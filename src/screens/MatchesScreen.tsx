@@ -3,9 +3,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, radius } from "../constants/theme";
-import { jobs } from "../data/jobs";
+import { useJobs } from "../hooks/useJobs";
 
 export function MatchesScreen() {
+  const { jobs } = useJobs();
   const matchedJobs = jobs.slice(0, 5);
 
   return (

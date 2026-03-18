@@ -24,3 +24,28 @@ export const radius = {
   xl: 24,
   pill: 999,
 };
+
+/** Shared spacing scale (4pt base). Use for margins and padding across screens. */
+export const spacing = {
+  xs: 4,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 20,
+  xxl: 24,
+} as const;
+
+/** Horizontal padding bounds for card/screen content. Use with clamp(width * 0.06, ...). */
+export const horizontalPaddingBounds = { min: 20, max: 28 } as const;
+
+/** Reference width for font scaling (e.g. design width). Fonts scale with screen width. */
+export const REFERENCE_WIDTH = 390;
+
+/**
+ * Scale factor for font sizes based on screen width. Use with base font sizes: fontSize: Math.round(16 * getFontScale(width))
+ * Clamped so text doesn't get too small on narrow devices or too large on tablets.
+ */
+export function getFontScale(width: number, refWidth: number = REFERENCE_WIDTH): number {
+  const scale = width / refWidth;
+  return Math.min(Math.max(scale, 0.85), 1.25);
+}

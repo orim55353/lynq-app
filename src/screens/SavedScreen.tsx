@@ -4,9 +4,10 @@ import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-nati
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, radius } from "../constants/theme";
 import { useSavedJobs } from "../context/SavedJobsContext";
-import { jobs } from "../data/jobs";
+import { useJobs } from "../hooks/useJobs";
 
 export function SavedScreen() {
+  const { jobs } = useJobs();
   const { savedIds, loaded, removeSaved } = useSavedJobs();
   const savedJobs = jobs.filter((job) => savedIds.includes(job.id));
 

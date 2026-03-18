@@ -1,11 +1,35 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { useCallback } from "react";
+import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, radius } from "../constants/theme";
-import { profile } from "../data/profile";
+import { useAuth } from "../context/AuthContext";
+import { useProfile } from "../hooks/useProfile";
 
 export function ProfileScreen() {
+  const { uid, signOut } = useAuth();
+  const { profile, loading } = useProfile(uid);
+
+  const handleSignOut = useCallback(() => {
+    Alert.alert("Sign out", "Are you sure?", [
+      { text: "Cancel", style: "cancel" },
+      { text: "Sign out", style: "destructive", onPress: () => signOut() },
+    ]);
+  }, [signOut]);
+
+  if (loading) {
+    return (
+      <LinearGradient colors={["#FAF5FF", "#FDF2F8"]} style={styles.background}>
+        <SafeAreaView style={styles.safe} edges={["top"]}>
+          <View style={[styles.card, styles.loadingCard]}>
+            <Text style={styles.loadingText}>Loading profile...</Text>
+          </View>
+        </SafeAreaView>
+      </LinearGradient>
+    );
+  }
+
   return (
     <LinearGradient colors={["#FAF5FF", "#FDF2F8"]} style={styles.background}>
       <SafeAreaView style={styles.safe} edges={["top"]}>
@@ -25,7 +49,7 @@ export function ProfileScreen() {
                 <Text style={styles.tagline}>{profile.tagline}</Text>
 
                 <View style={styles.infoWrap}>
-                  <View style={[styles.infoPill, { backgroundColor: "#F3E8FF" }]}> 
+                  <View style={[styles.infoPill, { backgroundColor: "#F3E8FF" }]}>
                     <Ionicons name="mail-outline" size={14} color="#7E22CE" />
                     <Text style={[styles.infoText, { color: "#7E22CE" }]}>{profile.email}</Text>
                   </View>
@@ -81,6 +105,11 @@ export function ProfileScreen() {
               </View>
             </View>
           </View>
+
+          <Pressable onPress={handleSignOut} style={({ pressed }) => [styles.signOutButton, pressed && styles.signOutPressed]}>
+            <Ionicons name="log-out-outline" size={20} color={colors.red500} />
+            <Text style={styles.signOutText}>Sign out</Text>
+          </Pressable>
         </ScrollView>
       </SafeAreaView>
     </LinearGradient>
@@ -153,4 +182,16 @@ const styles = StyleSheet.create({
   companyName: { fontSize: 16, fontWeight: "700", marginTop: 1 },
   dates: { fontSize: 12, color: colors.gray500, marginTop: 3, marginBottom: 4 },
   summary: { fontSize: 14, lineHeight: 20, color: colors.gray700 },
+  loadingCard: { alignItems: "center", justifyContent: "center", minHeight: 120 },
+  loadingText: { fontSize: 16, color: colors.gray500 },
+  signOutButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    paddingVertical: 14,
+    marginTop: 8,
+  },
+  signOutPressed: { opacity: 0.7 },
+  signOutText: { fontSize: 16, color: colors.red500, fontWeight: "600" },
 });

@@ -1,5 +1,4 @@
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { LinearGradient } from "expo-linear-gradient";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
@@ -8,7 +7,6 @@ import { colors, radius } from "../constants/theme";
 const iconMap: Record<string, keyof typeof Ionicons.glyphMap> = {
   Discover: "home",
   Matches: "heart",
-  Saved: "bookmark",
   Chat: "chatbubble-ellipses",
   Profile: "person",
 };
@@ -17,7 +15,7 @@ export function BottomTabBar({ state, descriptors, navigation }: BottomTabBarPro
   const insets = useSafeAreaInsets();
 
   return (
-    <View style={[styles.wrapper, { paddingBottom: Math.max(insets.bottom, 8) }]}> 
+    <View style={[styles.wrapper, { paddingBottom: Math.max(insets.bottom, 10) }]}>
       <View style={styles.inner}>
         {state.routes.map((route, index) => {
           const isFocused = state.index === index;
@@ -36,19 +34,12 @@ export function BottomTabBar({ state, descriptors, navigation }: BottomTabBarPro
 
           return (
             <Pressable key={route.key} style={styles.item} onPress={onPress}>
-              {isFocused ? (
-                <LinearGradient
-                  colors={[colors.purple500, colors.pink500]}
-                  start={{ x: 0, y: 0.5 }}
-                  end={{ x: 1, y: 0.5 }}
-                  style={styles.activeLine}
-                />
-              ) : null}
-              <View style={[styles.iconWrap, isFocused && styles.activeIconWrap]}>
+              <View style={[styles.iconWrap, isFocused && styles.iconWrapActive]}>
                 <Ionicons
                   name={iconMap[route.name]}
-                  size={22}
-                  color={isFocused ? colors.white : colors.gray600}
+                  size={24}
+                  color={isFocused ? colors.purple500 : colors.gray600}
+                  style={isFocused ? styles.activeIcon : undefined}
                 />
               </View>
               <Text style={[styles.label, isFocused && styles.activeLabel]}>{label}</Text>
@@ -62,49 +53,52 @@ export function BottomTabBar({ state, descriptors, navigation }: BottomTabBarPro
 
 const styles = StyleSheet.create({
   wrapper: {
-    backgroundColor: colors.white,
-    borderTopWidth: 1,
-    borderTopColor: colors.gray200,
-    shadowColor: "#000",
-    shadowOpacity: 0.12,
-    shadowOffset: { width: 0, height: -8 },
-    shadowRadius: 12,
-    elevation: 12,
+    position: "absolute",
+    left: 0,
+    right: 0,
+    bottom: 0,
+    paddingHorizontal: 16,
   },
   inner: {
+    borderRadius: radius.pill,
+    backgroundColor: "rgba(255,255,255,0.84)",
+    borderWidth: 1,
+    borderColor: "rgba(226,232,240,0.6)",
+    shadowColor: "#000",
+    shadowOpacity: 0.12,
+    shadowOffset: { width: 0, height: 8 },
+    shadowRadius: 14,
+    elevation: 8,
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    paddingHorizontal: 8,
-    paddingTop: 8,
+    paddingHorizontal: 6,
+    paddingVertical: 6,
   },
   item: {
     alignItems: "center",
-    width: 68,
-    gap: 4,
+    width: 72,
+    gap: 2,
     position: "relative",
   },
-  activeLine: {
-    position: "absolute",
-    top: -8,
-    width: 30,
-    height: 4,
-    borderRadius: radius.pill,
-  },
   iconWrap: {
-    width: 36,
-    height: 36,
+    width: 28,
+    height: 28,
     borderRadius: radius.pill,
     justifyContent: "center",
     alignItems: "center",
   },
-  activeIconWrap: {
-    backgroundColor: colors.purple500,
+  iconWrapActive: {
+    transform: [{ scale: 1.1 }],
+  },
+  activeIcon: {
+    textShadowColor: "rgba(168, 85, 247, 0.65)",
+    textShadowRadius: 8,
   },
   label: {
-    fontSize: 11,
+    fontSize: 10,
     color: colors.gray600,
-    fontWeight: "600",
+    fontWeight: "500",
   },
   activeLabel: {
     color: colors.purple500,
