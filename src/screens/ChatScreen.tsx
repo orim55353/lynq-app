@@ -33,14 +33,14 @@ export function ChatScreen() {
           <Text style={[styles.title, { color: colors.text }]}>Messages</Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>Chat with companies you've matched with</Text>
 
-          <View style={[styles.shell, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
-            <View style={[styles.searchWrap, { backgroundColor: colors.bgSubtle, borderColor: colors.border }]}>
+          <View style={[styles.shell, { backgroundColor: colors.bgCard }]}>
+            <View style={[styles.searchWrap, { backgroundColor: colors.bgSubtle }]}>
               <Ionicons name="search-outline" size={18} color={colors.textTertiary} />
               <TextInput placeholder="Search messages..." placeholderTextColor={colors.textTertiary} style={[styles.searchInput, { color: colors.text }]} />
             </View>
 
-            <View style={[styles.chatShell, { borderColor: colors.border }]}>
-              <View style={[styles.chatListCol, { borderColor: colors.border }]}>
+            <View style={styles.chatShell}>
+              <View style={styles.chatListCol}>
                 <FlatList
                   data={chats}
                   keyExtractor={(item) => item.id}
@@ -50,7 +50,7 @@ export function ChatScreen() {
                     return (
                       <Pressable
                         onPress={() => setSelectedChat(item.id)}
-                        style={[styles.chatItem, { borderBottomColor: colors.borderSubtle }, active && { backgroundColor: colors.accentSoft }]}
+                        style={[styles.chatItem, active && { backgroundColor: colors.accentSoft }]}
                       >
                         <LinearGradient colors={accentGradient} style={styles.avatarBubble}>
                           <Text style={styles.avatarText}>{item.sender[0]}</Text>
@@ -72,7 +72,7 @@ export function ChatScreen() {
               <View style={styles.chatWindowCol}>
                 {activeChat ? (
                   <>
-                    <View style={[styles.chatHeader, { borderBottomColor: colors.border }]}>
+                    <View style={styles.chatHeader}>
                       <LinearGradient colors={accentGradient} style={styles.headerAvatar}>
                         <Text style={styles.avatarText}>{activeChat.sender[0]}</Text>
                       </LinearGradient>
@@ -83,19 +83,19 @@ export function ChatScreen() {
                     </View>
 
                     <ScrollView style={[styles.messageRegion, { backgroundColor: colors.bg }]} contentContainerStyle={styles.messageContent}>
-                      <View style={[styles.incomingBubble, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+                      <View style={[styles.incomingBubble, { backgroundColor: colors.bgCard }]}>
                         <Text style={[styles.incomingText, { color: colors.text }]}>{activeChat.text}</Text>
                         <Text style={[styles.incomingTime, { color: colors.textTertiary }]}>{activeChat.timestamp}</Text>
                       </View>
                     </ScrollView>
 
-                    <View style={[styles.inputRow, { borderColor: colors.border }]}>
+                    <View style={styles.inputRow}>
                       <TextInput
                         value={messageText}
                         onChangeText={setMessageText}
                         placeholder="Type a message..."
                         placeholderTextColor={colors.textTertiary}
-                        style={[styles.messageInput, { backgroundColor: colors.bgSubtle, color: colors.text, borderColor: colors.border }]}
+                        style={[styles.messageInput, { backgroundColor: colors.bgSubtle, color: colors.text }]}
                       />
                       <View style={styles.sendButtonWrap}>
                         <LinearGradient colors={accentGradient} style={[styles.sendButton, shadows.glow]}>
@@ -127,12 +127,12 @@ const styles = StyleSheet.create({
   page: { flex: 1, paddingHorizontal: spacing.xl, paddingTop: spacing.lg, paddingBottom: 96 },
   title: { ...typography.displayLarge, marginBottom: spacing.xxs },
   subtitle: { ...typography.body, marginBottom: spacing.lg },
-  shell: { flex: 1, borderRadius: radius.xl, padding: spacing.md, borderWidth: 1 },
-  searchWrap: { borderRadius: radius.pill, height: 42, paddingHorizontal: spacing.lg, flexDirection: "row", alignItems: "center", gap: spacing.sm, borderWidth: 1 },
+  shell: { flex: 1, borderRadius: radius.xl, padding: spacing.md },
+  searchWrap: { borderRadius: radius.pill, height: 42, paddingHorizontal: spacing.lg, flexDirection: "row", alignItems: "center", gap: spacing.sm },
   searchInput: { flex: 1, ...typography.bodySmall },
-  chatShell: { flex: 1, marginTop: spacing.md, borderRadius: radius.lg, overflow: "hidden", borderWidth: 1 },
-  chatListCol: { maxHeight: 270, borderBottomWidth: 1 },
-  chatItem: { flexDirection: "row", alignItems: "flex-start", gap: spacing.md, padding: spacing.md, borderBottomWidth: 1 },
+  chatShell: { flex: 1, marginTop: spacing.md, borderRadius: radius.lg, overflow: "hidden" },
+  chatListCol: { maxHeight: 270 },
+  chatItem: { flexDirection: "row", alignItems: "flex-start", gap: spacing.md, padding: spacing.md },
   avatarBubble: { width: 44, height: 44, borderRadius: radius.pill, alignItems: "center", justifyContent: "center" },
   avatarText: { color: "#FFFFFF", ...typography.subheading },
   chatMeta: { flex: 1 },
@@ -142,17 +142,17 @@ const styles = StyleSheet.create({
   chatPreview: { ...typography.bodySmall },
   unreadDot: { width: 8, height: 8, borderRadius: radius.pill, marginTop: spacing.sm },
   chatWindowCol: { flex: 1 },
-  chatHeader: { borderBottomWidth: 1, padding: spacing.md, flexDirection: "row", gap: spacing.md, alignItems: "center" },
+  chatHeader: { padding: spacing.md, flexDirection: "row", gap: spacing.md, alignItems: "center" },
   headerAvatar: { width: 40, height: 40, borderRadius: radius.pill, alignItems: "center", justifyContent: "center" },
   headerName: { ...typography.bodySmall, fontWeight: "700" },
   headerState: { ...typography.caption, marginTop: 2 },
   messageRegion: { flex: 1 },
   messageContent: { padding: spacing.lg },
-  incomingBubble: { maxWidth: "88%", borderRadius: radius.md, borderTopLeftRadius: 0, paddingHorizontal: spacing.md, paddingVertical: spacing.md, borderWidth: 1 },
+  incomingBubble: { maxWidth: "88%", borderRadius: radius.md, borderTopLeftRadius: 0, paddingHorizontal: spacing.md, paddingVertical: spacing.md },
   incomingText: { ...typography.bodySmall },
   incomingTime: { ...typography.caption, marginTop: spacing.xs },
-  inputRow: { borderTopWidth: 1, flexDirection: "row", padding: spacing.sm, gap: spacing.sm },
-  messageInput: { flex: 1, borderRadius: radius.pill, paddingHorizontal: spacing.lg, ...typography.bodySmall, borderWidth: 1 },
+  inputRow: { flexDirection: "row", padding: spacing.sm, gap: spacing.sm },
+  messageInput: { flex: 1, borderRadius: radius.pill, paddingHorizontal: spacing.lg, ...typography.bodySmall },
   sendButtonWrap: { borderRadius: radius.pill, overflow: "hidden" },
   sendButton: { width: 44, height: 44, borderRadius: radius.pill, alignItems: "center", justifyContent: "center" },
   emptyCenter: { flex: 1, alignItems: "center", justifyContent: "center", gap: spacing.md },

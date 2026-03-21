@@ -92,14 +92,21 @@ users/{uid}                     # User profile (read/write: owner only)
 
 **All color values, spacing, and radii MUST match `../DESIGN_SYSTEM.md` — the single source of truth across all Lynq projects.** When adding or changing any design token, update DESIGN_SYSTEM.md first, then update the platform-specific theme file.
 
+### Key Design Rules (from Kinetic Fluidity Framework)
+
+- **No 1px borders for sectioning** — use surface color shifts for depth
+- **No sharp corners** — minimum radius is 16px (`ROUND_SIXTEEN`)
+- **No flat colors on CTAs** — use gradient (`primary` to `primary-container` at 135deg)
+- **No 100% black text** — use `on-surface` (`#171D1E`)
+- **Generous whitespace** — asymmetrical spacing creates editorial energy
+
 ### Mobile-Specific Implementation
 
-- **Theme file:** `src/constants/theme.ts` exports `colors` (dark default), `themes.light`, semantic tokens
+- **Theme file:** `src/constants/theme.ts` — must be updated to match DESIGN_SYSTEM.md tokens
 - **Gradients:** `src/constants/gradients.ts` — `screenGradient`, `accentGradient`, `cardScrim`, etc.
-- **Typography:** `typography.*` presets (displayLarge, heading, body, label, etc.) with weight + tracking
-- **Font:** System (SF Pro on iOS, Roboto on Android) — no custom fonts
+- **Font:** Plus Jakarta Sans (loaded via `expo-font`) — replaces system fonts
 - **Font scaling:** `getFontScale(width)` — responsive to screen width, clamped 0.85x-1.25x
-- **Shadows:** `shadows.soft`, `shadows.medium`, `shadows.heavy`, `shadows.glow` (cyan), `shadows.warmGlow`
+- **Elevation:** Use tonal layering (surface hierarchy) over traditional shadows
 - **Glass surfaces:** `colors.glass`, `colors.glassBorder`, `colors.glassHeavy` for translucent overlays
 - **Animation:** `animation.*` constants for spring configs and durations
 - **Icons:** Ionicons via `@expo/vector-icons` — outline for info, filled for active states

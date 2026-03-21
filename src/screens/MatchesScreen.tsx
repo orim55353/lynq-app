@@ -20,7 +20,7 @@ export function MatchesScreen() {
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>Companies that liked you back</Text>
 
           {matchedJobs.map((job) => (
-            <View key={job.id} style={[styles.card, shadows.soft, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+            <View key={job.id} style={[styles.card, shadows.soft, { backgroundColor: colors.bgCard }]}>
               <LinearGradient colors={job.gradient} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={styles.cardTop} />
               <View style={styles.cardBody}>
                 <View style={styles.rowStart}>
@@ -31,7 +31,7 @@ export function MatchesScreen() {
                     <Text style={[styles.jobTitle, { color: colors.text }]}>{job.title}</Text>
                     <Text style={[styles.company, { color: colors.textSecondary }]}>{job.company}</Text>
                   </View>
-                  <View style={[styles.matchPill, { backgroundColor: colors.accentSoft, borderColor: colors.borderAccent }]}>
+                  <View style={[styles.matchPill, { backgroundColor: colors.accentSoft }]}>
                     <Ionicons name="heart" size={13} color={colors.accent} />
                     <Text style={[styles.matchText, { color: colors.accent }]}>{job.compatibilityScore}%</Text>
                   </View>
@@ -40,13 +40,13 @@ export function MatchesScreen() {
                 <Text style={[styles.description, { color: colors.textSecondary }]} numberOfLines={2}>{job.description}</Text>
 
                 <View style={styles.pillsRow}>
-                  <View style={[styles.pill, { backgroundColor: colors.bgSubtle, borderColor: colors.border }]}>
+                  <View style={[styles.pill, { backgroundColor: colors.bgSubtle }]}>
                     <Text style={[styles.pillText, { color: colors.textSecondary }]}>{job.location}</Text>
                   </View>
-                  <View style={[styles.pill, { backgroundColor: colors.bgSubtle, borderColor: colors.border }]}>
+                  <View style={[styles.pill, { backgroundColor: colors.bgSubtle }]}>
                     <Text style={[styles.pillText, { color: colors.textSecondary }]}>{job.type}</Text>
                   </View>
-                  <View style={[styles.pill, { backgroundColor: colors.bgSubtle, borderColor: colors.border }]}>
+                  <View style={[styles.pill, { backgroundColor: colors.bgSubtle }]}>
                     <Text style={[styles.pillText, { color: colors.textSecondary }]}>{job.salary}</Text>
                   </View>
                 </View>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: spacing.xl, paddingVertical: spacing.lg, gap: spacing.lg, paddingBottom: 130 },
   title: { ...typography.displayLarge, marginBottom: spacing.xxs },
   subtitle: { ...typography.body, marginBottom: spacing.sm },
-  card: { borderRadius: radius.xl, overflow: "hidden", borderWidth: 1 },
+  card: { borderRadius: radius.xl, overflow: "hidden" },
   cardTop: { height: 4 },
   cardBody: { padding: spacing.lg },
   rowStart: { flexDirection: "row", alignItems: "flex-start", gap: spacing.md, marginBottom: spacing.md },
@@ -86,11 +86,11 @@ const styles = StyleSheet.create({
   flexOne: { flex: 1 },
   jobTitle: { ...typography.heading, marginBottom: spacing.xxs },
   company: { ...typography.bodySmall, fontWeight: "600" },
-  matchPill: { flexDirection: "row", gap: 4, alignItems: "center", paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radius.pill, borderWidth: 1 },
+  matchPill: { flexDirection: "row", gap: 4, alignItems: "center", paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radius.pill },
   matchText: { ...typography.label },
   description: { ...typography.bodySmall, marginBottom: spacing.md },
   pillsRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm, marginBottom: spacing.lg },
-  pill: { flexDirection: "row", gap: 4, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radius.pill, alignItems: "center", borderWidth: 1 },
+  pill: { flexDirection: "row", gap: 4, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radius.pill, alignItems: "center" },
   pillText: { ...typography.label },
   primaryButton: { borderRadius: radius.pill, overflow: "hidden" },
   primaryButtonGradient: { height: 48, borderRadius: radius.pill, justifyContent: "center", alignItems: "center", flexDirection: "row", gap: spacing.sm },

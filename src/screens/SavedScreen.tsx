@@ -24,7 +24,7 @@ export function SavedScreen() {
           </Text>
 
           {!loaded || savedJobs.length === 0 ? (
-            <View style={[styles.emptyCard, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+            <View style={[styles.emptyCard, { backgroundColor: colors.bgCard }]}>
               <View style={[styles.emptyIconWrap, { backgroundColor: colors.bgSubtle }]}>
                 <Ionicons name="bookmark-outline" size={40} color={colors.textTertiary} />
               </View>
@@ -33,7 +33,7 @@ export function SavedScreen() {
             </View>
           ) : (
             savedJobs.map((job) => (
-              <View key={job.id} style={[styles.card, shadows.soft, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+              <View key={job.id} style={[styles.card, shadows.soft, { backgroundColor: colors.bgCard }]}>
                 <LinearGradient colors={job.gradient} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={styles.cardTop} />
                 <View style={styles.cardBody}>
                   <View style={styles.rowStart}>
@@ -52,13 +52,13 @@ export function SavedScreen() {
                   <Text style={[styles.description, { color: colors.textSecondary }]} numberOfLines={2}>{job.description}</Text>
 
                   <View style={styles.pillsRow}>
-                    <View style={[styles.pill, { backgroundColor: colors.bgSubtle, borderColor: colors.border }]}>
+                    <View style={[styles.pill, { backgroundColor: colors.bgSubtle }]}>
                       <Text style={[styles.pillText, { color: colors.textSecondary }]}>{job.location}</Text>
                     </View>
-                    <View style={[styles.pill, { backgroundColor: colors.bgSubtle, borderColor: colors.border }]}>
+                    <View style={[styles.pill, { backgroundColor: colors.bgSubtle }]}>
                       <Text style={[styles.pillText, { color: colors.textSecondary }]}>{job.type}</Text>
                     </View>
-                    <View style={[styles.pill, { backgroundColor: colors.bgSubtle, borderColor: colors.border }]}>
+                    <View style={[styles.pill, { backgroundColor: colors.bgSubtle }]}>
                       <Text style={[styles.pillText, { color: colors.textSecondary }]}>{job.salary}</Text>
                     </View>
                   </View>
@@ -84,11 +84,11 @@ const styles = StyleSheet.create({
   content: { paddingHorizontal: spacing.xl, paddingVertical: spacing.lg, gap: spacing.lg, paddingBottom: 130 },
   title: { ...typography.displayLarge, marginBottom: spacing.xxs },
   subtitle: { ...typography.body, marginBottom: spacing.sm },
-  emptyCard: { borderRadius: radius.xl, paddingVertical: spacing.huge, paddingHorizontal: spacing.xxl, alignItems: "center", gap: spacing.md, borderWidth: 1 },
+  emptyCard: { borderRadius: radius.xl, paddingVertical: spacing.huge, paddingHorizontal: spacing.xxl, alignItems: "center", gap: spacing.md },
   emptyIconWrap: { width: 72, height: 72, borderRadius: radius.pill, justifyContent: "center", alignItems: "center", marginBottom: spacing.sm },
   emptyTitle: { ...typography.heading },
   emptyText: { ...typography.body, textAlign: "center" },
-  card: { borderRadius: radius.xl, overflow: "hidden", borderWidth: 1 },
+  card: { borderRadius: radius.xl, overflow: "hidden" },
   cardTop: { height: 4 },
   cardBody: { padding: spacing.lg },
   rowStart: { flexDirection: "row", alignItems: "flex-start", gap: spacing.md, marginBottom: spacing.md },
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
   deleteWrap: { padding: spacing.sm, borderRadius: radius.pill },
   description: { ...typography.bodySmall, marginBottom: spacing.md },
   pillsRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm, marginBottom: spacing.lg },
-  pill: { flexDirection: "row", gap: 4, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radius.pill, alignItems: "center", borderWidth: 1 },
+  pill: { flexDirection: "row", gap: 4, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radius.pill, alignItems: "center" },
   pillText: { ...typography.label },
   primaryButton: { borderRadius: radius.pill, overflow: "hidden" },
   primaryButtonGradient: { height: 48, borderRadius: radius.pill, justifyContent: "center", alignItems: "center" },

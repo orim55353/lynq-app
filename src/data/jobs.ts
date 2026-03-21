@@ -14,6 +14,11 @@ export const jobs: Job[] = [
     tagline: "Lead the floor. Own the energy. Run the show.",
     description:
       "Lead and supervise gaming operations on the casino floor. Ensure exceptional guest experiences while maintaining strict gaming regulations and security standards.",
+    highlights: [
+      "Supervise table games & slot operations",
+      "Train and mentor floor staff",
+      "VIP guest satisfaction & compliance",
+    ],
     responsibilities: [
       "Supervise table games and slot operations during assigned shift",
       "Monitor and enforce gaming regulations and company policies",
@@ -39,6 +44,8 @@ export const jobs: Job[] = [
     schedule: "Full-Time",
     workType: "On-Site",
     gradient: ["#DC2626", "#D97706"],
+    matchExplanation:
+      "Based on your profile, you're a strong fit for this role. Your hospitality background and Nevada location align well with what Caesars is looking for. Consider highlighting any gaming regulation experience to strengthen your application.",
   },
   {
     id: "2",
@@ -50,6 +57,11 @@ export const jobs: Job[] = [
     tagline: "Be the first face guests remember.",
     description:
       "Oversee front desk operations and lead a team providing world-class hospitality. Handle VIP guest relations and ensure seamless check-in experiences.",
+    highlights: [
+      "Lead front desk team & daily operations",
+      "Handle VIP arrivals & special requests",
+      "Manage room inventory & rate strategy",
+    ],
     responsibilities: [
       "Manage daily front desk operations and staff scheduling",
       "Handle VIP arrivals and special accommodation requests",
@@ -74,6 +86,8 @@ export const jobs: Job[] = [
     schedule: "Full-Time",
     workType: "On-Site",
     gradient: ["#2563EB", "#4F46E5"],
+    matchExplanation:
+      "Your profile is an exceptional match. Your 5+ years in hotel management and strong guest relations track record are exactly what this position requires. Your local presence in Atlantic City is a significant advantage.",
   },
   {
     id: "3",
@@ -85,6 +99,11 @@ export const jobs: Job[] = [
     tagline: "Serve unforgettable moments, not just meals.",
     description:
       "Provide exceptional service in our award-winning restaurants. Demonstrate extensive menu and wine knowledge while delivering personalized service.",
+    highlights: [
+      "Fine dining service in award-winning venues",
+      "Wine & menu pairing expertise",
+      "Luxury table presentation standards",
+    ],
     responsibilities: [
       "Deliver fine dining service in a high-volume restaurant",
       "Present menu options and make pairing recommendations",
@@ -109,6 +128,8 @@ export const jobs: Job[] = [
     schedule: "Full-Time",
     workType: "On-Site",
     gradient: ["#9333EA", "#DB2777"],
+    matchExplanation:
+      "You meet several key qualifications for this position. Your food service experience is relevant, though additional fine dining or wine knowledge would strengthen your candidacy. The flexible schedule aligns with your availability.",
   },
   {
     id: "4",
@@ -120,6 +141,11 @@ export const jobs: Job[] = [
     tagline: "Protect the experience. Keep the peace.",
     description:
       "Maintain a safe and secure environment for guests and staff. Monitor surveillance systems and respond to incidents professionally.",
+    highlights: [
+      "Patrol & monitor surveillance systems",
+      "Respond to security & medical incidents",
+      "Enforce gaming regulations on property",
+    ],
     responsibilities: [
       "Patrol assigned areas and monitor surveillance feeds",
       "Respond to security incidents and medical emergencies",
@@ -145,6 +171,8 @@ export const jobs: Job[] = [
     schedule: "Full-Time",
     workType: "On-Site",
     gradient: ["#374151", "#111827"],
+    matchExplanation:
+      "Your background aligns well with this role's requirements. Your clean record and availability for rotating shifts are strong positives. First Aid certification would boost your match score further.",
   },
   {
     id: "5",
@@ -156,6 +184,11 @@ export const jobs: Job[] = [
     tagline: "Roll out the red carpet. Every. Single. Time.",
     description:
       "Build relationships with high-value guests as their personal concierge. Arrange luxury accommodations, show tickets, and exclusive experiences.",
+    highlights: [
+      "Build VIP guest relationships",
+      "Arrange luxury experiences & events",
+      "Hit monthly revenue & retention targets",
+    ],
     responsibilities: [
       "Develop and maintain relationships with VIP guests",
       "Arrange luxury accommodations, dining, and entertainment",
@@ -181,5 +214,7 @@ export const jobs: Job[] = [
     schedule: "Full-Time",
     workType: "On-Site",
     gradient: ["#D97706", "#EAB308"],
+    matchExplanation:
+      "Your profile is an outstanding fit. Your extensive experience in luxury hospitality and relationship-building skills are exactly what Caesars needs. Your existing network in Las Vegas makes you an ideal candidate.",
   },
 ];

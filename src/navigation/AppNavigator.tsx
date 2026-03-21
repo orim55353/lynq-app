@@ -3,12 +3,14 @@ import { BottomTabBar } from "../components/BottomTabBar";
 import { ChatScreen } from "../screens/ChatScreen";
 import { DiscoverScreen } from "../screens/DiscoverScreen";
 import { MatchesScreen } from "../screens/MatchesScreen";
+import { SavedScreen } from "../screens/SavedScreen";
 import { ProfileScreen } from "../screens/ProfileScreen";
 import { useTheme } from "../hooks/useTheme";
 
 export type RootTabParamList = {
   Discover: undefined;
   Matches: undefined;
+  Saved: undefined;
   Chat: undefined;
   Profile: undefined;
 };
@@ -29,6 +31,7 @@ export function AppNavigator() {
     >
       <Tab.Screen name="Discover" component={DiscoverScreen} />
       <Tab.Screen name="Matches" component={MatchesScreen} />
+      <Tab.Screen name="Saved" component={SavedScreen} />
       <Tab.Screen name="Chat" component={ChatScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen} />
     </Tab.Navigator>

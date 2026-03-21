@@ -1,93 +1,102 @@
 import { Platform, type TextStyle, type ViewStyle } from "react-native";
 
 // ─── Color System ───────────────────────────────────────────────────────────
-// Unified with Lynq backoffice (cyan accent on dark surfaces) and landing page
-// (warm neutrals). Dark mode is default; light mode for secondary contexts.
+// Aligned with DESIGN_SYSTEM.md "Kinetic Fluidity Framework".
+// Dark mode is default; light mode for secondary contexts.
+// All values sourced from ../DESIGN_SYSTEM.md — the single source of truth.
 
 export type ThemeMode = "dark" | "light";
 
-/** Dark theme — default. Matches backoffice dark mode palette. */
+/** Dark theme — default for mobile app. */
 const dark = {
-  // Surfaces (deepest → lightest)
-  bg: "#0B1220",           // Deepest background (matches backoffice --frame dark)
-  bgElevated: "#111827",   // Elevated surface (matches backoffice --background dark)
-  bgCard: "#1A2332",       // Card surfaces
-  bgCardHover: "#1F2D3D",  // Card hover/pressed
-  bgSubtle: "#243042",     // Subtle contrast surface (inputs, wells)
+  // Surfaces (deepest → lightest) — dark equivalents of design system surface hierarchy
+  bg: "#0B1220",           // surface (dark base)
+  bgElevated: "#111827",   // surface-container-low (dark)
+  bgCard: "#1A2332",       // surface-container-lowest equivalent (dark cards)
+  bgCardHover: "#1F2D3D",  // surface-container-high (dark)
+  bgSubtle: "#243042",     // surface-container (dark inputs/wells)
 
-  // Text
-  text: "#F1F5F9",         // Primary text
-  textSecondary: "#94A3B8", // Secondary text (matches backoffice --muted-foreground dark)
-  textTertiary: "#64748B", // Tertiary/placeholder
-  textInverse: "#0B1220",  // Text on accent/light backgrounds
+  // Text — NEVER use 100% black (#000000)
+  text: "#F1F5F9",         // on-surface (dark mode)
+  textSecondary: "#94A3B8", // on-surface-variant (dark mode)
+  textTertiary: "#64748B", // placeholder/outline
+  textInverse: "#171D1E",  // on-primary — uses design system on-surface value
 
-  // Lynq Accent — Electric Cyan (matches backoffice #2dd4ff dark / landing #0891b2)
-  accent: "#00E5FF",       // Primary accent (matches backoffice --lynq-accent light)
-  accentSoft: "rgba(0, 229, 255, 0.15)", // Muted accent background
-  accentGlow: "rgba(0, 229, 255, 0.35)", // Glow/shadow color
-  accentHover: "#00CCE5",  // Pressed state
+  // Brand — Kinetic Fluidity Framework primaries
+  primary: "#00687A",      // primary — deep brand
+  accent: "#06B6D4",       // primary-container — Electric Cyan (CTAs, brand highlights)
+  accentSoft: "rgba(6, 182, 212, 0.15)",
+  accentGlow: "rgba(6, 182, 212, 0.20)", // accent glow: 20% opacity per design system
+  accentHover: "#0E7490",  // tertiary — deep teal
 
-  // Secondary accent — Warm amber (from landing page orange #fb923c)
-  warm: "#FB923C",         // Secondary warm accent
-  warmSoft: "rgba(251, 146, 60, 0.12)",
+  // Secondary accent — Vibrant Tangerine
+  warm: "#FD933D",         // secondary-container
+  warmSoft: "rgba(253, 147, 61, 0.12)",
 
-  // Borders & Separators
-  border: "#1E293B",       // Default border (matches backoffice dark)
-  borderSubtle: "rgba(255, 255, 255, 0.06)", // Very subtle separator
-  borderAccent: "rgba(0, 229, 255, 0.25)", // Accent-tinted border
+  // Borders — "No-Line" rule: ghost borders at 15% opacity, no solid 1px borders
+  border: "rgba(255, 255, 255, 0.15)",   // ghost border (outline-variant at 15%)
+  borderSubtle: "rgba(255, 255, 255, 0.06)",
+  borderAccent: "rgba(6, 182, 212, 0.25)",
 
-  // Status
-  success: "#2DD4BF",      // Matches backoffice dark
-  successSoft: "rgba(45, 212, 191, 0.12)",
-  warning: "#FBBF24",
-  warningSoft: "rgba(251, 191, 36, 0.12)",
-  danger: "#F87171",
-  dangerSoft: "rgba(248, 113, 113, 0.12)",
-  info: "#60A5FA",
-  infoSoft: "rgba(96, 165, 250, 0.12)",
+  // Status — design system values
+  success: "#14B8A6",
+  successSoft: "rgba(20, 184, 166, 0.12)",
+  warning: "#F59E0B",
+  warningSoft: "rgba(245, 158, 11, 0.12)",
+  danger: "#EF4444",
+  dangerSoft: "rgba(239, 68, 68, 0.12)",
+  info: "#3B82F6",
+  infoSoft: "rgba(59, 130, 246, 0.12)",
 
-  // Glass morphism
-  glass: "rgba(255, 255, 255, 0.06)",
-  glassBorder: "rgba(255, 255, 255, 0.1)",
-  glassHeavy: "rgba(255, 255, 255, 0.12)",
+  // Glass morphism — surface at 70-85% opacity + backdrop-blur 20-40px
+  glass: "rgba(11, 18, 32, 0.75)",
+  glassBorder: "rgba(255, 255, 255, 0.15)",
+  glassHeavy: "rgba(11, 18, 32, 0.85)",
 
   // Overlays
   overlay: "rgba(0, 0, 0, 0.6)",
   overlayHeavy: "rgba(0, 0, 0, 0.8)",
 
-  // Chart palette (matches backoffice dark)
-  chart1: "#60A5FA",
-  chart2: "#2DD4BF",
-  chart3: "#FBBF24",
-  chart4: "#A78BFA",
-  chart5: "#F87171",
+  // Chart palette — design system values
+  chart1: "#3B82F6",
+  chart2: "#14B8A6",
+  chart3: "#F59E0B",
+  chart4: "#8B5CF6",
+  chart5: "#EF4444",
 } as const;
 
-/** Light theme — for auth screens and specific contexts. */
+/** Light theme — design system surface hierarchy values. */
 const light = {
-  bg: "#FAFAF9",           // Warm stone (from landing page)
-  bgElevated: "#FFFFFF",
-  bgCard: "#FFFFFF",
-  bgCardHover: "#F5F5F4",
-  bgSubtle: "#F1F0EE",
+  // Surfaces — design system surface hierarchy (exact values from DESIGN_SYSTEM.md)
+  bg: "#F5FAFC",           // surface
+  bgElevated: "#EFF4F7",   // surface-container-low
+  bgCard: "#FFFFFF",       // surface-container-lowest (high-impact cards)
+  bgCardHover: "#E0E5E8",  // surface-container-high
+  bgSubtle: "#E8EDF0",     // surface-container
 
-  text: "#1C1917",         // Warm dark (from landing page --text)
-  textSecondary: "#57534E", // From landing page --text-muted
-  textTertiary: "#A8A29E",
-  textInverse: "#FFFFFF",
+  // Text — design system text colors
+  text: "#171D1E",         // on-surface — NEVER use 100% black
+  textSecondary: "#3D494C", // on-surface-variant
+  textTertiary: "#A8A29E", // placeholder
+  textInverse: "#FFFFFF",  // on-primary
 
-  accent: "#0891B2",       // Landing page accent — slightly deeper for light bg legibility
-  accentSoft: "rgba(8, 145, 178, 0.08)",
-  accentGlow: "rgba(8, 145, 178, 0.2)",
-  accentHover: "#0E7490",
+  // Brand — same primaries across both themes
+  primary: "#00687A",      // primary — deep brand
+  accent: "#06B6D4",       // primary-container — Electric Cyan
+  accentSoft: "rgba(6, 182, 212, 0.08)",
+  accentGlow: "rgba(6, 182, 212, 0.20)",
+  accentHover: "#0E7490",  // tertiary
 
-  warm: "#F97316",
-  warmSoft: "rgba(249, 115, 22, 0.08)",
+  // Secondary accent — Vibrant Tangerine
+  warm: "#FD933D",         // secondary-container
+  warmSoft: "rgba(253, 147, 61, 0.08)",
 
-  border: "#E7E5E4",       // From landing page
+  // Borders — ghost borders with on-surface at 15% opacity
+  border: "rgba(23, 29, 30, 0.15)",
   borderSubtle: "rgba(0, 0, 0, 0.04)",
-  borderAccent: "rgba(8, 145, 178, 0.2)",
+  borderAccent: "rgba(6, 182, 212, 0.20)",
 
+  // Status — same across themes
   success: "#14B8A6",
   successSoft: "rgba(20, 184, 166, 0.08)",
   warning: "#F59E0B",
@@ -97,13 +106,16 @@ const light = {
   info: "#3B82F6",
   infoSoft: "rgba(59, 130, 246, 0.08)",
 
-  glass: "rgba(255, 255, 255, 0.7)",
-  glassBorder: "rgba(0, 0, 0, 0.06)",
-  glassHeavy: "rgba(255, 255, 255, 0.85)",
+  // Glass morphism — surface at 70-85% opacity
+  glass: "rgba(245, 250, 252, 0.75)",
+  glassBorder: "rgba(23, 29, 30, 0.15)",
+  glassHeavy: "rgba(245, 250, 252, 0.85)",
 
+  // Overlays
   overlay: "rgba(0, 0, 0, 0.4)",
   overlayHeavy: "rgba(0, 0, 0, 0.6)",
 
+  // Chart palette — design system values
   chart1: "#3B82F6",
   chart2: "#14B8A6",
   chart3: "#F59E0B",
@@ -128,32 +140,32 @@ export const colors = dark;
 export const cardColors = {
   light: {
     bg: "rgba(255, 255, 255, 0.55)",
-    text: "#1C1917",
-    textSecondary: "#57534E",
-    textMuted: "#78716C",
-    accent: "#0891B2",
-    accentText: "#0891B2",
+    text: "#171D1E",
+    textSecondary: "#3D494C",
+    textMuted: "#52525B",
+    accent: "#06B6D4",
+    accentText: "#00687A",
     infoBg: "rgba(255, 255, 255, 0.6)",
     infoBorder: "rgba(255, 255, 255, 0.4)",
     infoDivider: "rgba(0, 0, 0, 0.1)",
     pillBg: "rgba(255, 255, 255, 0.5)",
     pillBorder: "rgba(255, 255, 255, 0.4)",
-    pillText: "#1C1917",
+    pillText: "#171D1E",
     matchBg: "rgba(255, 255, 255, 0.7)",
     logoBg: "rgba(255, 255, 255, 0.9)",
     bookmarkBg: "rgba(255, 255, 255, 0.6)",
     bookmarkBorder: "rgba(0, 0, 0, 0.1)",
     bookmarkIcon: "#3F3F46",
-    applyText: "#0B1220",
-    hintText: "#57534E",
+    applyText: "#FFFFFF",
+    hintText: "#3D494C",
   },
   dark: {
     bg: "rgba(11, 18, 32, 0.7)",
     text: "#F1F5F9",
-    textSecondary: "#94A3B8",
-    textMuted: "#64748B",
-    accent: "#00E5FF",
-    accentText: "#00E5FF",
+    textSecondary: "#CBD5E1",
+    textMuted: "#94A3B8",
+    accent: "#06B6D4",
+    accentText: "#22D3EE",
     infoBg: "rgba(255, 255, 255, 0.08)",
     infoBorder: "rgba(255, 255, 255, 0.1)",
     infoDivider: "rgba(255, 255, 255, 0.1)",
@@ -165,7 +177,7 @@ export const cardColors = {
     bookmarkBg: "rgba(255, 255, 255, 0.1)",
     bookmarkBorder: "rgba(255, 255, 255, 0.15)",
     bookmarkIcon: "#CBD5E1",
-    applyText: "#0B1220",
+    applyText: "#FFFFFF",
     hintText: "#94A3B8",
   },
 } as const;
@@ -175,122 +187,124 @@ export type CardColorScheme = {
 };
 
 // ─── Job Card Gradient Presets ──────────────────────────────────────────────
-// Richer, deeper gradients that pop on dark surfaces.
-// Each job can override with its own `gradient` field.
+// From DESIGN_SYSTEM.md "Job Card Gradients (Mobile-Specific)"
 
 export const jobGradients = {
-  electric:   ["#00E5FF", "#0891B2"] as [string, string],  // Lynq brand
-  sunset:     ["#FB923C", "#EF4444"] as [string, string],  // Warm/urgent
-  aurora:     ["#2DD4BF", "#3B82F6"] as [string, string],  // Cool/trust
-  neon:       ["#A78BFA", "#EC4899"] as [string, string],  // Creative/design
-  midnight:   ["#1E293B", "#0F172A"] as [string, string],  // Corporate/serious
-  ember:      ["#F59E0B", "#DC2626"] as [string, string],  // Bold/action
-  ocean:      ["#06B6D4", "#6366F1"] as [string, string],  // Tech/innovation
-  forest:     ["#22C55E", "#14B8A6"] as [string, string],  // Growth/finance
+  electric:   ["#00E5FF", "#0891B2"] as [string, string],
+  sunset:     ["#FB923C", "#EF4444"] as [string, string],
+  aurora:     ["#2DD4BF", "#3B82F6"] as [string, string],
+  neon:       ["#A78BFA", "#EC4899"] as [string, string],
+  midnight:   ["#1E293B", "#0F172A"] as [string, string],
+  ember:      ["#F59E0B", "#DC2626"] as [string, string],
+  ocean:      ["#06B6D4", "#6366F1"] as [string, string],
+  forest:     ["#22C55E", "#14B8A6"] as [string, string],
 } as const;
 
 // ─── Spacing ────────────────────────────────────────────────────────────────
+// 4px base unit per design system. Generous, editorial spacing.
 
 export const spacing = {
   xxs: 2,
-  xs: 4,
-  sm: 8,
-  md: 12,
-  lg: 16,
-  xl: 20,
-  xxl: 24,
-  xxxl: 32,
-  huge: 48,
+  xs: 4,     // spacing-1
+  sm: 8,     // spacing-2
+  md: 12,    // spacing-3
+  lg: 16,    // spacing-4
+  xl: 20,    // spacing-5
+  xxl: 24,   // spacing-6
+  xxxl: 32,  // spacing-8
+  huge: 48,  // spacing-12
 } as const;
 
 export const horizontalPaddingBounds = { min: 20, max: 28 } as const;
 
 // ─── Border Radius ──────────────────────────────────────────────────────────
+// Design system: minimum 16px. Sharp corners (0px, 4px) are prohibited.
+// Only three tiers: ROUND_SIXTEEN, ROUND_TWENTY_FOUR, pill.
 
 export const radius = {
-  xs: 6,
-  sm: 10,
-  md: 14,
-  lg: 18,
-  xl: 24,
-  xxl: 32,
-  pill: 999,
+  xs: 16,    // ROUND_SIXTEEN — minimum radius per design system
+  sm: 16,    // ROUND_SIXTEEN — buttons, small elements, inputs
+  md: 16,    // ROUND_SIXTEEN — nested card content
+  lg: 24,    // ROUND_TWENTY_FOUR — cards, containers, modals
+  xl: 24,    // ROUND_TWENTY_FOUR
+  xxl: 24,   // ROUND_TWENTY_FOUR
+  pill: 999, // Full-round pills, badges
 } as const;
 
 // ─── Typography ─────────────────────────────────────────────────────────────
-// System fonts — SF Pro on iOS is excellent for Gen Z bold aesthetics.
-// Weight mapping matches both platforms.
+// Plus Jakarta Sans (loaded via expo-font).
+// Weights and letter-spacing from DESIGN_SYSTEM.md type scale.
 
 export const typography = {
-  /** Screen titles, hero text — maximum impact */
+  /** Screen titles, hero text — display-lg equivalent (mobile-scaled) */
   displayLarge: {
     fontSize: 38,
     lineHeight: 42,
-    fontWeight: "900" as TextStyle["fontWeight"],
-    letterSpacing: -1.5,
+    fontWeight: "700" as TextStyle["fontWeight"],
+    letterSpacing: -1.1,  // -0.03em at 38px
   },
-  /** Card titles, salary — commanding presence */
+  /** Card titles, salary — display-md equivalent (mobile-scaled) */
   displayMedium: {
     fontSize: 28,
     lineHeight: 32,
-    fontWeight: "800" as TextStyle["fontWeight"],
-    letterSpacing: -1,
+    fontWeight: "700" as TextStyle["fontWeight"],
+    letterSpacing: -0.6,  // -0.02em at 28px
   },
-  /** Section headers — confident but not shouting */
+  /** Section headers — headline-lg equivalent */
   heading: {
     fontSize: 22,
     lineHeight: 28,
-    fontWeight: "700" as TextStyle["fontWeight"],
-    letterSpacing: -0.5,
+    fontWeight: "600" as TextStyle["fontWeight"],
+    letterSpacing: -0.4,  // -0.02em at 22px
   },
-  /** Subheadings, company names */
+  /** Subheadings, company names — headline-md equivalent */
   subheading: {
     fontSize: 17,
     lineHeight: 22,
-    fontWeight: "700" as TextStyle["fontWeight"],
-    letterSpacing: -0.3,
+    fontWeight: "600" as TextStyle["fontWeight"],
+    letterSpacing: -0.3,  // -0.02em at 17px
   },
-  /** Body text, descriptions */
+  /** Body text, descriptions — body-lg equivalent. Line-height 1.6 for approachability */
   body: {
     fontSize: 15,
-    lineHeight: 22,
+    lineHeight: 24,       // 1.6 ratio per design system
     fontWeight: "400" as TextStyle["fontWeight"],
     letterSpacing: 0,
   },
-  /** Smaller body, secondary info */
+  /** Smaller body, secondary info — body-md equivalent */
   bodySmall: {
     fontSize: 13,
-    lineHeight: 18,
+    lineHeight: 21,       // ~1.6 ratio
     fontWeight: "400" as TextStyle["fontWeight"],
     letterSpacing: 0,
   },
-  /** Pills, badges, labels — tight and punchy */
+  /** Button text, prominent labels — label-lg equivalent */
+  button: {
+    fontSize: 16,
+    lineHeight: 20,
+    fontWeight: "600" as TextStyle["fontWeight"],
+    letterSpacing: 0.16,  // 0.01em at 16px
+  },
+  /** Pills, badges, labels — label-md equivalent */
   label: {
     fontSize: 12,
     lineHeight: 16,
-    fontWeight: "600" as TextStyle["fontWeight"],
-    letterSpacing: 0.2,
+    fontWeight: "500" as TextStyle["fontWeight"],
+    letterSpacing: 0.24,  // 0.02em at 12px
   },
-  /** Tiny text, timestamps, captions */
+  /** Tiny text, timestamps, captions — label-sm equivalent */
   caption: {
     fontSize: 11,
     lineHeight: 14,
     fontWeight: "500" as TextStyle["fontWeight"],
-    letterSpacing: 0.3,
-  },
-  /** CTA buttons — bold and clear */
-  button: {
-    fontSize: 16,
-    lineHeight: 20,
-    fontWeight: "700" as TextStyle["fontWeight"],
-    letterSpacing: -0.2,
+    letterSpacing: 0.22,  // 0.02em at 11px
   },
   /** Large CTA (Apply Now) */
   buttonLarge: {
     fontSize: 18,
     lineHeight: 22,
-    fontWeight: "800" as TextStyle["fontWeight"],
-    letterSpacing: -0.3,
+    fontWeight: "700" as TextStyle["fontWeight"],
+    letterSpacing: -0.2,
   },
   /** Tab bar labels */
   tab: {
@@ -302,45 +316,48 @@ export const typography = {
 } as const;
 
 // ─── Shadows ────────────────────────────────────────────────────────────────
+// Design system: tonal layering for depth, NOT traditional shadows.
+// Ambient shadows only for floating elements (modals, FABs, tooltips).
+// Shadow color: on-surface (#171D1E) — NEVER pure black.
 
 export const shadows = {
-  /** Subtle card shadow */
+  /** Ambient shadow — floating elements only (Y:16, blur:32, 6% opacity) */
   soft: {
-    shadowColor: "#000000",
-    shadowOpacity: 0.15,
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 12,
+    shadowColor: "#171D1E",
+    shadowOpacity: 0.06,
+    shadowOffset: { width: 0, height: 16 },
+    shadowRadius: 32,
     elevation: 4,
   } as ViewStyle,
   /** Medium elevation — modals, floating elements */
   medium: {
-    shadowColor: "#000000",
-    shadowOpacity: 0.25,
-    shadowOffset: { width: 0, height: 8 },
-    shadowRadius: 24,
+    shadowColor: "#171D1E",
+    shadowOpacity: 0.08,
+    shadowOffset: { width: 0, height: 16 },
+    shadowRadius: 32,
     elevation: 8,
   } as ViewStyle,
   /** Heavy elevation — bottom tab bar */
   heavy: {
-    shadowColor: "#000000",
-    shadowOpacity: 0.35,
-    shadowOffset: { width: 0, height: 12 },
+    shadowColor: "#171D1E",
+    shadowOpacity: 0.10,
+    shadowOffset: { width: 0, height: 16 },
     shadowRadius: 32,
     elevation: 12,
   } as ViewStyle,
-  /** Accent glow — for CTAs and active elements */
+  /** Accent glow — primary CTA buttons and active highlights */
   glow: {
-    shadowColor: "#00E5FF",
-    shadowOpacity: 0.4,
-    shadowOffset: { width: 0, height: 4 },
+    shadowColor: "#06B6D4",
+    shadowOpacity: 0.20,
+    shadowOffset: { width: 0, height: 0 },
     shadowRadius: 16,
     elevation: 6,
   } as ViewStyle,
-  /** Warm glow — for secondary accent elements */
+  /** Warm glow — secondary accent elements */
   warmGlow: {
-    shadowColor: "#FB923C",
-    shadowOpacity: 0.3,
-    shadowOffset: { width: 0, height: 4 },
+    shadowColor: "#FD933D",
+    shadowOpacity: 0.20,
+    shadowOffset: { width: 0, height: 0 },
     shadowRadius: 12,
     elevation: 4,
   } as ViewStyle,
@@ -356,15 +373,16 @@ export function getFontScale(width: number, refWidth: number = REFERENCE_WIDTH):
 }
 
 // ─── Animation Constants ────────────────────────────────────────────────────
-// Spring configs for react-native Animated / Reanimated
+// Keep durations short: 150-300ms for micro-interactions.
+// Use spring physics for React Native interactions.
 
 export const animation = {
-  /** Quick micro-interaction (button press, pill tap) */
+  /** Quick micro-interaction (button press, pill tap) — 150ms */
   quick: { duration: 150 },
-  /** Standard transition (card expand, modal enter) */
+  /** Standard transition (card expand, modal enter) — 250ms */
   standard: { duration: 250 },
-  /** Dramatic entrance (screen transition, reveal) */
-  dramatic: { duration: 400 },
+  /** Dramatic entrance (screen transition, reveal) — 300ms */
+  dramatic: { duration: 300 },
   /** Spring physics for bouncy interactions */
   spring: {
     tension: 300,

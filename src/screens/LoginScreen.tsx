@@ -66,7 +66,7 @@ export function LoginScreen({ navigation }: Props) {
             <View style={styles.inputWrap}>
               <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Email</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.bgSubtle, borderColor: colors.border, color: colors.text }]}
+                style={[styles.input, { backgroundColor: colors.bgSubtle, color: colors.text }]}
                 placeholder="you@email.com"
                 placeholderTextColor={colors.textTertiary}
                 value={email}
@@ -81,7 +81,7 @@ export function LoginScreen({ navigation }: Props) {
             <View style={styles.inputWrap}>
               <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Password</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.bgSubtle, borderColor: colors.border, color: colors.text }]}
+                style={[styles.input, { backgroundColor: colors.bgSubtle, color: colors.text }]}
                 placeholder="Enter your password"
                 placeholderTextColor={colors.textTertiary}
                 value={password}
@@ -160,7 +160,6 @@ const styles = StyleSheet.create({
     borderRadius: radius.md,
     paddingHorizontal: spacing.lg,
     ...typography.body,
-    borderWidth: 1,
   },
   button: { marginTop: spacing.lg, marginBottom: spacing.xl, borderRadius: radius.pill, overflow: "hidden" },
   buttonPressed: { opacity: 0.9 },

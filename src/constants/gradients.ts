@@ -1,6 +1,6 @@
 /**
  * Gradient presets for LinearGradient components.
- * All gradients are designed to work on dark surfaces.
+ * All values aligned with DESIGN_SYSTEM.md "Kinetic Fluidity Framework".
  * Typed as mutable tuples to satisfy expo-linear-gradient's colors prop.
  */
 
@@ -31,15 +31,18 @@ export const bottomFade: [string, string, string] = [
   "rgba(11, 18, 32, 0.95)",
 ];
 
-/** Accent gradient — primary CTA buttons */
-export const accentGradient: [string, string] = ["#00E5FF", "#0891B2"];
+/**
+ * Primary CTA gradient — NEVER use flat color for primary CTAs.
+ * primary (#00687A) → primary-container (#06B6D4) at 135deg.
+ */
+export const accentGradient: [string, string] = ["#00687A", "#06B6D4"];
 
-/** Warm gradient — secondary actions, highlights */
+/** Warm gradient — secondary accents, logo "q" element */
 export const warmGradient: [string, string] = ["#FB923C", "#F97316"];
 
-/** Spotlight — subtle white glow from top of card */
+/** Spotlight — subtle accent glow from top of card */
 export const spotlightGradient: [string, string, string] = [
-  "rgba(0, 229, 255, 0.12)",
-  "rgba(0, 229, 255, 0.04)",
+  "rgba(6, 182, 212, 0.12)",
+  "rgba(6, 182, 212, 0.04)",
   "transparent",
 ];

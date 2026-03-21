@@ -75,7 +75,7 @@ export function RegisterScreen({ navigation }: Props) {
             <View style={styles.inputWrap}>
               <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Email</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.bgSubtle, borderColor: colors.border, color: colors.text }]}
+                style={[styles.input, { backgroundColor: colors.bgSubtle, color: colors.text }]}
                 placeholder="you@email.com"
                 placeholderTextColor={colors.textTertiary}
                 value={email}
@@ -90,7 +90,7 @@ export function RegisterScreen({ navigation }: Props) {
             <View style={styles.inputWrap}>
               <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Password</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.bgSubtle, borderColor: colors.border, color: colors.text }]}
+                style={[styles.input, { backgroundColor: colors.bgSubtle, color: colors.text }]}
                 placeholder="Min 6 characters"
                 placeholderTextColor={colors.textTertiary}
                 value={password}
@@ -104,7 +104,7 @@ export function RegisterScreen({ navigation }: Props) {
             <View style={styles.inputWrap}>
               <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Confirm Password</Text>
               <TextInput
-                style={[styles.input, { backgroundColor: colors.bgSubtle, borderColor: colors.border, color: colors.text }]}
+                style={[styles.input, { backgroundColor: colors.bgSubtle, color: colors.text }]}
                 placeholder="Repeat your password"
                 placeholderTextColor={colors.textTertiary}
                 value={confirmPassword}
@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   subtitle: { ...typography.body, marginBottom: spacing.xxl },
   inputWrap: { marginBottom: spacing.lg },
   inputLabel: { ...typography.label, marginBottom: spacing.sm, textTransform: "uppercase" },
-  input: { height: 52, borderRadius: radius.md, paddingHorizontal: spacing.lg, ...typography.body, borderWidth: 1 },
+  input: { height: 52, borderRadius: radius.md, paddingHorizontal: spacing.lg, ...typography.body },
   button: { marginTop: spacing.lg, marginBottom: spacing.xl, borderRadius: radius.pill, overflow: "hidden" },
   buttonPressed: { opacity: 0.9 },
   buttonGradient: { height: 56, borderRadius: radius.pill, justifyContent: "center", alignItems: "center" },

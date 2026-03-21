@@ -25,7 +25,7 @@ export function ProfileScreen() {
     return (
       <View style={[styles.background, { backgroundColor: colors.bg }]}>
         <SafeAreaView style={styles.safe} edges={["top"]}>
-          <View style={[styles.card, styles.loadingCard, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+          <View style={[styles.card, styles.loadingCard, { backgroundColor: colors.bgCard }]}>
             <Text style={[styles.loadingText, { color: colors.textSecondary }]}>Loading profile...</Text>
           </View>
         </SafeAreaView>
@@ -37,7 +37,7 @@ export function ProfileScreen() {
     <View style={[styles.background, { backgroundColor: colors.bg }]}>
       <SafeAreaView style={styles.safe} edges={["top"]}>
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-          <View style={[styles.card, shadows.soft, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+          <View style={[styles.card, shadows.soft, { backgroundColor: colors.bgCard }]}>
             <View style={styles.headerRow}>
               <LinearGradient colors={accentGradient} style={styles.avatar}>
                 <Text style={styles.avatarText}>{profile.initials}</Text>
@@ -45,7 +45,7 @@ export function ProfileScreen() {
               <View style={styles.flexOne}>
                 <View style={styles.nameRow}>
                   <Text style={[styles.name, { color: colors.text }]}>{profile.name}</Text>
-                  <Pressable style={[styles.editButton, { backgroundColor: colors.bgSubtle, borderColor: colors.border }]}>
+                  <Pressable style={[styles.editButton, { backgroundColor: colors.bgSubtle }]}>
                     <Ionicons name="create-outline" size={16} color={colors.textSecondary} />
                   </Pressable>
                 </View>
@@ -69,18 +69,18 @@ export function ProfileScreen() {
             </View>
           </View>
 
-          <View style={[styles.card, shadows.soft, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+          <View style={[styles.card, shadows.soft, { backgroundColor: colors.bgCard }]}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>Skills</Text>
             <View style={styles.skillsWrap}>
               {profile.skills.map((skill) => (
-                <View key={skill} style={[styles.skillPill, { backgroundColor: colors.accentSoft, borderColor: colors.borderAccent }]}>
+                <View key={skill} style={[styles.skillPill, { backgroundColor: colors.accentSoft }]}>
                   <Text style={[styles.skillText, { color: colors.accent }]}>{skill}</Text>
                 </View>
               ))}
             </View>
           </View>
 
-          <View style={[styles.card, shadows.soft, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+          <View style={[styles.card, shadows.soft, { backgroundColor: colors.bgCard }]}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>Experience</Text>
             <View style={styles.timelineItem}>
               <View style={[styles.timelineLine, { backgroundColor: colors.accent }]} />
@@ -116,21 +116,21 @@ const styles = StyleSheet.create({
   background: { flex: 1 },
   safe: { flex: 1 },
   content: { paddingHorizontal: spacing.xl, paddingVertical: spacing.lg, gap: spacing.lg, paddingBottom: 130 },
-  card: { borderRadius: radius.xl, padding: spacing.xl, borderWidth: 1 },
+  card: { borderRadius: radius.xl, padding: spacing.xl },
   headerRow: { flexDirection: "row", gap: spacing.lg },
   avatar: { width: 80, height: 80, borderRadius: radius.pill, justifyContent: "center", alignItems: "center" },
   avatarText: { color: "#FFFFFF", fontSize: 28, fontWeight: "800" },
   flexOne: { flex: 1 },
   nameRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: spacing.xxs },
   name: { ...typography.displayMedium },
-  editButton: { width: 34, height: 34, borderRadius: radius.pill, alignItems: "center", justifyContent: "center", borderWidth: 1 },
+  editButton: { width: 34, height: 34, borderRadius: radius.pill, alignItems: "center", justifyContent: "center" },
   tagline: { ...typography.body, marginBottom: spacing.md },
   infoWrap: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
   infoPill: { flexDirection: "row", alignItems: "center", gap: 4, borderRadius: radius.pill, paddingHorizontal: spacing.md, paddingVertical: spacing.sm },
   infoText: { ...typography.label },
   sectionTitle: { ...typography.heading, marginBottom: spacing.md },
   skillsWrap: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm },
-  skillPill: { paddingHorizontal: spacing.lg, paddingVertical: spacing.sm, borderRadius: radius.pill, borderWidth: 1 },
+  skillPill: { paddingHorizontal: spacing.lg, paddingVertical: spacing.sm, borderRadius: radius.pill },
   skillText: { ...typography.label },
   timelineItem: { flexDirection: "row", gap: spacing.md, marginBottom: spacing.lg },
   timelineLine: { width: 3, borderRadius: radius.pill },

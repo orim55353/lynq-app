@@ -7,6 +7,8 @@ export interface Job {
   type: string;
   tagline: string;
   description: string;
+  /** Short bullet points for the preview card (3 max) */
+  highlights: [string, string, string];
   responsibilities?: string[];
   requirements?: string[];
   companyAbout?: string;
@@ -18,6 +20,8 @@ export interface Job {
   schedule: string;
   workType: string;
   gradient: [string, string];
+  /** AI-generated paragraph explaining the match score reasoning */
+  matchExplanation?: string;
 }
 
 export interface ChatMessage {

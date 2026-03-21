@@ -2,7 +2,20 @@
   "permissions": {
     "allow": [
       "Bash(npm run:*)",
-      "Bash(find src:*)"
+      "Bash(find src:*)",
+      "Bash(npx tsc:*)",
+      "Read(//Users/orimizrachi/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/2.0.1/**)",
+      "Bash(python3 skills/ui-ux-pro-max/scripts/search.py \"touch ergonomics thumb zone card layout content hierarchy\" --domain ux -n 15)",
+      "Bash(python3 src/ui-ux-pro-max/scripts/search.py \"touch ergonomics thumb zone card layout content hierarchy swipe\" --domain ux -n 15)",
+      "Bash(python3 src/ui-ux-pro-max/scripts/search.py \"card list flatlist performance navigation\" --stack react-native)",
+      "Bash(python3 src/ui-ux-pro-max/scripts/search.py \"entertainment social job discovery mobile\" --design-system)",
+      "Bash(python3 src/ui-ux-pro-max/scripts/search.py \"entertainment job discovery TikTok luxury editorial immersive dark\" --design-system -p \"Lynq Discover\")",
+      "Bash(python3 src/ui-ux-pro-max/scripts/search.py \"animation spring gesture swipe\" --domain ux)",
+      "Bash(npx expo:*)",
+      "Bash(python3 /Users/orimizrachi/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/2.0.1/.claude/skills/ui-ux-pro-max/scripts/search.py \"job recruitment social media stories branded content immersive mobile\" --design-system -p \"Lynq StoryBoard v2\")",
+      "Bash(python3 /Users/orimizrachi/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/2.0.1/.claude/skills/ui-ux-pro-max/scripts/search.py \"story viewer modal animation spring gesture swipe\" --domain ux -n 15)",
+      "Bash(python3 /Users/orimizrachi/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/2.0.1/.claude/skills/ui-ux-pro-max/scripts/search.py \"list performance navigation gesture\" --stack react-native)",
+      "Bash(python3 /Users/orimizrachi/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/2.0.1/.claude/skills/ui-ux-pro-max/scripts/search.py \"immersive fullscreen content dark mode gradient glass\" --domain style -n 8)"
     ]
   }
 }
