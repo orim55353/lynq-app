@@ -11,10 +11,13 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors, radius } from "../constants/theme";
+import { radius, shadows, spacing, typography } from "../constants/theme";
+import { accentGradient } from "../constants/gradients";
 import { chats } from "../data/chat";
+import { useTheme } from "../hooks/useTheme";
 
 export function ChatScreen() {
+  const { colors } = useTheme();
   const [selectedChat, setSelectedChat] = useState<string | null>(null);
   const [messageText, setMessageText] = useState("");
 
@@ -24,20 +27,20 @@ export function ChatScreen() {
   );
 
   return (
-    <LinearGradient colors={["#FAF5FF", "#FDF2F8"]} style={styles.background}>
+    <View style={[styles.background, { backgroundColor: colors.bg }]}>
       <SafeAreaView style={styles.safe} edges={["top"]}>
         <View style={styles.page}>
-          <Text style={styles.title}>Messages</Text>
-          <Text style={styles.subtitle}>Chat with companies you've matched with</Text>
+          <Text style={[styles.title, { color: colors.text }]}>Messages</Text>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>Chat with companies you've matched with</Text>
 
-          <View style={styles.shell}>
-            <View style={styles.searchWrap}>
-              <Ionicons name="search-outline" size={20} color={colors.gray400} />
-              <TextInput placeholder="Search messages..." placeholderTextColor={colors.gray400} style={styles.searchInput} />
+          <View style={[styles.shell, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+            <View style={[styles.searchWrap, { backgroundColor: colors.bgSubtle, borderColor: colors.border }]}>
+              <Ionicons name="search-outline" size={18} color={colors.textTertiary} />
+              <TextInput placeholder="Search messages..." placeholderTextColor={colors.textTertiary} style={[styles.searchInput, { color: colors.text }]} />
             </View>
 
-            <View style={styles.chatShell}>
-              <View style={styles.chatListCol}>
+            <View style={[styles.chatShell, { borderColor: colors.border }]}>
+              <View style={[styles.chatListCol, { borderColor: colors.border }]}>
                 <FlatList
                   data={chats}
                   keyExtractor={(item) => item.id}
@@ -47,21 +50,19 @@ export function ChatScreen() {
                     return (
                       <Pressable
                         onPress={() => setSelectedChat(item.id)}
-                        style={[styles.chatItem, active && styles.chatItemActive]}
+                        style={[styles.chatItem, { borderBottomColor: colors.borderSubtle }, active && { backgroundColor: colors.accentSoft }]}
                       >
-                        <LinearGradient colors={[colors.purple500, colors.pink500]} style={styles.avatarBubble}>
+                        <LinearGradient colors={accentGradient} style={styles.avatarBubble}>
                           <Text style={styles.avatarText}>{item.sender[0]}</Text>
                         </LinearGradient>
                         <View style={styles.chatMeta}>
                           <View style={styles.chatMetaTop}>
-                            <Text style={styles.chatSender}>{item.sender}</Text>
-                            <Text style={styles.chatTime}>{item.timestamp}</Text>
+                            <Text style={[styles.chatSender, { color: colors.text }]}>{item.sender}</Text>
+                            <Text style={[styles.chatTime, { color: colors.textTertiary }]}>{item.timestamp}</Text>
                           </View>
-                          <Text numberOfLines={1} style={styles.chatPreview}>
-                            {item.text}
-                          </Text>
+                          <Text numberOfLines={1} style={[styles.chatPreview, { color: colors.textSecondary }]}>{item.text}</Text>
                         </View>
-                        {item.unread ? <View style={styles.unreadDot} /> : null}
+                        {item.unread ? <View style={[styles.unreadDot, { backgroundColor: colors.accent }]} /> : null}
                       </Pressable>
                     );
                   }}
@@ -71,39 +72,44 @@ export function ChatScreen() {
               <View style={styles.chatWindowCol}>
                 {activeChat ? (
                   <>
-                    <View style={styles.chatHeader}>
-                      <LinearGradient colors={[colors.purple500, colors.pink500]} style={styles.headerAvatar}>
+                    <View style={[styles.chatHeader, { borderBottomColor: colors.border }]}>
+                      <LinearGradient colors={accentGradient} style={styles.headerAvatar}>
                         <Text style={styles.avatarText}>{activeChat.sender[0]}</Text>
                       </LinearGradient>
                       <View>
-                        <Text style={styles.headerName}>{activeChat.sender}</Text>
-                        <Text style={styles.headerState}>Active now</Text>
+                        <Text style={[styles.headerName, { color: colors.text }]}>{activeChat.sender}</Text>
+                        <Text style={[styles.headerState, { color: colors.success }]}>Active now</Text>
                       </View>
                     </View>
 
-                    <ScrollView style={styles.messageRegion} contentContainerStyle={styles.messageContent}>
-                      <View style={styles.incomingBubble}>
-                        <Text style={styles.incomingText}>{activeChat.text}</Text>
-                        <Text style={styles.incomingTime}>{activeChat.timestamp}</Text>
+                    <ScrollView style={[styles.messageRegion, { backgroundColor: colors.bg }]} contentContainerStyle={styles.messageContent}>
+                      <View style={[styles.incomingBubble, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+                        <Text style={[styles.incomingText, { color: colors.text }]}>{activeChat.text}</Text>
+                        <Text style={[styles.incomingTime, { color: colors.textTertiary }]}>{activeChat.timestamp}</Text>
                       </View>
                     </ScrollView>
 
-                    <View style={styles.inputRow}>
+                    <View style={[styles.inputRow, { borderColor: colors.border }]}>
                       <TextInput
                         value={messageText}
                         onChangeText={setMessageText}
                         placeholder="Type a message..."
-                        placeholderTextColor={colors.gray400}
-                        style={styles.messageInput}
+                        placeholderTextColor={colors.textTertiary}
+                        style={[styles.messageInput, { backgroundColor: colors.bgSubtle, color: colors.text, borderColor: colors.border }]}
                       />
-                      <LinearGradient colors={[colors.purple500, colors.pink500]} style={styles.sendButton}>
-                        <Ionicons name="send" size={17} color={colors.white} />
-                      </LinearGradient>
+                      <View style={styles.sendButtonWrap}>
+                        <LinearGradient colors={accentGradient} style={[styles.sendButton, shadows.glow]}>
+                          <Ionicons name="send" size={16} color={colors.textInverse} />
+                        </LinearGradient>
+                      </View>
                     </View>
                   </>
                 ) : (
                   <View style={styles.emptyCenter}>
-                    <Text style={styles.emptyCenterText}>Select a chat to start messaging</Text>
+                    <View style={[styles.emptyIconWrap, { backgroundColor: colors.bgSubtle }]}>
+                      <Ionicons name="chatbubble-outline" size={32} color={colors.textTertiary} />
+                    </View>
+                    <Text style={[styles.emptyCenterText, { color: colors.textTertiary }]}>Select a chat to start messaging</Text>
                   </View>
                 )}
               </View>
@@ -111,118 +117,45 @@ export function ChatScreen() {
           </View>
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   background: { flex: 1 },
   safe: { flex: 1 },
-  page: { flex: 1, paddingHorizontal: 20, paddingTop: 14, paddingBottom: 96 },
-  title: { fontSize: 38, lineHeight: 42, fontWeight: "800", color: colors.gray900, marginBottom: 2 },
-  subtitle: { fontSize: 16, color: colors.gray500, marginBottom: 10 },
-  shell: {
-    flex: 1,
-    backgroundColor: colors.white,
-    borderRadius: radius.xl,
-    padding: 12,
-  },
-  searchWrap: {
-    backgroundColor: colors.gray100,
-    borderRadius: radius.pill,
-    height: 42,
-    paddingHorizontal: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-  },
-  searchInput: { flex: 1, color: colors.gray900, fontSize: 14 },
-  chatShell: { flex: 1, marginTop: 12, borderRadius: radius.lg, overflow: "hidden", borderWidth: 1, borderColor: colors.gray200 },
-  chatListCol: {
-    maxHeight: 270,
-    borderBottomWidth: 1,
-    borderColor: colors.gray200,
-  },
-  chatItem: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    gap: 10,
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: colors.gray100,
-  },
-  chatItemActive: { backgroundColor: "#FAF5FF" },
-  avatarBubble: {
-    width: 44,
-    height: 44,
-    borderRadius: radius.pill,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  avatarText: { color: colors.white, fontSize: 16, fontWeight: "800" },
+  page: { flex: 1, paddingHorizontal: spacing.xl, paddingTop: spacing.lg, paddingBottom: 96 },
+  title: { ...typography.displayLarge, marginBottom: spacing.xxs },
+  subtitle: { ...typography.body, marginBottom: spacing.lg },
+  shell: { flex: 1, borderRadius: radius.xl, padding: spacing.md, borderWidth: 1 },
+  searchWrap: { borderRadius: radius.pill, height: 42, paddingHorizontal: spacing.lg, flexDirection: "row", alignItems: "center", gap: spacing.sm, borderWidth: 1 },
+  searchInput: { flex: 1, ...typography.bodySmall },
+  chatShell: { flex: 1, marginTop: spacing.md, borderRadius: radius.lg, overflow: "hidden", borderWidth: 1 },
+  chatListCol: { maxHeight: 270, borderBottomWidth: 1 },
+  chatItem: { flexDirection: "row", alignItems: "flex-start", gap: spacing.md, padding: spacing.md, borderBottomWidth: 1 },
+  avatarBubble: { width: 44, height: 44, borderRadius: radius.pill, alignItems: "center", justifyContent: "center" },
+  avatarText: { color: "#FFFFFF", ...typography.subheading },
   chatMeta: { flex: 1 },
   chatMetaTop: { flexDirection: "row", justifyContent: "space-between", marginBottom: 3 },
-  chatSender: { color: colors.gray900, fontWeight: "700", fontSize: 15 },
-  chatTime: { color: colors.gray400, fontSize: 12 },
-  chatPreview: { color: colors.gray500, fontSize: 13 },
-  unreadDot: {
-    width: 8,
-    height: 8,
-    borderRadius: radius.pill,
-    backgroundColor: colors.purple500,
-    marginTop: 6,
-  },
+  chatSender: { ...typography.bodySmall, fontWeight: "700" },
+  chatTime: { ...typography.caption },
+  chatPreview: { ...typography.bodySmall },
+  unreadDot: { width: 8, height: 8, borderRadius: radius.pill, marginTop: spacing.sm },
   chatWindowCol: { flex: 1 },
-  chatHeader: {
-    borderBottomWidth: 1,
-    borderBottomColor: colors.gray200,
-    padding: 12,
-    flexDirection: "row",
-    gap: 10,
-    alignItems: "center",
-  },
-  headerAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: radius.pill,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  headerName: { color: colors.gray900, fontSize: 15, fontWeight: "700" },
-  headerState: { color: colors.green500, fontSize: 12, marginTop: 2 },
-  messageRegion: { flex: 1, backgroundColor: colors.gray50 },
-  messageContent: { padding: 14 },
-  incomingBubble: {
-    maxWidth: "88%",
-    backgroundColor: colors.white,
-    borderRadius: 14,
-    borderTopLeftRadius: 0,
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-  },
-  incomingText: { color: colors.gray900, fontSize: 14, lineHeight: 20 },
-  incomingTime: { color: colors.gray400, marginTop: 4, fontSize: 11 },
-  inputRow: {
-    borderTopWidth: 1,
-    borderColor: colors.gray200,
-    flexDirection: "row",
-    padding: 10,
-    gap: 8,
-  },
-  messageInput: {
-    flex: 1,
-    backgroundColor: colors.gray100,
-    borderRadius: radius.pill,
-    paddingHorizontal: 14,
-    color: colors.gray900,
-  },
-  sendButton: {
-    width: 44,
-    height: 44,
-    borderRadius: radius.pill,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  emptyCenter: { flex: 1, alignItems: "center", justifyContent: "center" },
-  emptyCenterText: { color: colors.gray400, fontSize: 15 },
+  chatHeader: { borderBottomWidth: 1, padding: spacing.md, flexDirection: "row", gap: spacing.md, alignItems: "center" },
+  headerAvatar: { width: 40, height: 40, borderRadius: radius.pill, alignItems: "center", justifyContent: "center" },
+  headerName: { ...typography.bodySmall, fontWeight: "700" },
+  headerState: { ...typography.caption, marginTop: 2 },
+  messageRegion: { flex: 1 },
+  messageContent: { padding: spacing.lg },
+  incomingBubble: { maxWidth: "88%", borderRadius: radius.md, borderTopLeftRadius: 0, paddingHorizontal: spacing.md, paddingVertical: spacing.md, borderWidth: 1 },
+  incomingText: { ...typography.bodySmall },
+  incomingTime: { ...typography.caption, marginTop: spacing.xs },
+  inputRow: { borderTopWidth: 1, flexDirection: "row", padding: spacing.sm, gap: spacing.sm },
+  messageInput: { flex: 1, borderRadius: radius.pill, paddingHorizontal: spacing.lg, ...typography.bodySmall, borderWidth: 1 },
+  sendButtonWrap: { borderRadius: radius.pill, overflow: "hidden" },
+  sendButton: { width: 44, height: 44, borderRadius: radius.pill, alignItems: "center", justifyContent: "center" },
+  emptyCenter: { flex: 1, alignItems: "center", justifyContent: "center", gap: spacing.md },
+  emptyIconWrap: { width: 64, height: 64, borderRadius: radius.pill, justifyContent: "center", alignItems: "center" },
+  emptyCenterText: { ...typography.body },
 });

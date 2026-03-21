@@ -4,6 +4,7 @@ import { ChatScreen } from "../screens/ChatScreen";
 import { DiscoverScreen } from "../screens/DiscoverScreen";
 import { MatchesScreen } from "../screens/MatchesScreen";
 import { ProfileScreen } from "../screens/ProfileScreen";
+import { useTheme } from "../hooks/useTheme";
 
 export type RootTabParamList = {
   Discover: undefined;
@@ -15,13 +16,15 @@ export type RootTabParamList = {
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
 export function AppNavigator() {
+  const { colors } = useTheme();
+
   return (
     <Tab.Navigator
       initialRouteName="Discover"
       tabBar={(props) => <BottomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
-        sceneStyle: { backgroundColor: "#ffffff" },
+        sceneStyle: { backgroundColor: colors.bg },
       }}
     >
       <Tab.Screen name="Discover" component={DiscoverScreen} />

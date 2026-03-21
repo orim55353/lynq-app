@@ -2,157 +2,107 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { colors, radius } from "../constants/theme";
+import { radius, shadows, spacing, typography } from "../constants/theme";
+import { accentGradient } from "../constants/gradients";
 import { useSavedJobs } from "../context/SavedJobsContext";
 import { useJobs } from "../hooks/useJobs";
+import { useTheme } from "../hooks/useTheme";
 
 export function SavedScreen() {
   const { jobs } = useJobs();
+  const { colors } = useTheme();
   const { savedIds, loaded, removeSaved } = useSavedJobs();
   const savedJobs = jobs.filter((job) => savedIds.includes(job.id));
 
   return (
-    <LinearGradient colors={["#FAF5FF", "#FDF2F8"]} style={styles.background}>
+    <View style={[styles.background, { backgroundColor: colors.bg }]}>
       <SafeAreaView style={styles.safe} edges={["top"]}>
         <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-          <Text style={styles.title}>Saved Jobs</Text>
-          <Text style={styles.subtitle}>
+          <Text style={[styles.title, { color: colors.text }]}>Saved Jobs</Text>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
             {loaded ? `${savedJobs.length} job${savedJobs.length === 1 ? "" : "s"} saved for later` : "Loading..."}
           </Text>
 
           {!loaded || savedJobs.length === 0 ? (
-            <View style={styles.emptyCard}>
-              <Ionicons name="bookmark-outline" size={56} color={colors.gray400} />
-              <Text style={styles.emptyTitle}>No saved jobs yet</Text>
-              <Text style={styles.emptyText}>Start swiping to save jobs you're interested in!</Text>
+            <View style={[styles.emptyCard, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
+              <View style={[styles.emptyIconWrap, { backgroundColor: colors.bgSubtle }]}>
+                <Ionicons name="bookmark-outline" size={40} color={colors.textTertiary} />
+              </View>
+              <Text style={[styles.emptyTitle, { color: colors.text }]}>No saved jobs yet</Text>
+              <Text style={[styles.emptyText, { color: colors.textSecondary }]}>Start swiping to save jobs you're interested in!</Text>
             </View>
           ) : (
             savedJobs.map((job) => (
-              <View key={job.id} style={styles.card}>
+              <View key={job.id} style={[styles.card, shadows.soft, { backgroundColor: colors.bgCard, borderColor: colors.border }]}>
                 <LinearGradient colors={job.gradient} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={styles.cardTop} />
                 <View style={styles.cardBody}>
                   <View style={styles.rowStart}>
-                    <View style={styles.logoWrap}>
+                    <View style={[styles.logoWrap, { backgroundColor: colors.bgSubtle }]}>
                       <Image source={{ uri: job.logoImage }} style={styles.logo} resizeMode="contain" />
                     </View>
                     <View style={styles.flexOne}>
-                      <Text style={styles.jobTitle}>{job.title}</Text>
-                      <Text style={styles.company}>{job.company}</Text>
+                      <Text style={[styles.jobTitle, { color: colors.text }]}>{job.title}</Text>
+                      <Text style={[styles.company, { color: colors.textSecondary }]}>{job.company}</Text>
                     </View>
-                    <Pressable onPress={() => removeSaved(job.id)} style={styles.deleteWrap}>
-                      <Ionicons name="trash-outline" size={18} color={colors.red500} />
+                    <Pressable onPress={() => removeSaved(job.id)} style={[styles.deleteWrap, { backgroundColor: colors.dangerSoft }]}>
+                      <Ionicons name="trash-outline" size={16} color={colors.danger} />
                     </Pressable>
                   </View>
 
-                  <Text style={styles.description}>{job.description}</Text>
+                  <Text style={[styles.description, { color: colors.textSecondary }]} numberOfLines={2}>{job.description}</Text>
 
                   <View style={styles.pillsRow}>
-                    <View style={[styles.pill, styles.pillPurple]}>
-                      <Ionicons name="location-outline" size={14} color="#7E22CE" />
-                      <Text style={[styles.pillText, { color: "#7E22CE" }]}>{job.location}</Text>
+                    <View style={[styles.pill, { backgroundColor: colors.bgSubtle, borderColor: colors.border }]}>
+                      <Text style={[styles.pillText, { color: colors.textSecondary }]}>{job.location}</Text>
                     </View>
-                    <View style={[styles.pill, styles.pillBlue]}>
-                      <Text style={[styles.pillText, { color: "#1D4ED8" }]}>{job.type}</Text>
+                    <View style={[styles.pill, { backgroundColor: colors.bgSubtle, borderColor: colors.border }]}>
+                      <Text style={[styles.pillText, { color: colors.textSecondary }]}>{job.type}</Text>
                     </View>
-                    <View style={[styles.pill, styles.pillGreen]}>
-                      <Ionicons name="cash-outline" size={14} color="#15803D" />
-                      <Text style={[styles.pillText, { color: "#15803D" }]}>{job.salary}</Text>
+                    <View style={[styles.pill, { backgroundColor: colors.bgSubtle, borderColor: colors.border }]}>
+                      <Text style={[styles.pillText, { color: colors.textSecondary }]}>{job.salary}</Text>
                     </View>
                   </View>
 
-                  <LinearGradient
-                    colors={[colors.purple500, colors.pink500]}
-                    start={{ x: 0, y: 0.5 }}
-                    end={{ x: 1, y: 0.5 }}
-                    style={styles.primaryButton}
-                  >
-                    <Text style={styles.primaryButtonText}>Apply Now</Text>
-                  </LinearGradient>
+                  <View style={styles.primaryButton}>
+                    <LinearGradient colors={accentGradient} start={{ x: 0, y: 0.5 }} end={{ x: 1, y: 0.5 }} style={styles.primaryButtonGradient}>
+                      <Text style={[styles.primaryButtonText, { color: colors.textInverse }]}>Apply Now</Text>
+                    </LinearGradient>
+                  </View>
                 </View>
               </View>
             ))
           )}
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   background: { flex: 1 },
   safe: { flex: 1 },
-  content: {
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    gap: 14,
-    paddingBottom: 130,
-  },
-  title: {
-    fontSize: 38,
-    lineHeight: 42,
-    fontWeight: "800",
-    color: colors.gray900,
-    marginBottom: 2,
-  },
-  subtitle: {
-    fontSize: 16,
-    color: colors.gray500,
-    marginBottom: 8,
-  },
-  emptyCard: {
-    backgroundColor: colors.white,
-    borderRadius: radius.xl,
-    paddingVertical: 42,
-    paddingHorizontal: 24,
-    alignItems: "center",
-    gap: 10,
-  },
-  emptyTitle: { fontSize: 26, color: colors.gray900, fontWeight: "800" },
-  emptyText: { fontSize: 15, color: colors.gray500, textAlign: "center" },
-  card: {
-    backgroundColor: colors.white,
-    borderRadius: radius.xl,
-    overflow: "hidden",
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 6,
-  },
-  cardTop: { height: 6 },
-  cardBody: { padding: 18 },
-  rowStart: { flexDirection: "row", alignItems: "flex-start", gap: 12, marginBottom: 10 },
-  logoWrap: {
-    width: 56,
-    height: 56,
-    borderRadius: 12,
-    backgroundColor: colors.gray100,
-    padding: 8,
-  },
+  content: { paddingHorizontal: spacing.xl, paddingVertical: spacing.lg, gap: spacing.lg, paddingBottom: 130 },
+  title: { ...typography.displayLarge, marginBottom: spacing.xxs },
+  subtitle: { ...typography.body, marginBottom: spacing.sm },
+  emptyCard: { borderRadius: radius.xl, paddingVertical: spacing.huge, paddingHorizontal: spacing.xxl, alignItems: "center", gap: spacing.md, borderWidth: 1 },
+  emptyIconWrap: { width: 72, height: 72, borderRadius: radius.pill, justifyContent: "center", alignItems: "center", marginBottom: spacing.sm },
+  emptyTitle: { ...typography.heading },
+  emptyText: { ...typography.body, textAlign: "center" },
+  card: { borderRadius: radius.xl, overflow: "hidden", borderWidth: 1 },
+  cardTop: { height: 4 },
+  cardBody: { padding: spacing.lg },
+  rowStart: { flexDirection: "row", alignItems: "flex-start", gap: spacing.md, marginBottom: spacing.md },
+  logoWrap: { width: 52, height: 52, borderRadius: radius.md, padding: spacing.sm },
   logo: { width: "100%", height: "100%" },
   flexOne: { flex: 1 },
-  jobTitle: { fontSize: 22, fontWeight: "800", color: colors.gray900, marginBottom: 2 },
-  company: { fontSize: 14, color: colors.gray500, fontWeight: "600" },
-  deleteWrap: { padding: 10, borderRadius: radius.pill, backgroundColor: "#FEF2F2" },
-  description: { fontSize: 14, color: colors.gray700, lineHeight: 20, marginBottom: 10 },
-  pillsRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginBottom: 12 },
-  pill: {
-    flexDirection: "row",
-    gap: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: radius.pill,
-    alignItems: "center",
-  },
-  pillPurple: { backgroundColor: "#F3E8FF" },
-  pillBlue: { backgroundColor: "#DBEAFE" },
-  pillGreen: { backgroundColor: "#DCFCE7" },
-  pillText: { fontSize: 12, fontWeight: "600" },
-  primaryButton: {
-    height: 48,
-    borderRadius: radius.pill,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  primaryButtonText: { color: colors.white, fontSize: 16, fontWeight: "800" },
+  jobTitle: { ...typography.heading, marginBottom: spacing.xxs },
+  company: { ...typography.bodySmall, fontWeight: "600" },
+  deleteWrap: { padding: spacing.sm, borderRadius: radius.pill },
+  description: { ...typography.bodySmall, marginBottom: spacing.md },
+  pillsRow: { flexDirection: "row", flexWrap: "wrap", gap: spacing.sm, marginBottom: spacing.lg },
+  pill: { flexDirection: "row", gap: 4, paddingHorizontal: spacing.md, paddingVertical: spacing.sm, borderRadius: radius.pill, alignItems: "center", borderWidth: 1 },
+  pillText: { ...typography.label },
+  primaryButton: { borderRadius: radius.pill, overflow: "hidden" },
+  primaryButtonGradient: { height: 48, borderRadius: radius.pill, justifyContent: "center", alignItems: "center" },
+  primaryButtonText: { ...typography.button },
 });

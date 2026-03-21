@@ -5,7 +5,11 @@ export interface Job {
   location: string;
   salary: string;
   type: string;
+  tagline: string;
   description: string;
+  responsibilities?: string[];
+  requirements?: string[];
+  companyAbout?: string;
   benefits: string[];
   logoImage: string;
   bgImage: string;

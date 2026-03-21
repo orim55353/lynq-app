@@ -11,8 +11,25 @@ export const jobs: Job[] = [
     location: "Las Vegas, NV",
     salary: "$28 - $35/hour",
     type: "Full-time",
+    tagline: "Lead the floor. Own the energy. Run the show.",
     description:
       "Lead and supervise gaming operations on the casino floor. Ensure exceptional guest experiences while maintaining strict gaming regulations and security standards.",
+    responsibilities: [
+      "Supervise table games and slot operations during assigned shift",
+      "Monitor and enforce gaming regulations and company policies",
+      "Resolve guest complaints and ensure VIP satisfaction",
+      "Train and mentor new floor staff",
+      "Coordinate with security and surveillance teams",
+    ],
+    requirements: [
+      "3+ years casino floor experience",
+      "Nevada Gaming Control Board license",
+      "Strong leadership and communication skills",
+      "Ability to work nights, weekends, and holidays",
+      "Fluent in English; Spanish a plus",
+    ],
+    companyAbout:
+      "Caesars Entertainment is the world's most diversified casino-entertainment provider. With 50+ resorts across the US, we're committed to building a world-class team that delivers extraordinary experiences.",
     benefits: ["Health insurance", "401k matching", "Employee gaming privileges", "Hotel discounts"],
     logoImage: caesarsLogo,
     bgImage:
@@ -30,8 +47,24 @@ export const jobs: Job[] = [
     location: "Atlantic City, NJ",
     salary: "$24 - $30/hour",
     type: "Full-time",
+    tagline: "Be the first face guests remember.",
     description:
       "Oversee front desk operations and lead a team providing world-class hospitality. Handle VIP guest relations and ensure seamless check-in experiences.",
+    responsibilities: [
+      "Manage daily front desk operations and staff scheduling",
+      "Handle VIP arrivals and special accommodation requests",
+      "Resolve escalated guest issues with professionalism",
+      "Oversee room inventory and rate management",
+      "Train staff on hospitality standards and systems",
+    ],
+    requirements: [
+      "5+ years in hotel front office management",
+      "Experience with Opera PMS or similar systems",
+      "Exceptional interpersonal and problem-solving skills",
+      "Bachelor's degree in Hospitality Management preferred",
+    ],
+    companyAbout:
+      "Caesars Entertainment is the world's most diversified casino-entertainment provider. With 50+ resorts across the US, we're committed to building a world-class team that delivers extraordinary experiences.",
     benefits: ["Health & dental insurance", "Paid vacation", "Free meals", "Career advancement"],
     logoImage: caesarsLogo,
     bgImage:
@@ -49,8 +82,24 @@ export const jobs: Job[] = [
     location: "Las Vegas, NV",
     salary: "$15 - $20/hour + tips",
     type: "Full-time",
+    tagline: "Serve unforgettable moments, not just meals.",
     description:
       "Provide exceptional service in our award-winning restaurants. Demonstrate extensive menu and wine knowledge while delivering personalized service.",
+    responsibilities: [
+      "Deliver fine dining service in a high-volume restaurant",
+      "Present menu options and make pairing recommendations",
+      "Maintain detailed knowledge of wine list and specials",
+      "Ensure table settings meet luxury standards",
+      "Collaborate with kitchen team on timing and presentation",
+    ],
+    requirements: [
+      "2+ years fine dining experience",
+      "Wine knowledge (WSET or Court of Master Sommeliers a plus)",
+      "Professional appearance and demeanor",
+      "Ability to lift 30+ lbs and stand for extended periods",
+    ],
+    companyAbout:
+      "Caesars Entertainment is the world's most diversified casino-entertainment provider. With 50+ resorts across the US, we're committed to building a world-class team that delivers extraordinary experiences.",
     benefits: ["Flexible schedules", "Employee meals", "Health coverage", "Tip pooling"],
     logoImage: caesarsLogo,
     bgImage:
@@ -68,8 +117,25 @@ export const jobs: Job[] = [
     location: "New Orleans, LA",
     salary: "$22 - $28/hour",
     type: "Full-time",
+    tagline: "Protect the experience. Keep the peace.",
     description:
       "Maintain a safe and secure environment for guests and staff. Monitor surveillance systems and respond to incidents professionally.",
+    responsibilities: [
+      "Patrol assigned areas and monitor surveillance feeds",
+      "Respond to security incidents and medical emergencies",
+      "Enforce property rules and gaming regulations",
+      "Write detailed incident reports",
+      "Coordinate with local law enforcement when needed",
+    ],
+    requirements: [
+      "High school diploma or equivalent",
+      "Security guard license for Louisiana",
+      "First Aid/CPR certification preferred",
+      "Clean background check required",
+      "Ability to work rotating shifts",
+    ],
+    companyAbout:
+      "Caesars Entertainment is the world's most diversified casino-entertainment provider. With 50+ resorts across the US, we're committed to building a world-class team that delivers extraordinary experiences.",
     benefits: ["Comprehensive insurance", "Retirement plan", "Shift differentials", "Tuition reimbursement"],
     logoImage: caesarsLogo,
     bgImage:
@@ -87,8 +153,25 @@ export const jobs: Job[] = [
     location: "Las Vegas, NV",
     salary: "$35 - $45/hour",
     type: "Full-time",
+    tagline: "Roll out the red carpet. Every. Single. Time.",
     description:
       "Build relationships with high-value guests as their personal concierge. Arrange luxury accommodations, show tickets, and exclusive experiences.",
+    responsibilities: [
+      "Develop and maintain relationships with VIP guests",
+      "Arrange luxury accommodations, dining, and entertainment",
+      "Track guest preferences and anticipate needs",
+      "Meet monthly revenue and retention targets",
+      "Host exclusive events and tournaments",
+    ],
+    requirements: [
+      "5+ years in casino hosting or luxury hospitality",
+      "Proven book of business preferred",
+      "Exceptional networking and relationship skills",
+      "Flexible schedule including evenings and weekends",
+      "Bachelor's degree preferred",
+    ],
+    companyAbout:
+      "Caesars Entertainment is the world's most diversified casino-entertainment provider. With 50+ resorts across the US, we're committed to building a world-class team that delivers extraordinary experiences.",
     benefits: ["Commission opportunities", "Premium benefits", "Travel perks", "Networking events"],
     logoImage: caesarsLogo,
     bgImage:

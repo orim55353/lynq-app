@@ -1,8 +1,8 @@
-import { memo, useCallback, useMemo } from "react";
+import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import {
-  Alert,
+  Animated,
   Image,
   ImageBackground,
   Pressable,
@@ -13,10 +13,11 @@ import {
 } from "react-native";
 import {
   colors,
+  cardColors,
+  type CardColorScheme,
   getFontScale,
   radius,
   spacing,
-  horizontalPaddingBounds,
 } from "../constants/theme";
 import { Job } from "../types/models";
 import { clamp } from "../utils/math";
@@ -28,6 +29,14 @@ interface JobCardProps {
   bottomOffset: number;
   isSaved: boolean;
   onToggleSaved: (jobId: string) => void;
+  onExpand?: (job: Job) => void;
+  mode?: "light" | "dark";
+}
+
+function matchColor(score: number): string {
+  if (score >= 80) return "#22C55E";
+  if (score >= 60) return "#F59E0B";
+  return "#94A3B8";
 }
 
 export const JobCard = memo(function JobCard({
@@ -37,177 +46,208 @@ export const JobCard = memo(function JobCard({
   bottomOffset,
   isSaved,
   onToggleSaved,
+  onExpand,
+  mode = "light",
 }: JobCardProps) {
   const { width } = useWindowDimensions();
-  const layout = useMemo(
-    () => ({
-      horizontalPadding: clamp(
-        width * 0.06,
-        horizontalPaddingBounds.min,
-        horizontalPaddingBounds.max,
-      ),
-      descriptionLines: clamp(Math.floor(cardHeight / 180), 3, 6),
-    }),
-    [cardHeight, width],
-  );
+  const [applied, setApplied] = useState(false);
+  const applyScale = useRef(new Animated.Value(1)).current;
+  const saveScale = useRef(new Animated.Value(1)).current;
+
+  const c: CardColorScheme = cardColors[mode];
 
   const fontScale = useMemo(() => getFontScale(width), [width]);
-  const fontSizes = useMemo(
+  const fs = useMemo(
     () => ({
-      company: Math.round(18 * fontScale),
-      matchText: Math.round(12 * fontScale),
-      title: Math.round(36 * fontScale),
-      titleLineHeight: Math.round(36 * fontScale),
-      salary: Math.round(26 * fontScale),
-      salaryLineHeight: Math.round(30 * fontScale),
-      badgeText: Math.round(14 * fontScale),
+      company: Math.round(15 * fontScale),
+      title: Math.round(28 * fontScale),
+      titleLineHeight: Math.round(32 * fontScale),
+      salary: Math.round(20 * fontScale),
+      locationText: Math.round(14 * fontScale),
       description: Math.round(14 * fontScale),
       descriptionLineHeight: Math.round(21 * fontScale),
-      infoLabel: Math.round(11 * fontScale),
-      infoValue: Math.round(11 * fontScale),
-      benefitPill: Math.round(13 * fontScale),
-      applyText: Math.round(20 * fontScale),
+      matchScore: Math.round(16 * fontScale),
+      matchLabel: Math.round(10 * fontScale),
+      infoLabel: Math.round(10 * fontScale),
+      infoValue: Math.round(12 * fontScale),
+      benefitText: Math.round(11 * fontScale),
+      applyText: Math.round(17 * fontScale),
+      hintText: Math.round(10 * fontScale),
     }),
     [fontScale],
   );
 
-  const contentStyle = useMemo(
-    () => [
-      styles.content,
-      {
-        paddingTop: topOffset,
-        paddingBottom: bottomOffset,
-        paddingHorizontal: layout.horizontalPadding,
-      },
-    ],
-    [layout.horizontalPadding, topOffset, bottomOffset],
-  );
+  const onCardPress = useCallback(() => {
+    onExpand?.(job);
+  }, [job, onExpand]);
 
   const onToggleSavePress = useCallback(() => {
+    Animated.sequence([
+      Animated.spring(saveScale, { toValue: 0.8, useNativeDriver: true, speed: 50, bounciness: 4 }),
+      Animated.spring(saveScale, { toValue: 1, useNativeDriver: true, speed: 20, bounciness: 12 }),
+    ]).start();
     onToggleSaved(job.id);
-  }, [job.id, onToggleSaved]);
+  }, [job.id, onToggleSaved, saveScale]);
 
   const onApplyPress = useCallback(() => {
-    Alert.alert("Apply", `Applying to ${job.title} at ${job.company}`);
-  }, [job.company, job.title]);
+    if (applied) return;
+    Animated.sequence([
+      Animated.spring(applyScale, { toValue: 0.95, useNativeDriver: true, speed: 50, bounciness: 4 }),
+      Animated.spring(applyScale, { toValue: 1, useNativeDriver: true, speed: 20, bounciness: 10 }),
+    ]).start();
+    setApplied(true);
+  }, [applied, applyScale]);
+
+  const mColor = matchColor(job.compatibilityScore);
 
   return (
     <View style={[styles.page, { height: cardHeight }]}>
+      {/* Full-bleed background */}
       <ImageBackground
         source={{ uri: job.bgImage }}
         style={StyleSheet.absoluteFill}
         resizeMode="cover"
       />
-
       <LinearGradient
         colors={[job.gradient[0], job.gradient[1]]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
-        style={[StyleSheet.absoluteFill, { opacity: 0.85 }]}
+        style={[StyleSheet.absoluteFill, { opacity: 0.55 }]}
       />
-
       <LinearGradient
-        colors={["rgba(255,255,255,0.45)", "rgba(255,255,255,0.25)", "transparent"]}
-        locations={[0, 0.35, 0.8]}
-        start={{ x: 0.5, y: 0 }}
-        end={{ x: 0.5, y: 1 }}
-        style={styles.spotlight}
-      />
-
-      <LinearGradient
-        colors={["rgba(0,0,0,0.3)", "rgba(0,0,0,0.5)", "rgba(0,0,0,0.72)"]}
+        colors={["rgba(0,0,0,0.3)", "rgba(0,0,0,0.1)", "rgba(0,0,0,0.4)"]}
+        locations={[0, 0.4, 1]}
         style={StyleSheet.absoluteFill}
       />
 
-      <View style={contentStyle}>
-        <View style={styles.topSection}>
-          <View style={styles.companyRow}>
-            <View style={styles.logoWrap}>
-              <Image source={{ uri: job.logoImage }} style={styles.logo} resizeMode="contain" />
-            </View>
-            <View style={styles.companyTextWrap}>
-              <Text style={[styles.company, { fontSize: fontSizes.company }]}>{job.company}</Text>
-            </View>
-            <View style={styles.matchWrap}>
-              <View style={styles.matchDot} />
-              <Text style={[styles.matchText, { fontSize: fontSizes.matchText }]}>{job.compatibilityScore}% Match</Text>
-            </View>
-          </View>
+      {/* ─── Glass card ─── */}
+      <View style={[styles.cardOuter, { paddingTop: topOffset + spacing.sm }]}>
+        <Pressable style={[styles.card, { backgroundColor: c.bg }]} onPress={onCardPress}>
+          <View style={[styles.cardContent, { paddingBottom: bottomOffset + spacing.sm }]}>
 
-          <Text style={[styles.title, { fontSize: fontSizes.title, lineHeight: fontSizes.titleLineHeight }]}>
-            {job.title}
-          </Text>
-          <Text style={[styles.salary, { fontSize: fontSizes.salary, lineHeight: fontSizes.salaryLineHeight }]}>
-            {job.salary}
-          </Text>
-
-          <View style={styles.badgeRow}>
-            <View style={styles.badge}>
-              <Ionicons name="location-outline" size={15} color={colors.white} />
-              <Text style={[styles.badgeText, { fontSize: fontSizes.badgeText }]}>{job.location}</Text>
+            {/* Company + Match */}
+            <View style={styles.headerRow}>
+              <View style={[styles.logoWrap, { backgroundColor: c.logoBg }]}>
+                <Image source={{ uri: job.logoImage }} style={styles.logo} resizeMode="contain" />
+              </View>
+              <View style={styles.companyWrap}>
+                <Text style={[styles.company, { fontSize: fs.company, color: c.text }]}>{job.company}</Text>
+              </View>
+              <View style={[styles.matchPill, { borderColor: mColor, backgroundColor: c.matchBg }]}>
+                <View style={[styles.matchDot, { backgroundColor: mColor }]} />
+                <Text style={[styles.matchText, { fontSize: fs.matchScore, color: c.text }]}>
+                  {job.compatibilityScore}%
+                </Text>
+              </View>
             </View>
-            <View style={styles.badge}>
-              <Text style={[styles.badgeText, { fontSize: fontSizes.badgeText }]}>{job.type}</Text>
-            </View>
-          </View>
-        </View>
 
-        <View style={styles.spacer} />
+            {/* Title */}
+            <Text style={[styles.title, { fontSize: fs.title, lineHeight: fs.titleLineHeight, color: c.text }]}>
+              {job.title}
+            </Text>
 
-        <View style={styles.bottomSection}>
-          <Text
-            style={[
-              styles.description,
-              { fontSize: fontSizes.description, lineHeight: fontSizes.descriptionLineHeight },
-            ]}
-            numberOfLines={layout.descriptionLines}
-            ellipsizeMode="tail"
-          >
-            {job.description}
-          </Text>
+            {/* Salary */}
+            <Text style={[styles.salary, { fontSize: fs.salary, color: c.accentText }]}>
+              {job.salary}
+            </Text>
 
-          <View style={styles.infoPanel}>
-            <View style={styles.infoCell}>
-              <Ionicons name="briefcase-outline" size={18} color={colors.white} />
-              <Text style={[styles.infoLabel, { fontSize: fontSizes.infoLabel }]}>Experience</Text>
-              <Text style={[styles.infoValue, { fontSize: fontSizes.infoValue }]}>{job.experience}</Text>
-            </View>
-            <View style={[styles.infoCell, styles.infoBorder]}>
-              <Ionicons name="calendar-outline" size={18} color={colors.white} />
-              <Text style={[styles.infoLabel, { fontSize: fontSizes.infoLabel }]}>Schedule</Text>
-              <Text style={[styles.infoValue, { fontSize: fontSizes.infoValue }]}>{job.schedule}</Text>
-            </View>
-            <View style={styles.infoCell}>
-              <Ionicons name="map-outline" size={18} color={colors.white} />
-              <Text style={[styles.infoLabel, { fontSize: fontSizes.infoLabel }]}>Work Type</Text>
-              <Text style={[styles.infoValue, { fontSize: fontSizes.infoValue }]}>{job.workType}</Text>
-            </View>
-          </View>
+            {/* Location */}
+            <Text style={[styles.locationText, { fontSize: fs.locationText, color: c.textSecondary }]}>
+              {job.location} · {job.type}
+            </Text>
 
-          <View style={styles.benefitsRow}>
-            {job.benefits.slice(0, 4).map((benefit) => (
-              <Text key={benefit} style={[styles.benefitPill, { fontSize: fontSizes.benefitPill }]}>
-                {benefit}
-              </Text>
-            ))}
-          </View>
-
-          <View style={styles.actionRow}>
-            <Pressable
-              style={[styles.bookmarkButton, isSaved && styles.bookmarkButtonSaved]}
-              onPress={onToggleSavePress}
+            {/* Description */}
+            <Text
+              style={[styles.descriptionText, { fontSize: fs.description, lineHeight: fs.descriptionLineHeight, color: c.textMuted }]}
+              numberOfLines={3}
+              ellipsizeMode="tail"
             >
-              <Ionicons
-                name="bookmark"
-                size={24}
-                color={isSaved ? colors.black : colors.white}
-              />
-            </Pressable>
-            <Pressable style={styles.applyButton} onPress={onApplyPress}>
-              <Text style={[styles.applyText, { fontSize: fontSizes.applyText }]}>Apply Now</Text>
-            </Pressable>
+              {job.description}
+            </Text>
+
+            {/* Spacer */}
+            <View style={styles.spacer} />
+
+            {/* Info strip */}
+            <View style={[styles.infoRow, { backgroundColor: c.infoBg, borderColor: c.infoBorder }]}>
+              <View style={styles.infoCell}>
+                <Ionicons name="briefcase-outline" size={14} color={c.accent} />
+                <Text style={[styles.infoLabel, { fontSize: fs.infoLabel, color: c.textMuted }]}>Experience</Text>
+                <Text style={[styles.infoValue, { fontSize: fs.infoValue, color: c.text }]}>{job.experience}</Text>
+              </View>
+              <View style={[styles.infoDivider, { backgroundColor: c.infoDivider }]} />
+              <View style={styles.infoCell}>
+                <Ionicons name="calendar-outline" size={14} color={c.accent} />
+                <Text style={[styles.infoLabel, { fontSize: fs.infoLabel, color: c.textMuted }]}>Schedule</Text>
+                <Text style={[styles.infoValue, { fontSize: fs.infoValue, color: c.text }]}>{job.schedule}</Text>
+              </View>
+              <View style={[styles.infoDivider, { backgroundColor: c.infoDivider }]} />
+              <View style={styles.infoCell}>
+                <Ionicons name="map-outline" size={14} color={c.accent} />
+                <Text style={[styles.infoLabel, { fontSize: fs.infoLabel, color: c.textMuted }]}>Type</Text>
+                <Text style={[styles.infoValue, { fontSize: fs.infoValue, color: c.text }]}>{job.workType}</Text>
+              </View>
+            </View>
+
+            {/* Benefits */}
+            <View style={styles.benefitsRow}>
+              {job.benefits.slice(0, 4).map((benefit) => (
+                <View key={benefit} style={[styles.benefitPill, { backgroundColor: c.pillBg, borderColor: c.pillBorder }]}>
+                  <Ionicons name="checkmark-circle" size={12} color={c.accent} />
+                  <Text style={[styles.benefitText, { fontSize: fs.benefitText, color: c.pillText }]}>{benefit}</Text>
+                </View>
+              ))}
+            </View>
+
+            {/* Actions */}
+            <View style={styles.actionRow}>
+              <Animated.View style={{ transform: [{ scale: saveScale }] }}>
+                <Pressable
+                  style={[
+                    styles.bookmarkButton,
+                    { backgroundColor: c.bookmarkBg, borderColor: c.bookmarkBorder },
+                    isSaved && styles.bookmarkButtonSaved,
+                  ]}
+                  onPress={onToggleSavePress}
+                >
+                  <Ionicons
+                    name={isSaved ? "bookmark" : "bookmark-outline"}
+                    size={20}
+                    color={isSaved ? "#0B1220" : c.bookmarkIcon}
+                  />
+                </Pressable>
+              </Animated.View>
+
+              <Animated.View style={[styles.applyButtonWrap, { transform: [{ scale: applyScale }] }]}>
+                <Pressable
+                  style={applied ? styles.applyButtonApplied : styles.applyButton}
+                  onPress={onApplyPress}
+                >
+                  {applied ? (
+                    <View style={styles.appliedInner}>
+                      <Ionicons name="checkmark-circle" size={20} color="#22C55E" />
+                      <Text style={[styles.appliedText, { fontSize: fs.applyText }]}>Applied!</Text>
+                    </View>
+                  ) : (
+                    <LinearGradient
+                      colors={["#00E5FF", "#0891B2"]}
+                      start={{ x: 0, y: 0.5 }}
+                      end={{ x: 1, y: 0.5 }}
+                      style={styles.applyGradient}
+                    >
+                      <Ionicons name="flash" size={18} color={c.applyText} />
+                      <Text style={[styles.applyText, { fontSize: fs.applyText, color: c.applyText }]}>Apply Instantly</Text>
+                    </LinearGradient>
+                  )}
+                </Pressable>
+              </Animated.View>
+            </View>
+
+            <Text style={[styles.hintText, { fontSize: fs.hintText, color: c.hintText }]}>
+              No resume needed · 1-tap apply
+            </Text>
           </View>
-        </View>
+        </Pressable>
       </View>
     </View>
   );
@@ -216,184 +256,198 @@ export const JobCard = memo(function JobCard({
 const styles = StyleSheet.create({
   page: {
     width: "100%",
-    backgroundColor: colors.black,
+    backgroundColor: colors.bg,
   },
-  spotlight: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  content: {
+  cardOuter: {
     flex: 1,
-    flexDirection: "column",
   },
-  topSection: {},
+  card: {
+    flex: 1,
+    borderTopLeftRadius: radius.xxl,
+    borderTopRightRadius: radius.xxl,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    overflow: "hidden",
+  },
+  cardContent: {
+    flex: 1,
+    padding: spacing.xl,
+    gap: spacing.md,
+  },
   spacer: {
     flex: 1,
+    minHeight: spacing.sm,
   },
-  bottomSection: {
-    paddingTop: spacing.lg,
-    paddingBottom: spacing.sm,
-  },
-  companyRow: {
+
+  // ─── Header ───
+  headerRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: spacing.lg,
     gap: spacing.md,
   },
   logoWrap: {
-    width: 58,
-    height: 58,
-    backgroundColor: "rgba(255,255,255,0.94)",
-    borderRadius: 14,
-    padding: spacing.sm,
+    width: 44,
+    height: 44,
+    borderRadius: radius.sm,
+    padding: 6,
   },
   logo: {
     width: "100%",
     height: "100%",
   },
-  companyTextWrap: {
+  companyWrap: {
     flex: 1,
   },
   company: {
-    color: colors.white,
-    fontSize: 18,
     fontWeight: "700",
   },
-  matchWrap: {
+
+  // ─── Match pill ───
+  matchPill: {
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
     borderRadius: radius.pill,
-    backgroundColor: "rgba(255,255,255,0.2)",
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.3)",
+    borderWidth: 2,
   },
   matchDot: {
     width: 8,
     height: 8,
     borderRadius: radius.pill,
-    backgroundColor: "#4ADE80",
   },
   matchText: {
-    color: colors.white,
-    fontWeight: "700",
-    fontSize: 12,
+    fontWeight: "800",
+    letterSpacing: -0.3,
   },
+
+  // ─── Title + salary ───
   title: {
-    color: colors.white,
-    fontSize: 36,
-    lineHeight: 36,
     fontWeight: "900",
-    marginBottom: spacing.sm,
+    letterSpacing: -1,
   },
   salary: {
-    color: colors.white,
-    fontSize: 26,
-    lineHeight: 30,
-    fontWeight: "700",
-    marginBottom: spacing.sm,
+    fontWeight: "800",
+    letterSpacing: -0.3,
   },
-  badgeRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.sm,
+
+  // ─── Location ───
+  locationText: {
+    fontWeight: "500",
   },
-  badge: {
+
+  // ─── Description ───
+  descriptionText: {
+    fontWeight: "400",
+  },
+
+  // ─── Info strip ───
+  infoRow: {
     flexDirection: "row",
     alignItems: "center",
-    gap: 5,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: radius.pill,
-    backgroundColor: "rgba(255,255,255,0.24)",
-  },
-  badgeText: {
-    color: colors.white,
-    fontSize: 14,
-    fontWeight: "600",
-  },
-  description: {
-    color: colors.white,
-    fontSize: 14,
-    lineHeight: 21,
-    marginBottom: spacing.lg,
-  },
-  infoPanel: {
-    borderRadius: radius.xl,
-    borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
-    backgroundColor: "rgba(255,255,255,0.1)",
+    borderRadius: radius.md,
     paddingVertical: spacing.md,
-    flexDirection: "row",
-    marginBottom: spacing.lg,
+    paddingHorizontal: spacing.sm,
+    borderWidth: 1,
   },
   infoCell: {
     flex: 1,
     alignItems: "center",
-    gap: 3,
+    gap: 2,
   },
-  infoBorder: {
-    borderLeftWidth: 1,
-    borderRightWidth: 1,
-    borderColor: "rgba(255,255,255,0.2)",
+  infoDivider: {
+    width: 1,
+    height: 28,
   },
   infoLabel: {
-    color: "rgba(255,255,255,0.7)",
-    fontSize: 11,
     fontWeight: "500",
+    marginTop: 2,
   },
   infoValue: {
-    color: colors.white,
-    fontSize: 11,
     fontWeight: "700",
   },
+
+  // ─── Benefits ───
   benefitsRow: {
     flexDirection: "row",
     flexWrap: "wrap",
-    justifyContent: "center",
     gap: spacing.sm,
-    marginBottom: spacing.lg,
   },
   benefitPill: {
-    color: "rgba(255,255,255,0.9)",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.xs,
+    paddingVertical: spacing.sm,
     borderRadius: radius.pill,
-    backgroundColor: "rgba(255,255,255,0.15)",
-    fontSize: 13,
-    fontWeight: "500",
+    borderWidth: 1,
   },
+  benefitText: {
+    fontWeight: "600",
+  },
+
+  // ─── Actions ───
   actionRow: {
     flexDirection: "row",
     alignItems: "center",
     gap: spacing.md,
   },
   bookmarkButton: {
-    width: 56,
-    height: 56,
+    width: 48,
+    height: 48,
     borderRadius: radius.pill,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 2,
-    borderColor: "rgba(255,255,255,0.3)",
-    backgroundColor: "rgba(255,255,255,0.2)",
+    borderWidth: 1.5,
   },
   bookmarkButtonSaved: {
-    backgroundColor: colors.white,
-    borderColor: colors.white,
+    backgroundColor: colors.accent,
+    borderColor: colors.accent,
+  },
+  applyButtonWrap: {
+    flex: 1,
   },
   applyButton: {
-    flex: 1,
-    height: 56,
+    height: 48,
     borderRadius: radius.pill,
-    backgroundColor: colors.white,
+    overflow: "hidden",
+  },
+  applyButtonApplied: {
+    height: 48,
+    borderRadius: radius.pill,
+    backgroundColor: "rgba(220, 252, 231, 0.6)",
+    borderWidth: 1,
+    borderColor: "rgba(34, 197, 94, 0.3)",
     justifyContent: "center",
     alignItems: "center",
   },
-  applyText: {
-    color: colors.black,
-    fontSize: 20,
+  appliedInner: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.sm,
+  },
+  appliedText: {
+    color: "#166534",
     fontWeight: "800",
+    letterSpacing: -0.3,
+  },
+  applyGradient: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: spacing.sm,
+  },
+  applyText: {
+    fontWeight: "800",
+    letterSpacing: -0.3,
+  },
+
+  // ─── Hint ───
+  hintText: {
+    fontWeight: "500",
+    letterSpacing: 0.2,
+    textAlign: "center",
   },
 });

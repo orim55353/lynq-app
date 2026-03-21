@@ -1,28 +1,22 @@
-import { NavigationContainer, DefaultTheme } from "@react-navigation/native";
+import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { ActivityIndicator, View } from "react-native";
+import { ActivityIndicator, useColorScheme, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthNavigator } from "./src/navigation/AuthNavigator";
 import { AppNavigator } from "./src/navigation/AppNavigator";
 import { AuthProvider, useAuth } from "./src/context/AuthContext";
 import { SavedJobsProvider } from "./src/context/SavedJobsContext";
-import { colors } from "./src/constants/theme";
-
-const navTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: "#ffffff",
-  },
-};
+import { themes } from "./src/constants/theme";
 
 function RootNavigator() {
   const { user, loading } = useAuth();
+  const scheme = useColorScheme();
+  const t = scheme === "dark" ? themes.dark : themes.light;
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.gray50, justifyContent: "center", alignItems: "center" }}>
-        <ActivityIndicator size="large" color={colors.purple500} />
+      <View style={{ flex: 1, backgroundColor: t.bg, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" color={t.accent} />
       </View>
     );
   }
@@ -39,11 +33,26 @@ function RootNavigator() {
 }
 
 export default function App() {
+  const scheme = useColorScheme();
+  const t = scheme === "dark" ? themes.dark : themes.light;
+
+  const navTheme = {
+    ...(scheme === "dark" ? DarkTheme : DefaultTheme),
+    colors: {
+      ...(scheme === "dark" ? DarkTheme : DefaultTheme).colors,
+      background: t.bg,
+      card: t.bgElevated,
+      text: t.text,
+      border: t.border,
+      primary: t.accent,
+    },
+  };
+
   return (
     <SafeAreaProvider>
       <AuthProvider>
         <NavigationContainer theme={navTheme}>
-          <StatusBar style="dark" />
+          <StatusBar style={scheme === "dark" ? "light" : "dark"} />
           <RootNavigator />
         </NavigationContainer>
       </AuthProvider>

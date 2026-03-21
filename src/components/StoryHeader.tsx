@@ -3,7 +3,8 @@ import { useMemo } from "react";
 import type { LayoutChangeEvent } from "react-native";
 import { Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useWindowDimensions } from "react-native";
-import { colors, radius, spacing, horizontalPaddingBounds } from "../constants/theme";
+import { radius, spacing, typography, horizontalPaddingBounds } from "../constants/theme";
+import { useTheme } from "../hooks/useTheme";
 import { clamp } from "../utils/math";
 
 export interface StoryCircle {
@@ -29,6 +30,7 @@ export function StoryHeader({
   onHeightChange,
 }: StoryHeaderProps) {
   const { width, height } = useWindowDimensions();
+  const { colors } = useTheme();
 
   const layout = useMemo(() => {
     const ringSize = clamp(width * 0.14, 52, 64);
@@ -57,6 +59,8 @@ export function StoryHeader({
         {
           paddingTop: layout.topPadding,
           paddingBottom: layout.bottomPadding,
+          backgroundColor: colors.bgElevated,
+          borderBottomColor: colors.border,
         },
       ]}
       onLayout={handleLayout}
@@ -85,14 +89,14 @@ export function StoryHeader({
               <View
                 style={[
                   styles.storyInnerWrap,
-                  { padding: layout.imagePadding },
-                  selectedStory === story.id && styles.storySelected,
+                  { padding: layout.imagePadding, backgroundColor: colors.bgElevated },
+                  selectedStory === story.id && { borderWidth: 2, borderColor: colors.accent },
                 ]}
               >
                 <Image source={{ uri: story.image }} style={styles.storyImage} />
               </View>
             </LinearGradient>
-            <Text style={[styles.storyLabel, { fontSize: layout.labelSize }]}>{story.label}</Text>
+            <Text style={[styles.storyLabel, { fontSize: layout.labelSize, color: colors.textSecondary }]}>{story.label}</Text>
           </Pressable>
         ))}
       </ScrollView>
@@ -107,9 +111,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 20,
-    backgroundColor: "rgba(255,255,255,0.94)",
     borderBottomWidth: 1,
-    borderBottomColor: "rgba(226,232,240,0.9)",
   },
   storyRow: {
     alignItems: "center",
@@ -123,11 +125,6 @@ const styles = StyleSheet.create({
   storyInnerWrap: {
     flex: 1,
     borderRadius: radius.pill,
-    backgroundColor: colors.white,
-  },
-  storySelected: {
-    borderWidth: 2,
-    borderColor: colors.purple500,
   },
   storyImage: {
     width: "100%",
@@ -135,7 +132,6 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
   },
   storyLabel: {
-    fontWeight: "500",
-    color: colors.gray600,
+    ...typography.caption,
   },
 });

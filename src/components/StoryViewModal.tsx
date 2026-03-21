@@ -7,12 +7,14 @@ import {
   NativeScrollEvent,
   Pressable,
   StyleSheet,
+  useColorScheme,
   useWindowDimensions,
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { JobCard } from "./JobCard";
-import { colors, spacing } from "../constants/theme";
+import { spacing } from "../constants/theme";
+import { useTheme } from "../hooks/useTheme";
 import { Job } from "../types/models";
 import { clamp } from "../utils/math";
 
@@ -39,6 +41,7 @@ export function StoryViewModal({
 }: StoryViewModalProps) {
   const { height: windowHeight, width: windowWidth } = useWindowDimensions();
   const insets = useSafeAreaInsets();
+  const { mode, colors } = useTheme();
   const listRef = useRef<FlatList<Job>>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -66,10 +69,7 @@ export function StoryViewModal({
       const clamped = Math.max(0, Math.min(index, jobs.length - 1));
       setCurrentIndex(clamped);
       setProgress(0);
-      listRef.current?.scrollToOffset({
-        offset: clamped * layout.cardWidth,
-        animated: true,
-      });
+      listRef.current?.scrollToOffset({ offset: clamped * layout.cardWidth, animated: true });
     },
     [jobs.length, layout.cardWidth],
   );
@@ -94,10 +94,7 @@ export function StoryViewModal({
           if (idx < jobs.length - 1) {
             setCurrentIndex(idx + 1);
             setProgress(0);
-            listRef.current?.scrollToOffset({
-              offset: (idx + 1) * layout.cardWidth,
-              animated: true,
-            });
+            listRef.current?.scrollToOffset({ offset: (idx + 1) * layout.cardWidth, animated: true });
           } else {
             onClose();
           }
@@ -123,19 +120,13 @@ export function StoryViewModal({
   );
 
   const handleTapLeft = useCallback(() => {
-    if (currentIndex > 0) {
-      goToIndex(currentIndex - 1);
-    } else {
-      onClose();
-    }
+    if (currentIndex > 0) goToIndex(currentIndex - 1);
+    else onClose();
   }, [currentIndex, goToIndex, onClose]);
 
   const handleTapRight = useCallback(() => {
-    if (currentIndex < jobs.length - 1) {
-      goToIndex(currentIndex + 1);
-    } else {
-      onClose();
-    }
+    if (currentIndex < jobs.length - 1) goToIndex(currentIndex + 1);
+    else onClose();
   }, [currentIndex, jobs.length, goToIndex, onClose]);
 
   const renderItem = useCallback(
@@ -148,18 +139,15 @@ export function StoryViewModal({
           bottomOffset={layout.bottomOffset}
           isSaved={isSaved(item.id)}
           onToggleSaved={onToggleSaved}
+          mode={mode}
         />
       </View>
     ),
-    [layout, isSaved, onToggleSaved],
+    [layout, isSaved, onToggleSaved, mode],
   );
 
   const getItemLayout = useCallback(
-    (_: unknown, index: number) => ({
-      length: layout.cardWidth,
-      offset: layout.cardWidth * index,
-      index,
-    }),
+    (_: unknown, index: number) => ({ length: layout.cardWidth, offset: layout.cardWidth * index, index }),
     [layout.cardWidth],
   );
 
@@ -169,14 +157,8 @@ export function StoryViewModal({
   const closeButtonTop = progressBarAreaHeight + spacing.xs;
 
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      presentationStyle="fullScreen"
-      statusBarTranslucent
-      onRequestClose={onClose}
-    >
-      <View style={styles.container}>
+    <Modal visible={visible} animationType="slide" presentationStyle="fullScreen" statusBarTranslucent onRequestClose={onClose}>
+      <View style={[styles.container, { backgroundColor: colors.bg }]}>
         <FlatList
           ref={listRef}
           data={jobs}
@@ -198,123 +180,41 @@ export function StoryViewModal({
           scrollEventThrottle={16}
         />
 
-        {/* Instagram-style progress bars */}
-        <View
-          style={[
-            styles.progressBarRow,
-            {
-              paddingTop: insets.top + spacing.sm,
-              paddingHorizontal: spacing.lg,
-            },
-          ]}
-          pointerEvents="none"
-        >
+        <View style={[styles.progressBarRow, { paddingTop: insets.top + spacing.sm, paddingHorizontal: spacing.lg }]} pointerEvents="none">
           <View style={styles.progressBarTrack}>
             {jobs.map((_, index) => (
-              <View
-                key={index}
-                style={[
-                  styles.progressSegment,
-                  { width: progressBarWidth },
-                ]}
-              >
-                <View
-                  style={[
-                    styles.progressSegmentFill,
-                    {
-                      width:
-                        index < currentIndex
-                          ? "100%"
-                          : index === currentIndex
-                            ? `${progress * 100}%`
-                            : "0%",
-                    },
-                  ]}
-                />
+              <View key={index} style={[styles.progressSegment, { width: progressBarWidth }]}>
+                <View style={[styles.progressSegmentFill, { backgroundColor: colors.accent, width: index < currentIndex ? "100%" : index === currentIndex ? `${progress * 100}%` : "0%" }]} />
               </View>
             ))}
           </View>
         </View>
 
-        {/* Close button: part of card area, below progress bars */}
         <Pressable
-          style={[styles.closeButton, { top: closeButtonTop }]}
+          style={[styles.closeButton, { top: closeButtonTop, backgroundColor: colors.glass, borderColor: colors.glassBorder }]}
           onPress={onClose}
           hitSlop={12}
           accessibilityLabel="Close story view"
           accessibilityRole="button"
         >
-          <Ionicons name="close" size={26} color={colors.white} />
+          <Ionicons name="close" size={24} color={colors.text} />
         </Pressable>
 
-        {/* Left tap zone: previous or close */}
-        <Pressable
-          style={[styles.tapZone, styles.tapZoneLeft]}
-          onPress={handleTapLeft}
-          accessibilityLabel={currentIndex === 0 ? "Close" : "Previous"}
-          accessibilityRole="button"
-        />
-
-        {/* Right tap zone: next or close */}
-        <Pressable
-          style={[styles.tapZone, styles.tapZoneRight]}
-          onPress={handleTapRight}
-          accessibilityLabel={currentIndex === jobs.length - 1 ? "Close" : "Next"}
-          accessibilityRole="button"
-        />
+        <Pressable style={[styles.tapZone, styles.tapZoneLeft]} onPress={handleTapLeft} accessibilityLabel={currentIndex === 0 ? "Close" : "Previous"} accessibilityRole="button" />
+        <Pressable style={[styles.tapZone, styles.tapZoneRight]} onPress={handleTapRight} accessibilityLabel={currentIndex === jobs.length - 1 ? "Close" : "Next"} accessibilityRole="button" />
       </View>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.black,
-  },
-  progressBarRow: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    zIndex: 25,
-  },
-  progressBarTrack: {
-    flexDirection: "row",
-    gap: PROGRESS_BAR_GAP,
-  },
-  progressSegment: {
-    height: PROGRESS_BAR_HEIGHT,
-    borderRadius: PROGRESS_BAR_HEIGHT / 2,
-    backgroundColor: "rgba(255,255,255,0.35)",
-    overflow: "hidden",
-  },
-  progressSegmentFill: {
-    height: "100%",
-    borderRadius: PROGRESS_BAR_HEIGHT / 2,
-    backgroundColor: colors.white,
-  },
-  tapZone: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    width: "40%",
-    zIndex: 20,
-  },
-  tapZoneLeft: {
-    left: 0,
-  },
-  tapZoneRight: {
-    right: 0,
-  },
-  closeButton: {
-    position: "absolute",
-    left: spacing.lg,
-    zIndex: 30,
-    width: CLOSE_BUTTON_SIZE,
-    height: CLOSE_BUTTON_SIZE,
-    borderRadius: CLOSE_BUTTON_SIZE / 2,
-    backgroundColor: "rgba(0,0,0,0.4)",
-    justifyContent: "center",
-    alignItems: "center",
-  },
+  container: { flex: 1 },
+  progressBarRow: { position: "absolute", left: 0, right: 0, zIndex: 25 },
+  progressBarTrack: { flexDirection: "row", gap: PROGRESS_BAR_GAP },
+  progressSegment: { height: PROGRESS_BAR_HEIGHT, borderRadius: PROGRESS_BAR_HEIGHT / 2, backgroundColor: "rgba(255,255,255,0.2)", overflow: "hidden" },
+  progressSegmentFill: { height: "100%", borderRadius: PROGRESS_BAR_HEIGHT / 2 },
+  tapZone: { position: "absolute", top: 0, bottom: 0, width: "40%", zIndex: 20 },
+  tapZoneLeft: { left: 0 },
+  tapZoneRight: { right: 0 },
+  closeButton: { position: "absolute", left: spacing.lg, zIndex: 30, width: CLOSE_BUTTON_SIZE, height: CLOSE_BUTTON_SIZE, borderRadius: CLOSE_BUTTON_SIZE / 2, borderWidth: 1, justifyContent: "center", alignItems: "center" },
 });

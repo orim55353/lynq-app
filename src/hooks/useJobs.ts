@@ -27,8 +27,9 @@ export function useJobs(): { jobs: Job[]; loading: boolean; error: Error | null 
         const fromFirestore = snapshot.docs.map((doc): Job => {
           const d = doc.data() as Record<string, unknown>;
           const g = Array.isArray(d.gradient) ? (d.gradient as string[]) : [];
-          const gradient: [string, string] = g.length >= 2 ? [g[0], g[1]] : ["#6366F1", "#EC4899"];
-          return { id: doc.id, ...d, gradient } as Job;
+          const gradient: [string, string] = g.length >= 2 ? [g[0], g[1]] : ["#00E5FF", "#0891B2"];
+          const tagline = typeof d.tagline === "string" ? d.tagline : "";
+          return { id: doc.id, ...d, gradient, tagline } as Job;
         });
         if (fromFirestore.length > 0) {
           setJobs(fromFirestore);
