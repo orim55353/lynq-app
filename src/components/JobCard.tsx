@@ -212,20 +212,6 @@ export const JobCard = memo(function JobCard({
       >
         {/* ═══ Top zone ═══ */}
         <View style={styles.topZone}>
-          {/* Match ring */}
-          <View style={styles.matchRingRow}>
-            <View style={[styles.matchRingBg, { backgroundColor: c.ringBg, borderColor: c.ringBorder }]}>
-              <MatchScoreRing
-                score={job.compatibilityScore}
-                size={88}
-                strokeWidth={5}
-                mode={mode}
-                labelStyle="short"
-                isVisible={isVisible}
-              />
-            </View>
-          </View>
-
           {/* Company identity */}
           <View style={styles.companyRow}>
             <View style={styles.logoWrap}>
@@ -240,13 +226,25 @@ export const JobCard = memo(function JobCard({
             </Text>
           </View>
 
-          {/* Job title */}
-          <Text
-            style={[styles.title, { fontSize: fs.title, lineHeight: fs.titleLineHeight, color: c.title }]}
-            numberOfLines={2}
-          >
-            {job.title}
-          </Text>
+          {/* Job title + Match ring row */}
+          <View style={styles.titleMatchRow}>
+            <Text
+              style={[styles.title, styles.titleFlex, { fontSize: fs.title, lineHeight: fs.titleLineHeight, color: c.title }]}
+              numberOfLines={2}
+            >
+              {job.title}
+            </Text>
+            <View style={[styles.matchRingBg, { backgroundColor: c.ringBg, borderColor: c.ringBorder }]}>
+              <MatchScoreRing
+                score={job.compatibilityScore}
+                size={72}
+                strokeWidth={4}
+                mode={mode}
+                labelStyle="short"
+                isVisible={isVisible}
+              />
+            </View>
+          </View>
 
           {/* Tagline */}
           {job.tagline ? (
@@ -378,12 +376,17 @@ const styles = StyleSheet.create({
   page: { width: "100%", overflow: "hidden" },
   topVignette: { position: "absolute", top: 0, left: 0, right: 0, height: 140 },
 
-  matchRingRow: {
-    alignSelf: "flex-start",
-    marginBottom: spacing.lg,
+  titleMatchRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginBottom: spacing.xs,
+  },
+  titleFlex: {
+    flex: 1,
   },
   matchRingBg: {
-    width: 96, height: 96,
+    width: 80, height: 80,
     borderRadius: radius.pill,
     borderWidth: 1,
     justifyContent: "center",
