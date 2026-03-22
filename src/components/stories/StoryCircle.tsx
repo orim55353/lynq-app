@@ -3,12 +3,12 @@ import { useCallback, useEffect, useRef } from "react";
 import {
   Animated,
   Easing,
-  Image,
   Pressable,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import { Image } from "expo-image";
 import { typography } from "../../constants/theme";
 import { useTheme } from "../../hooks/useTheme";
 import { TIER_CONFIG, type CompanyStory, type TierConfig } from "../../types/story";
@@ -186,7 +186,7 @@ export function StoryCircle({ story, isSeen, onPress }: StoryCircleProps) {
                     width: logoImageSize,
                     height: logoImageSize,
                   }}
-                  resizeMode="contain"
+                  contentFit="contain"
                 />
               </View>
             </View>

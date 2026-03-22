@@ -1,5 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Image, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { Image } from "expo-image";
 import { spacing, typography } from "../../../constants/theme";
 import type { CompanyStory, StorySlide } from "../../../types/story";
 

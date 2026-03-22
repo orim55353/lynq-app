@@ -42,8 +42,8 @@ export function StoryCirclesRow({
       style={[
         styles.container,
         {
-          paddingTop: topInset + spacing.xs,
-          paddingBottom: spacing.md,
+          paddingTop: topInset,
+          paddingBottom: spacing.xs,
         },
       ]}
       onLayout={handleLayout}
@@ -100,6 +100,6 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     alignItems: "flex-end",
-    paddingVertical: spacing.xs,
+    paddingVertical: 2,
   },
 });

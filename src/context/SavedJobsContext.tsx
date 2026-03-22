@@ -1,13 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-  collection,
-  deleteDoc,
-  doc,
-  onSnapshot,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
-import {
   createContext,
   ReactNode,
   useCallback,
@@ -17,7 +9,7 @@ import {
   useState,
 } from "react";
 import { useAuth } from "./AuthContext";
-import { db, isFirestoreAvailable } from "../lib/firebase";
+import { supabase } from "../lib/supabase";
 
 const STORAGE_KEY = "savedJobs";
 const isStringArray = (value: unknown): value is string[] =>
@@ -38,22 +30,56 @@ export function SavedJobsProvider({ children }: { children: ReactNode }) {
   const [savedIds, setSavedIds] = useState<string[]>([]);
   const [loaded, setLoaded] = useState(false);
 
-  // When signed in and Firestore available: subscribe to Firestore savedJobs subcollection
+  // When signed in: fetch saved jobs from Supabase
   useEffect(() => {
-    const dbRef = db;
-    if (!uid || !isFirestoreAvailable(dbRef)) return;
+    if (!uid) return;
 
-    const savedJobsRef = collection(dbRef, "users", uid, "savedJobs");
-    const unsubscribe = onSnapshot(savedJobsRef, (snapshot) => {
-      const ids = snapshot.docs.map((d) => d.id);
-      setSavedIds(ids);
-      setLoaded(true);
-    });
+    let isMounted = true;
 
-    return () => unsubscribe();
+    const loadFromSupabase = async () => {
+      try {
+        const { data: appUser } = await supabase
+          .from("app_users")
+          .select("id")
+          .eq("authId", uid)
+          .single();
+
+        if (!appUser || !isMounted) return;
+
+        const { data, error } = await supabase
+          .from("saved_jobs")
+          .select("jobId")
+          .eq("appUserId", appUser.id);
+
+        if (!isMounted) return;
+        if (error) throw error;
+
+        setSavedIds((data ?? []).map((row) => row.jobId as string));
+      } catch {
+        // Fall through
+      } finally {
+        if (isMounted) setLoaded(true);
+      }
+    };
+
+    void loadFromSupabase();
+
+    const channel = supabase
+      .channel(`saved-jobs-${uid}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "saved_jobs" },
+        () => { void loadFromSupabase(); },
+      )
+      .subscribe();
+
+    return () => {
+      isMounted = false;
+      supabase.removeChannel(channel);
+    };
   }, [uid]);
 
-  // When not signed in (auth ready): load from AsyncStorage
+  // When not signed in: load from AsyncStorage
   useEffect(() => {
     if (authLoading || uid) return;
 
@@ -64,52 +90,22 @@ export function SavedJobsProvider({ children }: { children: ReactNode }) {
         const raw = await AsyncStorage.getItem(STORAGE_KEY);
         if (raw && isMounted) {
           const parsed: unknown = JSON.parse(raw);
-          if (isStringArray(parsed)) {
-            setSavedIds(parsed);
-          }
-        }
-      } catch {
-        // Keep defaults if storage is corrupted/unavailable.
-      } finally {
-        if (isMounted) {
-          setLoaded(true);
-        }
-      }
-    };
-
-    void loadSavedJobs();
-
-    return () => {
-      isMounted = false;
-    };
-  }, [authLoading, uid]);
-
-  // When signed in but Firestore not available: still load from AsyncStorage so we have some state
-  useEffect(() => {
-    if (!uid || isFirestoreAvailable(db)) return;
-
-    let isMounted = true;
-    const load = async () => {
-      try {
-        const raw = await AsyncStorage.getItem(STORAGE_KEY);
-        if (raw && isMounted) {
-          const parsed: unknown = JSON.parse(raw);
           if (isStringArray(parsed)) setSavedIds(parsed);
         }
       } catch {
-        // ignore
+        // Keep defaults
       } finally {
         if (isMounted) setLoaded(true);
       }
     };
-    void load();
-    return () => { isMounted = false; };
-  }, [uid]);
 
-  // One-time migration: when we get a uid and Firestore is available, copy AsyncStorage to Firestore
+    void loadSavedJobs();
+    return () => { isMounted = false; };
+  }, [authLoading, uid]);
+
+  // One-time migration: AsyncStorage → Supabase
   useEffect(() => {
-    const dbRef = db;
-    if (!uid || !isFirestoreAvailable(dbRef)) return;
+    if (!uid) return;
 
     let isMounted = true;
 
@@ -120,33 +116,57 @@ export function SavedJobsProvider({ children }: { children: ReactNode }) {
         const parsed: unknown = JSON.parse(raw);
         if (!isStringArray(parsed) || parsed.length === 0) return;
 
-        const batch = parsed;
-        for (const jobId of batch) {
-          const ref = doc(dbRef, "users", uid, "savedJobs", jobId);
-          await setDoc(ref, { jobId, savedAt: serverTimestamp() });
-        }
+        const { data: appUser } = await supabase
+          .from("app_users")
+          .select("id")
+          .eq("authId", uid)
+          .single();
+
+        if (!appUser || !isMounted) return;
+
+        const rows = parsed.map((jobId) => ({
+          appUserId: appUser.id,
+          jobId,
+        }));
+
+        await supabase.from("saved_jobs").upsert(rows, { onConflict: "appUserId,jobId" });
         await AsyncStorage.removeItem(STORAGE_KEY);
       } catch {
-        // Non-fatal: Firestore subscription will still run
+        // Non-fatal
       }
     };
 
     void migrate();
-
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [uid]);
 
   const toggleSaved = useCallback(
     async (jobId: string) => {
-      const dbRef = db;
-      if (uid && isFirestoreAvailable(dbRef)) {
-        const ref = doc(dbRef, "users", uid, "savedJobs", jobId);
-        if (savedIds.includes(jobId)) {
-          await deleteDoc(ref);
-        } else {
-          await setDoc(ref, { jobId, savedAt: serverTimestamp() });
+      if (uid) {
+        try {
+          const { data: appUser } = await supabase
+            .from("app_users")
+            .select("id")
+            .eq("authId", uid)
+            .single();
+
+          if (!appUser) return;
+
+          if (savedIds.includes(jobId)) {
+            await supabase
+              .from("saved_jobs")
+              .delete()
+              .eq("appUserId", appUser.id)
+              .eq("jobId", jobId);
+            setSavedIds((prev) => prev.filter((id) => id !== jobId));
+          } else {
+            await supabase
+              .from("saved_jobs")
+              .insert({ appUserId: appUser.id, jobId });
+            setSavedIds((prev) => [...prev, jobId]);
+          }
+        } catch {
+          // Optimistic local update already done
         }
         return;
       }
@@ -164,10 +184,25 @@ export function SavedJobsProvider({ children }: { children: ReactNode }) {
 
   const removeSaved = useCallback(
     async (jobId: string) => {
-      const dbRef = db;
-      if (uid && isFirestoreAvailable(dbRef)) {
-        const ref = doc(dbRef, "users", uid, "savedJobs", jobId);
-        await deleteDoc(ref);
+      if (uid) {
+        try {
+          const { data: appUser } = await supabase
+            .from("app_users")
+            .select("id")
+            .eq("authId", uid)
+            .single();
+
+          if (appUser) {
+            await supabase
+              .from("saved_jobs")
+              .delete()
+              .eq("appUserId", appUser.id)
+              .eq("jobId", jobId);
+          }
+        } catch {
+          // Continue
+        }
+        setSavedIds((prev) => prev.filter((id) => id !== jobId));
         return;
       }
 

@@ -3,7 +3,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   Animated,
-  Image,
   ImageBackground,
   Pressable,
   StyleSheet,
@@ -11,6 +10,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { Image } from "expo-image";
 import {
   getFontScale,
   radius,
@@ -223,7 +223,7 @@ export const JobCard = memo(function JobCard({
           {/* Company identity */}
           <View style={styles.companyRow}>
             <View style={styles.logoWrap}>
-              <Image source={{ uri: job.logoImage }} style={styles.logo} resizeMode="contain" />
+              <Image source={{ uri: job.logoImage }} style={styles.logo} contentFit="contain" />
             </View>
             <Text style={[styles.companyName, { fontSize: fs.company, color: c.title }]} numberOfLines={1}>
               {job.company}
@@ -391,7 +391,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
-    marginBottom: spacing.xs,
+    marginBottom: 2,
   },
   titleFlex: {
     flex: 1,
@@ -408,17 +408,17 @@ const styles = StyleSheet.create({
   topZone: {},
   spacer: { flex: 1, minHeight: spacing.xl },
 
-  companyRow: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: spacing.md },
+  companyRow: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: spacing.xs },
   logoWrap: { width: 32, height: 32, borderRadius: radius.pill, backgroundColor: "rgba(255,255,255,0.95)", padding: 4 },
   logo: { width: "100%", height: "100%", borderRadius: radius.pill },
   companyName: { fontWeight: "700", letterSpacing: -0.1 },
   companyDot: { width: 3, height: 3, borderRadius: 2 },
   companyLocation: { fontWeight: "500" },
 
-  title: { fontWeight: "900", letterSpacing: -1.5, marginBottom: spacing.xs },
-  tagline: { fontWeight: "400", fontStyle: "italic", letterSpacing: 0.2, marginBottom: spacing.md },
+  title: { fontWeight: "900", letterSpacing: -1.5, marginBottom: 2 },
+  tagline: { fontWeight: "400", fontStyle: "italic", letterSpacing: 0.2, marginBottom: spacing.sm },
 
-  salaryRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm, marginBottom: spacing.lg },
+  salaryRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm, marginBottom: spacing.md },
   salary: { fontWeight: "800", letterSpacing: -0.4 },
   typePill: { paddingHorizontal: 10, paddingVertical: 3, borderRadius: radius.pill, borderWidth: 1 },
   typeText: { fontWeight: "600", textTransform: "uppercase", letterSpacing: 0.8 },

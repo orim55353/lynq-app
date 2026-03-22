@@ -36,11 +36,13 @@ export function DiscoverScreen() {
   // ─── Job state ──────────────────────────────────────────────────────────
   const [expandedJob, setExpandedJob] = useState<Job | null>(null);
   const [storyHeaderHeight, setStoryHeaderHeight] = useState(100);
-  const [visibleIds, setVisibleIds] = useState<Set<string>>(new Set(["1"]));
+  const visibleIdsRef = useRef<Set<string>>(new Set(["1"]));
+  const [visibleIdsTick, setVisibleIdsTick] = useState(0);
 
   const onViewableItemsChanged = useRef(
     ({ viewableItems }: { viewableItems: ViewToken[] }) => {
-      setVisibleIds(new Set(viewableItems.map((v) => v.key)));
+      visibleIdsRef.current = new Set(viewableItems.map((v) => v.key));
+      setVisibleIdsTick((t) => t + 1);
     },
   ).current;
 
@@ -90,7 +92,7 @@ export function DiscoverScreen() {
         onToggleSaved={toggleSaved}
         onExpand={handleExpand}
         mode={mode}
-        isVisible={visibleIds.has(item.id)}
+        isVisible={visibleIdsRef.current.has(item.id)}
       />
     ),
     [
@@ -101,7 +103,7 @@ export function DiscoverScreen() {
       toggleSaved,
       handleExpand,
       mode,
-      visibleIds,
+      visibleIdsTick,
     ],
   );
 

@@ -1,5 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Image, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { Image } from "expo-image";
 import { spacing, typography } from "../../../constants/theme";
 import type { StorySlide } from "../../../types/story";
 
@@ -16,7 +17,7 @@ export function CultureSlide({ slide }: CultureSlideProps) {
       <Image
         source={{ uri: slide.mediaUrl }}
         style={StyleSheet.absoluteFill}
-        resizeMode="cover"
+        contentFit="cover"
       />
 
       {/* Bottom gradient scrim for text legibility */}

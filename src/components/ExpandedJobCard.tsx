@@ -3,7 +3,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   Animated,
-  Image,
   ImageBackground,
   Modal,
   PanResponder,
@@ -14,6 +13,7 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
+import { Image } from "expo-image";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { radius, shadows, spacing } from "../constants/theme";
 import { useTheme } from "../hooks/useTheme";
@@ -310,7 +310,7 @@ export function ExpandedJobCard({
                 <Image
                   source={{ uri: job.logoImage }}
                   style={styles.headerLogoImg}
-                  resizeMode="contain"
+                  contentFit="contain"
                 />
               </View>
               <Text style={[styles.headerCompany, { color: p.company }]} numberOfLines={1}>

@@ -160,3 +160,30 @@ npm run typecheck      # tsc --noEmit
 ## Git
 
 Commit format: `<type>: <description>` (feat, fix, refactor, docs, test, chore, perf, ci)
+
+---
+
+## Lynq Vault Sync (MANDATORY)
+
+After completing work that changes feature status, adds new features, modifies data structures, or changes system connections, **update the Obsidian vault** at `/Users/orimizrachi/Documents/Obsidian Vault/Lynq/`.
+
+### What to update
+
+| Change Type | Files to Update |
+|-------------|----------------|
+| Feature added/completed | `App/App - Features.md` (status table) |
+| Screen added/modified | `App/App - Screens & Navigation.md` |
+| New data type or field | `Data Structures/Data - App Types.md` |
+| Firestore collection changed | `Data Structures/Data - Firestore Collections.md` |
+| New connection to backoffice working | `System Map/Feature Relationship Map.md` (connection strength), `System Map/lynq-system-chart.html` (update status badges/colors) |
+| Broken connection fixed | `System Map/Feature Relationship Map.md`, `System Map/System Connection Map.md` |
+| Stories system changed | `App/App - Stories System.md` |
+| Product decision made | `Product/Product - Decisions Log.md` |
+| Roadmap item completed | `Product/Product - Roadmap & Phases.md` (check off item) |
+
+### How to update the HTML chart
+
+In `System Map/lynq-system-chart.html`:
+- Change `tag-ui` (red) to `tag-done` (green) when a UI-only feature gets backend wiring
+- Change `conn-broken` to `conn-strong` and `status-broken` to `status-working` when a cross-system connection is established
+- Change `li.planned` to `li.active` in data flow pipelines when a step is implemented

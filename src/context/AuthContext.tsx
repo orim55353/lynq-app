@@ -1,18 +1,14 @@
 import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  type User,
-} from "firebase/auth";
-import {
   createContext,
   ReactNode,
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
-import { auth } from "../lib/firebase";
+import { supabase } from "../lib/supabase";
+import type { User } from "@supabase/supabase-js";
 
 interface AuthContextValue {
   user: User | null;
@@ -30,34 +26,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
       setLoading(false);
     });
 
-    return () => unsubscribe();
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null);
+        setLoading(false);
+      },
+    );
+
+    return () => subscription.unsubscribe();
   }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
   }, []);
 
   const register = useCallback(async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) throw error;
   }, []);
 
   const signOut = useCallback(async () => {
-    await auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
   }, []);
 
-  const value: AuthContextValue = {
-    user,
-    uid: user?.uid ?? null,
-    loading,
-    signIn,
-    register,
-    signOut,
-  };
+  const uid = user?.id ?? null;
+
+  const value = useMemo<AuthContextValue>(
+    () => ({ user, uid, loading, signIn, register, signOut }),
+    [user, uid, loading, signIn, register, signOut],
+  );
 
   return (
     <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

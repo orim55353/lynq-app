@@ -1,5 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Image } from "expo-image";
 import { spacing, typography } from "../../constants/theme";
 import { useTheme } from "../../hooks/useTheme";
 import type { CompanyStory } from "../../types/story";
@@ -29,7 +30,7 @@ export function StoryCompanyHeader({ company, onClose }: StoryCompanyHeaderProps
           <Image
             source={{ uri: company.companyLogo }}
             style={styles.logo}
-            resizeMode="contain"
+            contentFit="contain"
           />
         </View>
 

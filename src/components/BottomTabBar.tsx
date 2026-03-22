@@ -44,6 +44,8 @@ export function BottomTabBar({
   }, []);
 
   const isDark = mode === "dark";
+  const currentRoute = state.routes[state.index]?.name;
+  const isDiscover = currentRoute === "Discover";
 
   return (
     <View
@@ -57,8 +59,12 @@ export function BottomTabBar({
           styles.bar,
           {
             backgroundColor: isDark
-              ? "rgba(11, 18, 32, 0.8)"
-              : "rgba(255, 255, 255, 0.85)",
+              ? isDiscover
+                ? "rgba(11, 18, 32, 0.8)"
+                : "#0B1220"
+              : isDiscover
+                ? "rgba(255, 255, 255, 0.85)"
+                : "#FFFFFF",
             borderColor: isDark
               ? "rgba(255,255,255,0.08)"
               : "rgba(0,0,0,0.06)",

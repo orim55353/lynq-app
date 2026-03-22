@@ -3,7 +3,7 @@ import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, useColorScheme, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthNavigator } from "./src/navigation/AuthNavigator";
-import { AppNavigator } from "./src/navigation/AppNavigator";
+import { AppStack } from "./src/navigation/AppStack";
 import { AuthProvider, useAuth } from "./src/context/AuthContext";
 import { SavedJobsProvider } from "./src/context/SavedJobsContext";
 import { themes } from "./src/constants/theme";
@@ -27,7 +27,7 @@ function RootNavigator() {
 
   return (
     <SavedJobsProvider>
-      <AppNavigator />
+      <AppStack />
     </SavedJobsProvider>
   );
 }

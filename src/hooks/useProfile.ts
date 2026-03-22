@@ -1,13 +1,6 @@
-import {
-  doc,
-  getDoc,
-  serverTimestamp,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { profile as defaultProfile } from "../data/profile";
-import { db, isFirestoreAvailable } from "../lib/firebase";
+import { supabase } from "../lib/supabase";
 
 export interface Profile {
   initials: string;
@@ -49,33 +42,39 @@ export function useProfile(uid: string | null): {
       return;
     }
 
-    const dbRef = db;
-    if (!isFirestoreAvailable(dbRef)) {
-      setProfile(defaultProfile);
-      setLoading(false);
-      setError(null);
-      return;
-    }
-
     let isMounted = true;
 
     const load = async () => {
       try {
-        const userRef = doc(dbRef, "users", uid);
-        const snapshot = await getDoc(userRef);
+        const { data, error: queryError } = await supabase
+          .from("app_users")
+          .select("*")
+          .eq("authId", uid)
+          .single();
 
         if (!isMounted) return;
 
-        if (snapshot.exists()) {
-          setProfile(dataToProfile(snapshot.data() as Record<string, unknown>));
+        if (queryError) {
+          if (queryError.code === "PGRST116") {
+            const { error: insertError } = await supabase
+              .from("app_users")
+              .insert({
+                authId: uid,
+                email: "",
+                name: defaultProfile.name,
+                initials: defaultProfile.initials,
+                tagline: defaultProfile.tagline,
+                location: defaultProfile.location,
+                experience: defaultProfile.experience,
+                skills: defaultProfile.skills,
+              });
+            if (insertError) throw insertError;
+            setProfile(defaultProfile);
+          } else {
+            throw queryError;
+          }
         } else {
-          const initial = {
-            ...defaultProfile,
-            createdAt: serverTimestamp(),
-            updatedAt: serverTimestamp(),
-          };
-          await setDoc(userRef, initial);
-          setProfile(defaultProfile);
+          setProfile(dataToProfile(data as Record<string, unknown>));
         }
         setError(null);
       } catch (err) {
@@ -84,29 +83,22 @@ export function useProfile(uid: string | null): {
           setProfile(defaultProfile);
         }
       } finally {
-        if (isMounted) {
-          setLoading(false);
-        }
+        if (isMounted) setLoading(false);
       }
     };
 
     void load();
-
-    return () => {
-      isMounted = false;
-    };
+    return () => { isMounted = false; };
   }, [uid]);
 
   const updateProfile = useCallback(
     async (updates: Partial<Profile>) => {
-      const dbRef = db;
-      if (!uid || !isFirestoreAvailable(dbRef)) return;
-
-      const userRef = doc(dbRef, "users", uid);
-      await updateDoc(userRef, {
-        ...updates,
-        updatedAt: serverTimestamp(),
-      });
+      if (!uid) return;
+      const { error: updateError } = await supabase
+        .from("app_users")
+        .update(updates)
+        .eq("authId", uid);
+      if (updateError) throw updateError;
       setProfile((prev) => ({ ...prev, ...updates }));
     },
     [uid],

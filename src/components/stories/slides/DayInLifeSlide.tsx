@@ -1,5 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { Image, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { Image } from "expo-image";
 import { radius, spacing, typography } from "../../../constants/theme";
 import type { CompanyStory, StorySlide } from "../../../types/story";
 
@@ -53,7 +54,7 @@ export function DayInLifeSlide({ slide, company }: DayInLifeSlideProps) {
                   <Image
                     source={{ uri: entry.imageUrl }}
                     style={styles.entryImage}
-                    resizeMode="cover"
+                    contentFit="cover"
                   />
                 )}
               </View>
