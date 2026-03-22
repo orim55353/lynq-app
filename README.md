@@ -1,6 +1,6 @@
-# TikTok Jobs (Expo SDK 54)
+# Lynq (Expo SDK 54)
 
-React Native implementation of your Figma Make design for a TikTok-style jobs app.
+React Native job discovery app.
 
 ## Stack
 - Expo SDK 54

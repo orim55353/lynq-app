@@ -44,10 +44,10 @@ const overlayColors = {
     ringBg: "rgba(0,0,0,0.4)",
     ringBorder: "rgba(255,255,255,0.1)",
     title: "#FFFFFF",
-    subtitle: "rgba(255,255,255,0.65)",
+    subtitle: "rgba(255,255,255,0.8)",
     accent: "#22D3EE",
-    body: "rgba(255,255,255,0.75)",
-    muted: "rgba(255,255,255,0.5)",
+    body: "rgba(255,255,255,0.88)",
+    muted: "rgba(255,255,255,0.65)",
     icon: "rgba(6, 182, 212, 0.7)",
     divider: "rgba(255,255,255,0.1)",
     pillBg: "rgba(255,255,255,0.08)",
@@ -58,6 +58,10 @@ const overlayColors = {
     expandBg: "rgba(255,255,255,0.08)",
     expandBorder: "rgba(255,255,255,0.06)",
     expandIcon: "rgba(255,255,255,0.8)",
+    stripBg: "rgba(255,255,255,0.12)",
+    infoLabel: "rgba(255,255,255,0.4)",
+    infoValue: "#FFFFFF",
+    infoIcon: "rgba(255,255,255,0.8)",
   },
   light: {
     pageBg: "#F5FAFC",
@@ -80,6 +84,10 @@ const overlayColors = {
     expandBg: "rgba(0,0,0,0.05)",
     expandBorder: "rgba(0,0,0,0.08)",
     expandIcon: "#3D494C",
+    stripBg: "#FFFFFF",
+    infoLabel: "rgba(0,0,0,0.45)",
+    infoValue: "#171D1E",
+    infoIcon: "rgba(0,0,0,0.6)",
   },
 } as const;
 
@@ -287,7 +295,7 @@ export const JobCard = memo(function JobCard({
         <View style={styles.benefitsRow}>
           {job.benefits.slice(0, 3).map((b) => (
             <View key={b} style={[styles.benefitPill, { backgroundColor: c.pillBg, borderColor: c.pillBorder }]}>
-              <Ionicons name="checkmark-circle" size={12} color={c.icon} />
+              <Ionicons name="checkmark-circle" size={12} color={c.infoIcon} />
               <Text style={[styles.benefitText, { fontSize: fs.meta, color: c.body }]} numberOfLines={1}>
                 {b}
               </Text>
@@ -295,21 +303,24 @@ export const JobCard = memo(function JobCard({
           ))}
         </View>
 
-        {/* Meta strip */}
-        <View style={styles.metaStrip}>
-          <View style={styles.metaChip}>
-            <Ionicons name="briefcase-outline" size={12} color={c.muted} />
-            <Text style={[styles.metaText, { fontSize: fs.meta, color: c.muted }]}>{job.experience}</Text>
+        {/* Info strip */}
+        <View style={[styles.infoStrip, { backgroundColor: c.stripBg }]}>
+          <View style={styles.infoCell}>
+            <Ionicons name="briefcase-outline" size={18} color={c.infoIcon} />
+            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>Experience</Text>
+            <Text style={[styles.infoValue, { fontSize: fs.highlight, color: c.infoValue }]}>{job.experience}</Text>
           </View>
-          <View style={[styles.metaDivider, { backgroundColor: c.divider }]} />
-          <View style={styles.metaChip}>
-            <Ionicons name="time-outline" size={12} color={c.muted} />
-            <Text style={[styles.metaText, { fontSize: fs.meta, color: c.muted }]}>{job.schedule}</Text>
+          <View style={[styles.infoDivider, { backgroundColor: c.divider }]} />
+          <View style={styles.infoCell}>
+            <Ionicons name="calendar-outline" size={18} color={c.infoIcon} />
+            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>Schedule</Text>
+            <Text style={[styles.infoValue, { fontSize: fs.highlight, color: c.infoValue }]}>{job.schedule}</Text>
           </View>
-          <View style={[styles.metaDivider, { backgroundColor: c.divider }]} />
-          <View style={styles.metaChip}>
-            <Ionicons name="location-outline" size={12} color={c.muted} />
-            <Text style={[styles.metaText, { fontSize: fs.meta, color: c.muted }]}>{job.workType}</Text>
+          <View style={[styles.infoDivider, { backgroundColor: c.divider }]} />
+          <View style={styles.infoCell}>
+            <Ionicons name="location-outline" size={18} color={c.infoIcon} />
+            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>Type</Text>
+            <Text style={[styles.infoValue, { fontSize: fs.highlight, color: c.infoValue }]}>{job.workType}</Text>
           </View>
         </View>
 
@@ -425,10 +436,18 @@ const styles = StyleSheet.create({
   },
   benefitText: { fontWeight: "600" },
 
-  metaStrip: { flexDirection: "row", alignItems: "center", gap: 10, marginBottom: spacing.xxl },
-  metaChip: { flexDirection: "row", alignItems: "center", gap: 5 },
-  metaText: { fontWeight: "500", letterSpacing: 0.2 },
-  metaDivider: { width: 1, height: 12 },
+  infoStrip: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: radius.sm,
+    paddingVertical: spacing.lg,
+    paddingHorizontal: spacing.sm,
+    marginBottom: spacing.xxl,
+  },
+  infoCell: { flex: 1, alignItems: "center", gap: 4 },
+  infoLabel: { fontWeight: "500", letterSpacing: 0.2 },
+  infoValue: { fontWeight: "700", letterSpacing: -0.2 },
+  infoDivider: { width: 1, height: 32 },
 
   actionBar: { flexDirection: "row", alignItems: "center", gap: spacing.md },
   saveButton: { width: 52, height: 52, borderRadius: radius.pill, justifyContent: "center", alignItems: "center", borderWidth: 1 },

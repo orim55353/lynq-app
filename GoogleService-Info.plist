@@ -2,18 +2,22 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CLIENT_ID</key>
+	<string>366069991252-os0n45c6e72msv34a7e6vhd3v8hjlg9r.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.366069991252-os0n45c6e72msv34a7e6vhd3v8hjlg9r</string>
 	<key>API_KEY</key>
-	<string>AIzaSyBj_-tu-NZ65Y6f8Kd_h0cqP2MUaWLJI-I</string>
+	<string>AIzaSyBYag96uaDODUgLnAObItd1aw1UUWVbi40</string>
 	<key>GCM_SENDER_ID</key>
-	<string>76197560511</string>
+	<string>366069991252</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.jovloo.app</string>
+	<string>com.lynq.app</string>
 	<key>PROJECT_ID</key>
-	<string>intuere-1031e</string>
+	<string>lynq-83ada</string>
 	<key>STORAGE_BUCKET</key>
-	<string>intuere-1031e.firebasestorage.app</string>
+	<string>lynq-83ada.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:76197560511:ios:e9d3a52c6b63f8e16f860a</string>
+	<string>1:366069991252:ios:deec3cdca51d3fe3982ac1</string>
 </dict>
 </plist>

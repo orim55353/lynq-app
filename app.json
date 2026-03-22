@@ -1,13 +1,24 @@
 {
   "expo": {
-    "name": "TikTok Jobs",
+    "name": "Lynq",
     "slug": "lynq",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "scheme": "com.lynq.app",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.lynq.app",
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.366069991252-os0n45c6e72msv34a7e6vhd3v8hjlg9r"
+            ]
+          }
+        ]
+      }
     },
     "android": {
       "edgeToEdgeEnabled": true

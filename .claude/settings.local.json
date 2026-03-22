@@ -15,7 +15,11 @@
       "Bash(python3 /Users/orimizrachi/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/2.0.1/.claude/skills/ui-ux-pro-max/scripts/search.py \"job recruitment social media stories branded content immersive mobile\" --design-system -p \"Lynq StoryBoard v2\")",
       "Bash(python3 /Users/orimizrachi/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/2.0.1/.claude/skills/ui-ux-pro-max/scripts/search.py \"story viewer modal animation spring gesture swipe\" --domain ux -n 15)",
       "Bash(python3 /Users/orimizrachi/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/2.0.1/.claude/skills/ui-ux-pro-max/scripts/search.py \"list performance navigation gesture\" --stack react-native)",
-      "Bash(python3 /Users/orimizrachi/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/2.0.1/.claude/skills/ui-ux-pro-max/scripts/search.py \"immersive fullscreen content dark mode gradient glass\" --domain style -n 8)"
+      "Bash(python3 /Users/orimizrachi/.claude/plugins/cache/ui-ux-pro-max-skill/ui-ux-pro-max/2.0.1/.claude/skills/ui-ux-pro-max/scripts/search.py \"immersive fullscreen content dark mode gradient glass\" --domain style -n 8)",
+      "Bash(mkdir -p android/app/src/main/java/com/lynq/app)",
+      "Bash(mv android/app/src/main/java/com/jovloo/app/MainActivity.kt android/app/src/main/java/com/lynq/app/)",
+      "Bash(mv android/app/src/main/java/com/jovloo/app/MainApplication.kt android/app/src/main/java/com/lynq/app/)",
+      "Bash(rm -rf android/app/src/main/java/com/jovloo)"
     ]
   }
 }

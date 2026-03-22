@@ -1,6 +1,6 @@
 # Firebase – Intuere (jobs4) data structure
 
-Project: **Jovloo**  
+Project: **Lynq**  
 App: jobs4 (Intuere)  
 Backend: Firebase (Firestore + Auth)
 

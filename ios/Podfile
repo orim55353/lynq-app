@@ -20,7 +20,7 @@ platform :ios, podfile_properties['ios.deploymentTarget'] || '15.1'
 
 prepare_react_native_project!
 
-target 'TikTokJobs' do
+target 'Lynq' do
   use_expo_modules!
 
   if ENV['EXPO_USE_COMMUNITY_AUTOLINKING'] == '1'
@@ -59,28 +59,5 @@ target 'TikTokJobs' do
       :mac_catalyst_enabled => false,
       :ccache_enabled => ccache_enabled?(podfile_properties),
     )
-    # Fix ReactCommon/RuntimeExecutor.h not found with use_frameworks static (Firebase)
-    if podfile_properties['ios.useFrameworks'] == 'static' || ENV['USE_FRAMEWORKS'] == 'static'
-      rn_path = config[:reactNativePath]
-      runtimeexecutor_headers = [
-        '"${PODS_CONFIGURATION_BUILD_DIR}/React-runtimeexecutor/React_runtimeexecutor.framework/Headers"',
-        '"${PODS_CONFIGURATION_BUILD_DIR}/ReactCommon/ReactCommon.framework/Headers"',
-        "\"#{File.join(rn_path, 'ReactCommon')}\"",
-        "\"#{File.join(rn_path, 'ReactCommon/runtimeexecutor')}\"",
-        "\"#{File.join(rn_path, 'ReactCommon/callinvoker')}\"",
-      ]
-      installer.pods_project.targets.each do |target|
-        target.build_configurations.each do |cfg|
-          header_paths = cfg.build_settings['HEADER_SEARCH_PATHS']
-          header_paths = [header_paths] if header_paths.is_a?(String)
-          header_paths ||= ['$(inherited)']
-          runtimeexecutor_headers.each do |path|
-            path_str = path.gsub(/^"|"$/, '')
-            header_paths << path unless header_paths.any? { |p| p.to_s.include?(path_str) }
-          end
-          cfg.build_settings['HEADER_SEARCH_PATHS'] = header_paths
-        end
-      end
-    end
   end
 end

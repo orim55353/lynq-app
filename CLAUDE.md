@@ -1,6 +1,6 @@
 # Lynq App (Mobile)
 
-TikTok-style job discovery app for candidates. Expo/React Native + Firebase.
+Swipe-style job discovery app for candidates. Expo/React Native + Firebase.
 
 ---
 
@@ -37,7 +37,7 @@ src/
     chat.ts              # Static chat data
     profile.ts           # Default profile
   screens/
-    DiscoverScreen.tsx   # TikTok-style vertical-paging job feed + story circles
+    DiscoverScreen.tsx   # Swipe-style vertical-paging job feed + story circles
     MatchesScreen.tsx    # Matched jobs
     ChatScreen.tsx       # Chat list
     SavedScreen.tsx      # Saved jobs
