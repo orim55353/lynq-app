@@ -12,7 +12,10 @@
     "scheme": "com.lynq.app",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.lynq.app"
+      "bundleIdentifier": "com.lynq.app",
+      "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "Lynq uses your location to show jobs near you."
+      }
     },
     "android": {
       "edgeToEdgeEnabled": true

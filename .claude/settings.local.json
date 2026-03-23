@@ -19,7 +19,8 @@
       "Bash(mkdir -p android/app/src/main/java/com/lynq/app)",
       "Bash(mv android/app/src/main/java/com/jovloo/app/MainActivity.kt android/app/src/main/java/com/lynq/app/)",
       "Bash(mv android/app/src/main/java/com/jovloo/app/MainApplication.kt android/app/src/main/java/com/lynq/app/)",
-      "Bash(rm -rf android/app/src/main/java/com/jovloo)"
+      "Bash(rm -rf android/app/src/main/java/com/jovloo)",
+      "Skill(product-management:prd)"
     ]
   }
 }

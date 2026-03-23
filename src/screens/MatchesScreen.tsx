@@ -5,7 +5,6 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useCallback } from "react";
 import {
   Animated,
-  // Image replaced by expo-image
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,15 +13,11 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { Image } from "expo-image";
-import { GlassCard } from "../components/GlassCard";
-import { GlassPill } from "../components/GlassPill";
-import { GradientButton } from "../components/GradientButton";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { bottomFade, screenGradient, spotlightGradient } from "../constants/gradients";
 import {
   getFontScale,
   radius,
-  shadows,
   spacing,
   typography,
 } from "../constants/theme";
@@ -49,8 +44,8 @@ function MatchCard({
   const fontScale = getFontScale(width);
   const { scale, onPressIn, onPressOut } = useSpringPress({ pressedScale: 0.97 });
 
-  const titleSize = Math.round(22 * fontScale);
-  const titleLineHeight = Math.round(28 * fontScale);
+  const titleSize = Math.round(17 * fontScale);
+  const titleLineHeight = Math.round(22 * fontScale);
 
   return (
     <Animated.View
@@ -60,72 +55,68 @@ function MatchCard({
         onPressIn={onPressIn}
         onPressOut={onPressOut}
         onPress={() => onExpand(job)}
+        style={[
+          styles.card,
+          { backgroundColor: colors.glass, borderColor: colors.glassBorder },
+        ]}
       >
-        <GlassCard accentGradient={job.gradient as [string, string]}>
-          <View style={styles.rowStart}>
-            <View
-              style={[
-                styles.logoWrap,
-                { backgroundColor: colors.glass, borderColor: colors.glassBorder },
-              ]}
-            >
-              <Image
-                source={{ uri: job.logoImage }}
-                style={styles.logo}
-                contentFit="contain"
-              />
-            </View>
-            <View style={styles.flexOne}>
-              <Text
-                style={[
-                  styles.jobTitle,
-                  {
-                    color: colors.text,
-                    fontSize: titleSize,
-                    lineHeight: titleLineHeight,
-                  },
-                ]}
-                numberOfLines={2}
-              >
-                {job.title}
-              </Text>
-              <Text style={[styles.company, { color: colors.textSecondary }]}>
-                {job.company}
-              </Text>
-            </View>
-            <View
-              style={[
-                styles.matchPill,
-                { backgroundColor: colors.accentSoft },
-                shadows.glow,
-              ]}
-            >
-              <Ionicons name="heart" size={13} color={colors.accent} />
-              <Text style={[styles.matchText, { color: colors.accent }]}>
-                {job.compatibilityScore}%
-              </Text>
-            </View>
-          </View>
+        {/* Accent strip */}
+        <LinearGradient
+          colors={job.gradient as [string, string]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={styles.accentStrip}
+        />
 
-          <Text
-            style={[styles.description, { color: colors.textSecondary }]}
-            numberOfLines={2}
+        <View style={styles.cardContent}>
+          {/* Logo */}
+          <View
+            style={[
+              styles.logoWrap,
+              { backgroundColor: "rgba(255,255,255,0.95)", borderColor: colors.glassBorder },
+            ]}
           >
-            {job.description}
-          </Text>
-
-          <View style={styles.pillsRow}>
-            <GlassPill icon="location-outline" label={job.location} />
-            <GlassPill icon="briefcase-outline" label={job.type} />
-            <GlassPill icon="cash-outline" label={job.salary} />
+            <Image
+              source={{ uri: job.logoImage }}
+              style={styles.logo}
+              contentFit="contain"
+            />
           </View>
 
-          <GradientButton
-            label="Message Company"
-            icon="chatbubble-outline"
-            onPress={() => {}}
-          />
-        </GlassCard>
+          {/* Info */}
+          <View style={styles.info}>
+            <Text
+              style={[
+                styles.jobTitle,
+                { color: colors.text, fontSize: titleSize, lineHeight: titleLineHeight },
+              ]}
+              numberOfLines={1}
+            >
+              {job.title}
+            </Text>
+            <Text style={[styles.company, { color: colors.textSecondary }]} numberOfLines={1}>
+              {job.company}
+            </Text>
+            <View style={styles.metaRow}>
+              <Ionicons name="location-outline" size={12} color={colors.textTertiary} />
+              <Text style={[styles.metaText, { color: colors.textTertiary }]} numberOfLines={1}>
+                {job.location}
+              </Text>
+              <Text style={[styles.metaDot, { color: colors.textTertiary }]}>{"\u00B7"}</Text>
+              <Text style={[styles.metaText, { color: colors.accent }]}>
+                {job.salary}
+              </Text>
+            </View>
+          </View>
+
+          {/* Match badge */}
+          <View style={[styles.matchBadge, { backgroundColor: colors.accentSoft }]}>
+            <Text style={[styles.matchPercent, { color: colors.accent }]}>
+              {job.compatibilityScore}%
+            </Text>
+            <Ionicons name="heart" size={11} color={colors.accent} />
+          </View>
+        </View>
       </Pressable>
     </Animated.View>
   );
@@ -133,7 +124,6 @@ function MatchCard({
 
 export function MatchesScreen() {
   const { jobs } = useJobs();
-  const { colors } = useTheme();
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const matchedJobs = jobs.slice(0, 5);
 
@@ -168,10 +158,7 @@ export function MatchesScreen() {
       />
 
       <ScrollView
-        contentContainerStyle={[
-          styles.content,
-          { paddingBottom: 130 },
-        ]}
+        contentContainerStyle={[styles.content, { paddingBottom: 130 }]}
         showsVerticalScrollIndicator={false}
       >
         {matchedJobs.map((job, i) => (
@@ -190,15 +177,12 @@ export function MatchesScreen() {
         style={styles.bottomFade}
         pointerEvents="none"
       />
-
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
+  root: { flex: 1 },
   spotlight: {
     position: "absolute",
     top: 0,
@@ -216,57 +200,70 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.lg,
-    gap: spacing.lg,
-  },
-  rowStart: {
-    flexDirection: "row",
-    alignItems: "flex-start",
     gap: spacing.md,
-    marginBottom: spacing.md,
+  },
+
+  // ─── Card ─────────────────────────────────────────────────────────
+  card: {
+    borderRadius: radius.xl,
+    borderWidth: 1,
+    overflow: "hidden",
+  },
+  accentStrip: {
+    height: 3,
+  },
+  cardContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: spacing.lg,
+    gap: spacing.md,
   },
   logoWrap: {
-    width: 52,
-    height: 52,
+    width: 48,
+    height: 48,
     borderRadius: radius.md,
     borderWidth: 1,
-    padding: spacing.sm,
+    padding: spacing.xs,
   },
   logo: {
     width: "100%",
     height: "100%",
   },
-  flexOne: {
+  info: {
     flex: 1,
+    gap: 2,
   },
   jobTitle: {
-    fontWeight: typography.heading.fontWeight,
-    letterSpacing: typography.heading.letterSpacing,
-    marginBottom: spacing.xxs,
+    fontWeight: "700",
+    letterSpacing: -0.3,
   },
   company: {
     ...typography.bodySmall,
     fontWeight: "600",
   },
-  matchPill: {
+  metaRow: {
     flexDirection: "row",
+    alignItems: "center",
     gap: 4,
+    marginTop: 2,
+  },
+  metaText: {
+    fontSize: 12,
+    fontWeight: "500",
+  },
+  metaDot: {
+    fontSize: 12,
+  },
+  matchBadge: {
     alignItems: "center",
     paddingHorizontal: spacing.md,
     paddingVertical: spacing.sm,
     borderRadius: radius.pill,
+    gap: 2,
   },
-  matchText: {
-    ...typography.label,
-    fontWeight: "700",
-  },
-  description: {
-    ...typography.bodySmall,
-    marginBottom: spacing.md,
-  },
-  pillsRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.sm,
-    marginBottom: spacing.lg,
+  matchPercent: {
+    fontSize: 15,
+    fontWeight: "800",
+    letterSpacing: -0.3,
   },
 });

@@ -6,7 +6,6 @@ import { useCallback, useEffect, useRef } from "react";
 import {
   Animated,
   Easing,
-  // Image replaced by expo-image
   Pressable,
   ScrollView,
   StyleSheet,
@@ -16,14 +15,11 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { GlassCard } from "../components/GlassCard";
-import { GlassPill } from "../components/GlassPill";
-import { GradientButton } from "../components/GradientButton";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { bottomFade, screenGradient, spotlightGradient } from "../constants/gradients";
 import {
   getFontScale,
   radius,
-  shadows,
   spacing,
   typography,
 } from "../constants/theme";
@@ -91,7 +87,6 @@ function SavedCard({
   const fontScale = getFontScale(width);
   const { scale, onPressIn, onPressOut } = useSpringPress({ pressedScale: 0.97 });
 
-  // Spring bounce for delete button
   const deleteScale = useRef(new Animated.Value(1)).current;
   const handleDelete = useCallback(() => {
     Animated.sequence([
@@ -111,8 +106,8 @@ function SavedCard({
     onRemove(job.id);
   }, [deleteScale, job.id, onRemove]);
 
-  const titleSize = Math.round(22 * fontScale);
-  const titleLineHeight = Math.round(28 * fontScale);
+  const titleSize = Math.round(17 * fontScale);
+  const titleLineHeight = Math.round(22 * fontScale);
 
   return (
     <Animated.View
@@ -122,65 +117,70 @@ function SavedCard({
         onPressIn={onPressIn}
         onPressOut={onPressOut}
         onPress={() => onExpand(job)}
+        style={[
+          styles.card,
+          { backgroundColor: colors.glass, borderColor: colors.glassBorder },
+        ]}
       >
-        <GlassCard accentGradient={job.gradient as [string, string]}>
-          <View style={styles.rowStart}>
-            <View
-              style={[
-                styles.logoWrap,
-                { backgroundColor: colors.glass, borderColor: colors.glassBorder },
-              ]}
-            >
-              <Image
-                source={{ uri: job.logoImage }}
-                style={styles.logo}
-                contentFit="contain"
-              />
-            </View>
-            <View style={styles.flexOne}>
-              <Text
-                style={[
-                  styles.jobTitle,
-                  {
-                    color: colors.text,
-                    fontSize: titleSize,
-                    lineHeight: titleLineHeight,
-                  },
-                ]}
-                numberOfLines={2}
-              >
-                {job.title}
-              </Text>
-              <Text style={[styles.company, { color: colors.textSecondary }]}>
-                {job.company}
-              </Text>
-            </View>
-            <Animated.View style={{ transform: [{ scale: deleteScale }] }}>
-              <Pressable
-                onPress={handleDelete}
-                style={[styles.deleteWrap, { backgroundColor: colors.dangerSoft }]}
-                hitSlop={8}
-              >
-                <Ionicons name="trash-outline" size={16} color={colors.danger} />
-              </Pressable>
-            </Animated.View>
-          </View>
+        <LinearGradient
+          colors={job.gradient as [string, string]}
+          start={{ x: 0, y: 0.5 }}
+          end={{ x: 1, y: 0.5 }}
+          style={styles.accentStrip}
+        />
 
-          <Text
-            style={[styles.description, { color: colors.textSecondary }]}
-            numberOfLines={2}
+        <View style={styles.cardContent}>
+          {/* Logo */}
+          <View
+            style={[
+              styles.logoWrap,
+              { backgroundColor: "rgba(255,255,255,0.95)", borderColor: colors.glassBorder },
+            ]}
           >
-            {job.description}
-          </Text>
-
-          <View style={styles.pillsRow}>
-            <GlassPill icon="location-outline" label={job.location} />
-            <GlassPill icon="briefcase-outline" label={job.type} />
-            <GlassPill icon="cash-outline" label={job.salary} />
+            <Image
+              source={{ uri: job.logoImage }}
+              style={styles.logo}
+              contentFit="contain"
+            />
           </View>
 
-          <GradientButton label="Apply Now" onPress={() => {}} />
-        </GlassCard>
+          {/* Info */}
+          <View style={styles.info}>
+            <Text
+              style={[
+                styles.jobTitle,
+                { color: colors.text, fontSize: titleSize, lineHeight: titleLineHeight },
+              ]}
+              numberOfLines={1}
+            >
+              {job.title}
+            </Text>
+            <Text style={[styles.company, { color: colors.textSecondary }]} numberOfLines={1}>
+              {job.company}
+            </Text>
+            <View style={styles.metaRow}>
+              <Ionicons name="location-outline" size={12} color={colors.textTertiary} />
+              <Text style={[styles.metaText, { color: colors.textTertiary }]} numberOfLines={1}>
+                {job.location}
+              </Text>
+              <Text style={[styles.metaDot, { color: colors.textTertiary }]}>{"\u00B7"}</Text>
+              <Text style={[styles.metaText, { color: colors.accent }]}>
+                {job.salary}
+              </Text>
+            </View>
+          </View>
+
+          {/* Delete button */}
+          <Animated.View style={{ transform: [{ scale: deleteScale }] }}>
+            <Pressable
+              onPress={handleDelete}
+              style={[styles.deleteBtn, { backgroundColor: colors.dangerSoft }]}
+              hitSlop={8}
+            >
+              <Ionicons name="trash-outline" size={16} color={colors.danger} />
+            </Pressable>
+          </Animated.View>
+        </View>
       </Pressable>
     </Animated.View>
   );
@@ -225,10 +225,7 @@ export function SavedScreen() {
       <ScreenHeader title="Saved Jobs" subtitle={subtitleText} />
 
       <ScrollView
-        contentContainerStyle={[
-          styles.content,
-          { paddingBottom: 130 },
-        ]}
+        contentContainerStyle={[styles.content, { paddingBottom: 130 }]}
         showsVerticalScrollIndicator={false}
       >
         {!loaded || savedJobs.length === 0 ? (
@@ -269,15 +266,12 @@ export function SavedScreen() {
         style={styles.bottomFade}
         pointerEvents="none"
       />
-
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
+  root: { flex: 1 },
   spotlight: {
     position: "absolute",
     top: 0,
@@ -295,51 +289,66 @@ const styles = StyleSheet.create({
   content: {
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.lg,
-    gap: spacing.lg,
-  },
-  rowStart: {
-    flexDirection: "row",
-    alignItems: "flex-start",
     gap: spacing.md,
-    marginBottom: spacing.md,
+  },
+
+  // ─── Card ─────────────────────────────────────────────────────────
+  card: {
+    borderRadius: radius.xl,
+    borderWidth: 1,
+    overflow: "hidden",
+  },
+  accentStrip: {
+    height: 3,
+  },
+  cardContent: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: spacing.lg,
+    gap: spacing.md,
   },
   logoWrap: {
-    width: 52,
-    height: 52,
+    width: 48,
+    height: 48,
     borderRadius: radius.md,
     borderWidth: 1,
-    padding: spacing.sm,
+    padding: spacing.xs,
   },
   logo: {
     width: "100%",
     height: "100%",
   },
-  flexOne: {
+  info: {
     flex: 1,
+    gap: 2,
   },
   jobTitle: {
-    fontWeight: typography.heading.fontWeight,
-    letterSpacing: typography.heading.letterSpacing,
-    marginBottom: spacing.xxs,
+    fontWeight: "700",
+    letterSpacing: -0.3,
   },
   company: {
     ...typography.bodySmall,
     fontWeight: "600",
   },
-  deleteWrap: {
+  metaRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    marginTop: 2,
+  },
+  metaText: {
+    fontSize: 12,
+    fontWeight: "500",
+  },
+  metaDot: {
+    fontSize: 12,
+  },
+  deleteBtn: {
     padding: spacing.sm,
     borderRadius: radius.pill,
   },
-  description: {
-    ...typography.bodySmall,
-    marginBottom: spacing.md,
-  },
-  pillsRow: {
-    flexDirection: "row",
-    flexWrap: "wrap",
-    gap: spacing.sm,
-    marginBottom: spacing.lg,
-  },
+
+  // ─── Empty state ──────────────────────────────────────────────────
   emptyContent: {
     alignItems: "center",
     paddingVertical: spacing.xxxl,

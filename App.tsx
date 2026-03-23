@@ -3,13 +3,14 @@ import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, useColorScheme, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AuthNavigator } from "./src/navigation/AuthNavigator";
+import { OnboardingNavigator } from "./src/navigation/OnboardingNavigator";
 import { AppStack } from "./src/navigation/AppStack";
 import { AuthProvider, useAuth } from "./src/context/AuthContext";
 import { SavedJobsProvider } from "./src/context/SavedJobsContext";
 import { themes } from "./src/constants/theme";
 
 function RootNavigator() {
-  const { user, loading } = useAuth();
+  const { user, loading, needsOnboarding, onboardingResumeRoute } = useAuth();
   const scheme = useColorScheme();
   const t = scheme === "dark" ? themes.dark : themes.light;
 
@@ -23,6 +24,10 @@ function RootNavigator() {
 
   if (!user) {
     return <AuthNavigator />;
+  }
+
+  if (needsOnboarding) {
+    return <OnboardingNavigator initialRouteName={onboardingResumeRoute} />;
   }
 
   return (
