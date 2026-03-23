@@ -9,9 +9,10 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { authGradient, spotlightGradient } from "../constants/gradients";
-import { radius, shadows, spacing, typography } from "../constants/theme";
+import { authGradient, authGradientLight, spotlightGradient } from "../constants/gradients";
+import { spacing, typography } from "../constants/theme";
 import { useTheme } from "../hooks/useTheme";
+import { LynqLogo } from "./LynqLogo";
 
 interface AuthLayoutProps {
   /** Form content rendered between brand header and bottom link */
@@ -38,11 +39,12 @@ export function AuthLayout({
   onLinkPress,
   linkDisabled = false,
 }: AuthLayoutProps) {
-  const { colors } = useTheme();
+  const { colors, mode } = useTheme();
+  const bgGradient = mode === "dark" ? authGradient : authGradientLight;
 
   return (
     <View style={styles.root}>
-      <LinearGradient colors={authGradient} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={bgGradient} style={StyleSheet.absoluteFill} />
       <LinearGradient
         colors={spotlightGradient}
         style={styles.spotlight}
@@ -57,9 +59,7 @@ export function AuthLayout({
           <View style={styles.content}>
             {/* Brand header */}
             <View style={styles.brandRow}>
-              <View style={[styles.brandIcon, shadows.glow, { backgroundColor: colors.accent }]}>
-                <Text style={styles.brandLetter}>Lq</Text>
-              </View>
+              <LynqLogo size={48} white={mode === "dark"} />
               <Text style={[styles.brandName, { color: colors.text }]}>Lynq</Text>
             </View>
 
@@ -113,19 +113,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: spacing.md,
     marginBottom: spacing.xxxl,
-  },
-  brandIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: radius.sm,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  brandLetter: {
-    fontSize: 20,
-    fontWeight: "800",
-    color: "#FFFFFF",
-    letterSpacing: -0.5,
   },
   brandName: {
     fontSize: 30,

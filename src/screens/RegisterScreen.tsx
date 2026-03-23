@@ -276,8 +276,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
   },
   input: {
-    ...typography.body,
+    fontSize: 15,
+    fontWeight: "400" as const,
     flex: 1,
+    padding: 0,
   },
   buttonWrap: {
     marginTop: spacing.lg,

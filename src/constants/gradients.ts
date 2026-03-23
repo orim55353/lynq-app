@@ -10,6 +10,9 @@ export const screenGradient: [string, string] = ["#0B1220", "#111827"];
 /** Auth screen background — warm, inviting */
 export const authGradient: [string, string, string] = ["#0B1220", "#0F1D2E", "#111827"];
 
+/** Auth screen background — light mode */
+export const authGradientLight: [string, string, string] = ["#F5FAFC", "#EFF4F7", "#E8EDF0"];
+
 /** Card scrim — ensures text legibility on image backgrounds */
 export const cardScrim: [string, string, string] = [
   "rgba(11, 18, 32, 0.1)",

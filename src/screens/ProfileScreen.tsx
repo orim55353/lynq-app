@@ -30,17 +30,15 @@ import {
 } from "../constants/theme";
 import { useAuth } from "../context/AuthContext";
 import { useEntranceAnimations } from "../hooks/useEntranceAnimations";
-import { useProfile } from "../hooks/useProfile";
 import { useSpringPress } from "../hooks/useSpringPress";
 import { useTheme } from "../hooks/useTheme";
 
 export function ProfileScreen() {
-  const { uid, signOut } = useAuth();
+  const { signOut, profile, profileLoading: loading } = useAuth();
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const fontScale = getFontScale(width);
-  const { profile, loading } = useProfile(uid);
 
   // 4 sections: profile header, skills, experience, sign-out
   const { opacities, translateYs, trigger } = useEntranceAnimations(4, {
