@@ -1,6 +1,6 @@
 # Lynq App (Mobile)
 
-Swipe-style job discovery app for candidates. Expo/React Native + Firebase.
+Swipe-style job discovery app for candidates. Expo/React Native + Supabase.
 
 ---
 
@@ -8,8 +8,8 @@ Swipe-style job discovery app for candidates. Expo/React Native + Firebase.
 
 - **Framework:** Expo SDK 54, React Native 0.81, React 19, TypeScript 5 (strict)
 - **Navigation:** React Navigation 7 (bottom tabs + native stack)
-- **Backend:** Firebase (Auth, Firestore) via JS SDK v11
-- **Persistence:** Firestore (signed-in) / AsyncStorage (offline/anonymous) with auto-migration
+- **Backend:** Supabase (Auth, PostgreSQL) via @supabase/supabase-js
+- **Persistence:** Supabase (signed-in) / AsyncStorage (offline/anonymous) with auto-migration
 - **Styling:** React Native StyleSheet, `expo-linear-gradient`
 - **Build:** EAS Build (development, preview, production channels)
 - **Package manager:** npm
@@ -25,13 +25,13 @@ src/
     theme.ts             # Design tokens: colors (dark/light), spacing, radius, typography, shadows, animation
     gradients.ts         # Gradient presets for LinearGradient (screen, auth, card, accent, etc.)
   types/models.ts        # Job, ChatMessage interfaces
-  lib/firebase.ts        # Firebase init (app, auth, db) + isFirestoreAvailable() guard
+  lib/supabase.ts        # Supabase client init (auth, db)
   context/
     AuthContext.tsx       # AuthProvider + useAuth() — user, uid, signIn, register, signOut
-    SavedJobsContext.tsx  # SavedJobsProvider + useSavedJobs() — Firestore ↔ AsyncStorage sync
+    SavedJobsContext.tsx  # SavedJobsProvider + useSavedJobs() — Supabase ↔ AsyncStorage sync
   hooks/
-    useJobs.ts           # Fetches jobs from Firestore, falls back to static data
-    useProfile.ts        # User profile CRUD against Firestore users/{uid}
+    useJobs.ts           # Fetches jobs from Supabase, falls back to static data
+    useProfile.ts        # User profile CRUD against Supabase app_users table
   data/
     jobs.ts              # Static seed jobs (Caesars Entertainment)
     chat.ts              # Static chat data
@@ -70,20 +70,18 @@ src/
 
 - `useAuth()` provides `user`, `uid`, `loading`, `signIn`, `register`, `signOut`
 - All data hooks gate on `uid` from `useAuth()`
-- `useJobs()` fetches from Firestore `jobs` collection, falls back to `src/data/jobs.ts`
-- `useProfile(uid)` reads/writes `users/{uid}` in Firestore
-- `useSavedJobs()` syncs `users/{uid}/savedJobs` subcollection ↔ AsyncStorage with migration
+- `useJobs()` fetches from Supabase `jobs` table, falls back to `src/data/jobs.ts`
+- `useProfile(uid)` reads/writes `app_users` table in Supabase (filtered by uid)
+- `useSavedJobs()` syncs `saved_jobs` table in Supabase ↔ AsyncStorage with migration
 
 ---
 
-## Firestore Schema
+## PostgreSQL Tables
 
 ```
-jobs/{jobId}                    # Job documents (read: authenticated, write: admin only)
-users/{uid}                     # User profile (read/write: owner only)
-  savedJobs/{jobId}             # Saved job refs (read/write: owner only)
-  chats/{chatId}                # Chat threads (phase 2)
-    messages/{messageId}        # Chat messages (phase 2)
+app_users (id, uid, ...)        # User profiles (RLS: owner only)
+jobs (id, ...)                  # Job listings (RLS: read authenticated, write admin only)
+saved_jobs (id, user_id, job_id, ...)  # Saved job references (RLS: owner only)
 ```
 
 ---
@@ -118,13 +116,8 @@ users/{uid}                     # User profile (read/write: owner only)
 All prefixed `EXPO_PUBLIC_*` (inlined at build time):
 
 ```
-EXPO_PUBLIC_FIREBASE_API_KEY
-EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN
-EXPO_PUBLIC_FIREBASE_PROJECT_ID
-EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET
-EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-EXPO_PUBLIC_FIREBASE_APP_ID
-EXPO_PUBLIC_FIREBASE_MEASUREMENT_ID
+EXPO_PUBLIC_SUPABASE_URL
+EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY
 ```
 
 Copy `.env.example` to `.env` and restart with `npx expo start -c`.
@@ -150,7 +143,7 @@ npm run typecheck      # tsc --noEmit
 - **File size:** 200–400 lines typical, 800 max
 - **Functions:** Under 50 lines
 - **Styling:** `StyleSheet.create()` at bottom of file, use theme constants for all values
-- **Firestore access:** Always guard with `isFirestoreAvailable(db)` before using `db`
+- **Supabase access:** Use the shared Supabase client from `src/lib/supabase.ts`
 - **Error handling:** Handle explicitly; UI-facing errors get user-friendly messages
 - **No hardcoded values:** Use theme constants, env vars, or config objects
 - **Hook pattern:** Custom hooks return `{ data, loading, error }` tuples
@@ -174,7 +167,7 @@ After completing work that changes feature status, adds new features, modifies d
 | Feature added/completed | `App/App - Features.md` (status table) |
 | Screen added/modified | `App/App - Screens & Navigation.md` |
 | New data type or field | `Data Structures/Data - App Types.md` |
-| Firestore collection changed | `Data Structures/Data - Firestore Collections.md` |
+| Database schema changed | `Data Structures/Data - Database Schema.md` |
 | New connection to backoffice working | `System Map/Feature Relationship Map.md` (connection strength), `System Map/lynq-system-chart.html` (update status badges/colors) |
 | Broken connection fixed | `System Map/Feature Relationship Map.md`, `System Map/System Connection Map.md` |
 | Stories system changed | `App/App - Stories System.md` |

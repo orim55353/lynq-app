@@ -1,9 +1,11 @@
 import { memo, useCallback, useMemo, useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   Animated,
   ImageBackground,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -18,7 +20,6 @@ import {
   spacing,
 } from "../constants/theme";
 import { Job } from "../types/models";
-import { clamp } from "../utils/math";
 import { MatchScoreRing } from "./MatchScoreRing";
 
 interface JobCardProps {
@@ -39,7 +40,7 @@ interface JobCardProps {
 const overlayColors = {
   dark: {
     pageBg: "#0B1220",
-    overlay: "rgba(11, 18, 32, 0.45)",
+    blurTint: "rgba(11, 18, 32, 0.2)",
     topVignette: ["rgba(0,0,0,0.4)", "transparent"] as [string, string],
     ringBg: "rgba(0,0,0,0.4)",
     ringBorder: "rgba(255,255,255,0.1)",
@@ -65,7 +66,7 @@ const overlayColors = {
   },
   light: {
     pageBg: "#F5FAFC",
-    overlay: "rgba(255, 255, 255, 0.75)",
+    blurTint: "rgba(255, 255, 255, 0.15)",
     topVignette: ["rgba(255,255,255,0.3)", "transparent"] as [string, string],
     ringBg: "rgba(255,255,255,0.7)",
     ringBorder: "rgba(0,0,0,0.08)",
@@ -199,8 +200,13 @@ export const JobCard = memo(function JobCard({
         style={[StyleSheet.absoluteFill, { opacity: 0.4 }]}
       />
 
-      {/* ─── Layer 3: Solid tinted overlay — guarantees text contrast ─── */}
-      <View style={[StyleSheet.absoluteFill, { backgroundColor: c.overlay }]} />
+      {/* ─── Layer 3: Frosted glass blur + light tint for text contrast ─── */}
+      <BlurView
+        intensity={Platform.OS === "ios" ? 20 : 35}
+        tint={mode === "dark" ? "dark" : "light"}
+        style={StyleSheet.absoluteFill}
+      />
+      <View style={[StyleSheet.absoluteFill, { backgroundColor: c.blurTint }]} />
 
       {/* ─── Layer 4: Top vignette for status bar ─── */}
       <LinearGradient

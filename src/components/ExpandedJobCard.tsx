@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { BlurView } from "expo-blur";
 import { LinearGradient } from "expo-linear-gradient";
 import {
   Animated,
   ImageBackground,
   Modal,
   PanResponder,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -37,7 +39,7 @@ const DISMISS_THRESHOLD = 100;
 // ─── Mode-aware palette ─────────────────────────────────────────────────────
 const palette = {
   dark: {
-    overlay: "rgba(11, 18, 32, 0.55)",
+    blurTint: "rgba(11, 18, 32, 0.25)",
     dragPill: "rgba(255,255,255,0.3)",
     closeBg: "rgba(255,255,255,0.1)",
     closeBorder: "rgba(255,255,255,0.08)",
@@ -51,10 +53,10 @@ const palette = {
     salary: "#22D3EE",
     locationDot: "rgba(255,255,255,0.3)",
     location: "rgba(255,255,255,0.65)",
-    cardBg: "rgba(255,255,255,0.06)",
+    cardBg: "rgba(255,255,255,0.10)",
     cardBorder: "rgba(255,255,255,0.08)",
     scoreText: "#FFFFFF",
-    stripBg: "rgba(255,255,255,0.05)",
+    stripBg: "rgba(255,255,255,0.10)",
     infoLabel: "rgba(255,255,255,0.4)",
     infoValue: "#FFFFFF",
     infoIcon: "rgba(255,255,255,0.8)",
@@ -64,8 +66,8 @@ const palette = {
     accentIcon: "rgba(255,255,255,0.8)",
     bulletLine: "rgba(255,255,255,0.5)",
     bulletText: "rgba(255,255,255,0.88)",
-    benefitBg: "rgba(255,255,255,0.06)",
-    benefitBorder: "rgba(255,255,255,0.06)",
+    benefitBg: "rgba(255,255,255,0.10)",
+    benefitBorder: "rgba(255,255,255,0.10)",
     benefitText: "rgba(255,255,255,0.88)",
     stickyBg: "rgba(0,0,0,0.7)",
     poweredBy: "rgba(255,255,255,0.55)",
@@ -74,7 +76,7 @@ const palette = {
     saveIcon: "#FFFFFF",
   },
   light: {
-    overlay: "rgba(255, 255, 255, 0.75)",
+    blurTint: "rgba(255, 255, 255, 0.2)",
     dragPill: "rgba(0,0,0,0.15)",
     closeBg: "rgba(0,0,0,0.06)",
     closeBorder: "rgba(0,0,0,0.1)",
@@ -85,10 +87,10 @@ const palette = {
     matchText: "#171D1E",
     // Content zone — on white scrim
     title: "#171D1E",
-    tagline: "#3D494C",
+    tagline: "#171D1E",
     salary: "#00687A",
-    locationDot: "rgba(0,0,0,0.2)",
-    location: "#3D494C",
+    locationDot: "rgba(0,0,0,0.3)",
+    location: "#171D1E",
     cardBg: "#FFFFFF",
     cardBorder: "rgba(0,0,0,0.08)",
     scoreText: "#171D1E",
@@ -98,10 +100,10 @@ const palette = {
     infoIcon: "rgba(0,0,0,0.6)",
     divider: "rgba(0,0,0,0.08)",
     sectionTitle: "#171D1E",
-    body: "#3D494C",
-    accentIcon: "rgba(0,0,0,0.6)",
-    bulletLine: "rgba(0,0,0,0.4)",
-    bulletText: "#3D494C",
+    body: "#171D1E",
+    accentIcon: "rgba(0,0,0,0.75)",
+    bulletLine: "rgba(0,0,0,0.5)",
+    bulletText: "#171D1E",
     benefitBg: "rgba(0, 104, 122, 0.06)",
     benefitBorder: "rgba(0, 104, 122, 0.08)",
     benefitText: "#171D1E",
@@ -172,7 +174,15 @@ export function ExpandedJobCard({
         }),
       ]).start(() => setExpanded(true));
     }
-  }, [visible, cardTopY, slideY, dragY, backdropOpacity, contentOpacity, headerOpacity]);
+  }, [
+    visible,
+    cardTopY,
+    slideY,
+    dragY,
+    backdropOpacity,
+    contentOpacity,
+    headerOpacity,
+  ]);
 
   const animateClose = useCallback(() => {
     setExpanded(false);
@@ -196,7 +206,14 @@ export function ExpandedJobCard({
         useNativeDriver: true,
       }),
     ]).start(() => onClose());
-  }, [slideY, cardTopY, contentOpacity, headerOpacity, backdropOpacity, onClose]);
+  }, [
+    slideY,
+    cardTopY,
+    contentOpacity,
+    headerOpacity,
+    backdropOpacity,
+    onClose,
+  ]);
 
   // ─── Drag to dismiss ──────────────────────────────────────────────
   const panResponder = useRef(
@@ -274,7 +291,14 @@ export function ExpandedJobCard({
           end={{ x: 1, y: 1 }}
           style={[StyleSheet.absoluteFill, { opacity: 0.4 }]}
         />
-        <View style={[StyleSheet.absoluteFill, { backgroundColor: p.overlay }]} />
+        <BlurView
+          intensity={Platform.OS === "ios" ? 25 : 40}
+          tint={mode === "dark" ? "dark" : "light"}
+          style={StyleSheet.absoluteFill}
+        />
+        <View
+          style={[StyleSheet.absoluteFill, { backgroundColor: p.blurTint }]}
+        />
       </Animated.View>
 
       {/* ─── Expanding sheet ─── */}
@@ -291,7 +315,10 @@ export function ExpandedJobCard({
         {/* Drag handle + header — fades out instantly on close */}
         <Animated.View
           {...panResponder.panHandlers}
-          style={[styles.dragArea, { paddingTop: insets.top, opacity: headerOpacity }]}
+          style={[
+            styles.dragArea,
+            { paddingTop: insets.top, opacity: headerOpacity },
+          ]}
         >
           <View style={[styles.dragPill, { backgroundColor: p.dragPill }]} />
 
@@ -299,7 +326,10 @@ export function ExpandedJobCard({
           <View style={styles.header}>
             <Pressable
               onPress={animateClose}
-              style={[styles.closeBtn, { backgroundColor: p.closeBg, borderColor: p.closeBorder }]}
+              style={[
+                styles.closeBtn,
+                { backgroundColor: p.closeBg, borderColor: p.closeBorder },
+              ]}
               hitSlop={12}
             >
               <Ionicons name="chevron-down" size={22} color={p.closeIcon} />
@@ -313,7 +343,10 @@ export function ExpandedJobCard({
                   contentFit="contain"
                 />
               </View>
-              <Text style={[styles.headerCompany, { color: p.company }]} numberOfLines={1}>
+              <Text
+                style={[styles.headerCompany, { color: p.company }]}
+                numberOfLines={1}
+              >
                 {job.company}
               </Text>
             </View>
@@ -343,16 +376,29 @@ export function ExpandedJobCard({
           >
             {/* Hero section */}
             {/* ─── Job Info Card ─── */}
-            <View style={[styles.jobInfoCard, { backgroundColor: p.cardBg, borderColor: p.cardBorder }]}>
-              <Text style={[styles.title, { color: p.sectionTitle }]}>{job.title}</Text>
+            <View
+              style={[
+                styles.jobInfoCard,
+                { backgroundColor: p.cardBg, borderColor: p.cardBorder },
+              ]}
+            >
+              <Text style={[styles.title, { color: p.sectionTitle }]}>
+                {job.title}
+              </Text>
 
               {job.tagline ? (
-                <Text style={[styles.tagline, { color: p.body }]}>{job.tagline}</Text>
+                <Text style={[styles.tagline, { color: p.body }]}>
+                  {job.tagline}
+                </Text>
               ) : null}
 
               <View style={styles.salaryLocationRow}>
-                <Text style={[styles.salary, { color: p.salary }]}>{job.salary}</Text>
-                <Text style={[styles.locationDot, { color: p.divider }]}>{"\u00B7"}</Text>
+                <Text style={[styles.salary, { color: p.salary }]}>
+                  {job.salary}
+                </Text>
+                <Text style={[styles.locationDot, { color: p.divider }]}>
+                  {"\u00B7"}
+                </Text>
                 <Text style={[styles.location, { color: p.body }]}>
                   {job.location} {"\u00B7"} {job.type}
                 </Text>
@@ -360,7 +406,12 @@ export function ExpandedJobCard({
             </View>
 
             {/* ─── Match Hero ─── */}
-            <View style={[styles.matchHero, { backgroundColor: p.cardBg, borderColor: p.cardBorder }]}>
+            <View
+              style={[
+                styles.matchHero,
+                { backgroundColor: p.cardBg, borderColor: p.cardBorder },
+              ]}
+            >
               <MatchScoreRing
                 score={job.compatibilityScore}
                 size={110}
@@ -369,7 +420,9 @@ export function ExpandedJobCard({
                 labelStyle="short"
               />
               <View style={styles.matchHeroText}>
-                <Text style={[styles.matchHeroTitle, { color: p.sectionTitle }]}>
+                <Text
+                  style={[styles.matchHeroTitle, { color: p.sectionTitle }]}
+                >
                   You're a {matchLabel(job.compatibilityScore)} Match!
                 </Text>
                 <Text style={[styles.matchHeroBody, { color: p.body }]}>
@@ -386,10 +439,17 @@ export function ExpandedJobCard({
 
             {/* ─── AI Explanation ─── */}
             {job.matchExplanation && (
-              <View style={[styles.aiCard, { backgroundColor: p.cardBg, borderColor: p.cardBorder }]}>
+              <View
+                style={[
+                  styles.aiCard,
+                  { backgroundColor: p.cardBg, borderColor: p.cardBorder },
+                ]}
+              >
                 <View style={styles.aiHeader}>
                   <Ionicons name="sparkles" size={14} color={p.accentIcon} />
-                  <Text style={[styles.aiHeaderText, { color: p.sectionTitle }]}>
+                  <Text
+                    style={[styles.aiHeaderText, { color: p.sectionTitle }]}
+                  >
                     Why this score?
                   </Text>
                 </View>
@@ -404,27 +464,65 @@ export function ExpandedJobCard({
 
             {/* Info strip */}
             <View style={[styles.infoStrip, { backgroundColor: p.stripBg }]}>
-              <InfoCell icon="briefcase-outline" label="Experience" value={job.experience} labelColor={p.infoLabel} valueColor={p.infoValue} iconColor={p.infoIcon} />
-              <View style={[styles.infoDivider, { backgroundColor: p.divider }]} />
-              <InfoCell icon="calendar-outline" label="Schedule" value={job.schedule} labelColor={p.infoLabel} valueColor={p.infoValue} iconColor={p.infoIcon} />
-              <View style={[styles.infoDivider, { backgroundColor: p.divider }]} />
-              <InfoCell icon="location-outline" label="Work Type" value={job.workType} labelColor={p.infoLabel} valueColor={p.infoValue} iconColor={p.infoIcon} />
+              <InfoCell
+                icon="briefcase-outline"
+                label="Experience"
+                value={job.experience}
+                labelColor={p.infoLabel}
+                valueColor={p.infoValue}
+                iconColor={p.infoIcon}
+              />
+              <View
+                style={[styles.infoDivider, { backgroundColor: p.divider }]}
+              />
+              <InfoCell
+                icon="calendar-outline"
+                label="Schedule"
+                value={job.schedule}
+                labelColor={p.infoLabel}
+                valueColor={p.infoValue}
+                iconColor={p.infoIcon}
+              />
+              <View
+                style={[styles.infoDivider, { backgroundColor: p.divider }]}
+              />
+              <InfoCell
+                icon="location-outline"
+                label="Work Type"
+                value={job.workType}
+                labelColor={p.infoLabel}
+                valueColor={p.infoValue}
+                iconColor={p.infoIcon}
+              />
             </View>
 
             {/* About this role */}
             <View style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>About this role</Text>
-              <Text style={[styles.body, { color: p.body }]}>{job.description}</Text>
+              <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
+                About this role
+              </Text>
+              <Text style={[styles.body, { color: p.body }]}>
+                {job.description}
+              </Text>
             </View>
 
             {/* Responsibilities */}
             {job.responsibilities && job.responsibilities.length > 0 && (
               <View style={styles.section}>
-                <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>What you'll do</Text>
+                <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
+                  What you'll do
+                </Text>
                 {job.responsibilities.map((item, i) => (
                   <View key={i} style={styles.bulletRow}>
-                    <View style={[styles.bulletLine, { backgroundColor: p.bulletLine }]} />
-                    <Text style={[styles.bulletText, { color: p.bulletText }]}>{item}</Text>
+                    <View
+                      style={[
+                        styles.bulletLine,
+                        { backgroundColor: p.bulletLine },
+                      ]}
+                    />
+                    <Text style={[styles.bulletText, { color: p.bulletText }]}>
+                      {item}
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -433,11 +531,19 @@ export function ExpandedJobCard({
             {/* Requirements */}
             {job.requirements && job.requirements.length > 0 && (
               <View style={styles.section}>
-                <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>Requirements</Text>
+                <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
+                  Requirements
+                </Text>
                 {job.requirements.map((item, i) => (
                   <View key={i} style={styles.bulletRow}>
-                    <Ionicons name="checkmark-circle" size={16} color={p.accentIcon} />
-                    <Text style={[styles.bulletText, { color: p.bulletText }]}>{item}</Text>
+                    <Ionicons
+                      name="checkmark-circle"
+                      size={16}
+                      color={p.accentIcon}
+                    />
+                    <Text style={[styles.bulletText, { color: p.bulletText }]}>
+                      {item}
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -445,12 +551,31 @@ export function ExpandedJobCard({
 
             {/* Benefits */}
             <View style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>Benefits</Text>
+              <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
+                Benefits
+              </Text>
               <View style={styles.benefitsWrap}>
                 {job.benefits.map((b) => (
-                  <View key={b} style={[styles.benefitPill, { backgroundColor: p.benefitBg, borderColor: p.benefitBorder }]}>
-                    <Ionicons name="checkmark-circle" size={13} color={p.accentIcon} />
-                    <Text style={[styles.benefitText, { color: p.benefitText }]}>{b}</Text>
+                  <View
+                    key={b}
+                    style={[
+                      styles.benefitPill,
+                      {
+                        backgroundColor: p.benefitBg,
+                        borderColor: p.benefitBorder,
+                      },
+                    ]}
+                  >
+                    <Ionicons
+                      name="checkmark-circle"
+                      size={13}
+                      color={p.accentIcon}
+                    />
+                    <Text
+                      style={[styles.benefitText, { color: p.benefitText }]}
+                    >
+                      {b}
+                    </Text>
                   </View>
                 ))}
               </View>
@@ -459,8 +584,12 @@ export function ExpandedJobCard({
             {/* Company about */}
             {job.companyAbout && (
               <View style={styles.section}>
-                <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>About {job.company}</Text>
-                <Text style={[styles.body, { color: p.body }]}>{job.companyAbout}</Text>
+                <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
+                  About {job.company}
+                </Text>
+                <Text style={[styles.body, { color: p.body }]}>
+                  {job.companyAbout}
+                </Text>
               </View>
             )}
           </ScrollView>
@@ -497,19 +626,13 @@ export function ExpandedJobCard({
 
             <Pressable
               style={
-                applied
-                  ? styles.applyBtnDone
-                  : [styles.applyBtn, shadows.glow]
+                applied ? styles.applyBtnDone : [styles.applyBtn, shadows.glow]
               }
               onPress={handleApply}
             >
               {applied ? (
                 <View style={styles.appliedRow}>
-                  <Ionicons
-                    name="checkmark-circle"
-                    size={20}
-                    color="#22C55E"
-                  />
+                  <Ionicons name="checkmark-circle" size={20} color="#22C55E" />
                   <Text style={styles.appliedText}>Applied</Text>
                 </View>
               ) : (
