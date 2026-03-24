@@ -313,19 +313,19 @@ export const JobCard = memo(function JobCard({
         <View style={[styles.infoStrip, { backgroundColor: c.stripBg }]}>
           <View style={styles.infoCell}>
             <Ionicons name="briefcase-outline" size={18} color={c.infoIcon} />
-            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>Experience</Text>
+            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>ניסיון</Text>
             <Text style={[styles.infoValue, { fontSize: fs.highlight, color: c.infoValue }]}>{job.experience}</Text>
           </View>
           <View style={[styles.infoDivider, { backgroundColor: c.divider }]} />
           <View style={styles.infoCell}>
             <Ionicons name="calendar-outline" size={18} color={c.infoIcon} />
-            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>Schedule</Text>
+            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>לוח זמנים</Text>
             <Text style={[styles.infoValue, { fontSize: fs.highlight, color: c.infoValue }]}>{job.schedule}</Text>
           </View>
           <View style={[styles.infoDivider, { backgroundColor: c.divider }]} />
           <View style={styles.infoCell}>
             <Ionicons name="location-outline" size={18} color={c.infoIcon} />
-            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>Type</Text>
+            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>סוג</Text>
             <Text style={[styles.infoValue, { fontSize: fs.highlight, color: c.infoValue }]}>{job.workType}</Text>
           </View>
         </View>
@@ -358,7 +358,7 @@ export const JobCard = memo(function JobCard({
               {applied ? (
                 <View style={styles.appliedInner}>
                   <Ionicons name="checkmark-circle" size={20} color="#22C55E" />
-                  <Text style={[styles.appliedText, { fontSize: fs.apply }]}>Applied</Text>
+                  <Text style={[styles.appliedText, { fontSize: fs.apply }]}>הוגשה מועמדות</Text>
                 </View>
               ) : (
                 <LinearGradient
@@ -368,7 +368,7 @@ export const JobCard = memo(function JobCard({
                   style={styles.applyGradient}
                 >
                   <Ionicons name="flash" size={17} color="#FFFFFF" />
-                  <Text style={[styles.applyText, { fontSize: fs.apply }]}>Apply Now</Text>
+                  <Text style={[styles.applyText, { fontSize: fs.apply }]}>הגשת מועמדות</Text>
                 </LinearGradient>
               )}
             </Pressable>
@@ -394,7 +394,7 @@ const styles = StyleSheet.create({
   topVignette: { position: "absolute", top: 0, left: 0, right: 0, height: 140 },
 
   titleMatchRow: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: 12,
     marginBottom: 2,
@@ -414,29 +414,29 @@ const styles = StyleSheet.create({
   topZone: {},
   spacer: { flex: 1, minHeight: spacing.xl },
 
-  companyRow: { flexDirection: "row", alignItems: "center", gap: 8, marginBottom: spacing.xs },
+  companyRow: { flexDirection: "row-reverse", alignItems: "center", gap: 8, marginBottom: spacing.xs },
   logoWrap: { width: 32, height: 32, borderRadius: radius.pill, backgroundColor: "rgba(255,255,255,0.95)", padding: 4 },
   logo: { width: "100%", height: "100%", borderRadius: radius.pill },
-  companyName: { fontWeight: "700", letterSpacing: -0.1 },
+  companyName: { fontWeight: "700", letterSpacing: -0.1, textAlign: "right" },
   companyDot: { width: 3, height: 3, borderRadius: 2 },
   companyLocation: { fontWeight: "500" },
 
-  title: { fontWeight: "900", letterSpacing: -1.5, marginBottom: 2 },
-  tagline: { fontWeight: "400", fontStyle: "italic", letterSpacing: 0.2, marginBottom: spacing.sm },
+  title: { fontWeight: "900", letterSpacing: -1.5, marginBottom: 2, textAlign: "right" },
+  tagline: { fontWeight: "400", fontStyle: "italic", letterSpacing: 0.2, marginBottom: spacing.sm, textAlign: "right" },
 
-  salaryRow: { flexDirection: "row", alignItems: "center", gap: spacing.sm, marginBottom: spacing.md },
+  salaryRow: { flexDirection: "row-reverse", alignItems: "center", gap: spacing.sm, marginBottom: spacing.md },
   salary: { fontWeight: "800", letterSpacing: -0.4 },
   typePill: { paddingHorizontal: 10, paddingVertical: 3, borderRadius: radius.pill, borderWidth: 1 },
   typeText: { fontWeight: "600", textTransform: "uppercase", letterSpacing: 0.8 },
 
   highlights: { gap: 7, marginBottom: spacing.lg },
-  highlightRow: { flexDirection: "row", alignItems: "center", gap: 10 },
+  highlightRow: { flexDirection: "row-reverse", alignItems: "center", gap: 10 },
   highlightLine: { width: 16, height: 1.5, borderRadius: 1 },
-  highlightText: { flex: 1, fontWeight: "400", letterSpacing: 0 },
+  highlightText: { flex: 1, fontWeight: "400", letterSpacing: 0, textAlign: "right" },
 
-  benefitsRow: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginBottom: spacing.lg },
+  benefitsRow: { flexDirection: "row-reverse", flexWrap: "wrap", gap: 6, marginBottom: spacing.lg },
   benefitPill: {
-    flexDirection: "row", alignItems: "center", gap: 5,
+    flexDirection: "row-reverse", alignItems: "center", gap: 5,
     paddingHorizontal: 10, paddingVertical: 5,
     borderRadius: radius.pill, borderWidth: 1,
   },
@@ -466,9 +466,9 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(34, 197, 94, 0.15)", borderWidth: 1, borderColor: "rgba(34, 197, 94, 0.3)",
     justifyContent: "center", alignItems: "center",
   },
-  appliedInner: { flexDirection: "row", alignItems: "center", gap: spacing.sm },
+  appliedInner: { flexDirection: "row-reverse", alignItems: "center", gap: spacing.sm },
   appliedText: { color: "#22C55E", fontWeight: "800", letterSpacing: -0.3 },
-  applyGradient: { flex: 1, flexDirection: "row", justifyContent: "center", alignItems: "center", gap: spacing.sm },
+  applyGradient: { flex: 1, flexDirection: "row-reverse", justifyContent: "center", alignItems: "center", gap: spacing.sm },
   applyText: { fontWeight: "800", letterSpacing: -0.2, color: "#FFFFFF" },
   expandButton: { width: 44, height: 52, borderRadius: radius.pill, justifyContent: "center", alignItems: "center", borderWidth: 1 },
 });

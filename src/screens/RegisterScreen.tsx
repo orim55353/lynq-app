@@ -144,23 +144,23 @@ export function RegisterScreen({ navigation }: Props) {
   const handleRegister = useCallback(async () => {
     const trimmedEmail = email.trim();
     if (!trimmedEmail || !password || !confirmPassword) {
-      Alert.alert("Error", "Please fill in all fields.");
+      Alert.alert("שגיאה", "נא למלא את כל השדות.");
       return;
     }
     if (password !== confirmPassword) {
-      Alert.alert("Error", "Passwords do not match.");
+      Alert.alert("שגיאה", "הסיסמאות לא תואמות.");
       return;
     }
     if (password.length < 6) {
-      Alert.alert("Error", "Password must be at least 6 characters.");
+      Alert.alert("שגיאה", "הסיסמה חייבת להכיל לפחות 6 תווים.");
       return;
     }
     setLoading(true);
     try {
       await register(trimmedEmail, password);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Sign up failed.";
-      Alert.alert("Sign up failed", message);
+      const message = err instanceof Error ? err.message : "ההרשמה נכשלה.";
+      Alert.alert("ההרשמה נכשלה", message);
     } finally {
       setLoading(false);
     }
@@ -168,8 +168,8 @@ export function RegisterScreen({ navigation }: Props) {
 
   return (
     <AuthLayout
-      linkPrefix="Already have an account?"
-      linkAction="Log in"
+      linkPrefix="כבר יש לכם חשבון?"
+      linkAction="התחברות"
       onLinkPress={() => navigation.navigate("Login")}
       linkDisabled={loading}
     >
@@ -179,7 +179,7 @@ export function RegisterScreen({ navigation }: Props) {
           transform: [{ translateY: anims[0].translateY }],
         }}
       >
-        <Text style={[styles.title, { color: colors.text }]}>Create account</Text>
+        <Text style={[styles.title, { color: colors.text }]}>יצירת חשבון</Text>
       </Animated.View>
 
       <Animated.View
@@ -190,12 +190,12 @@ export function RegisterScreen({ navigation }: Props) {
         }}
       >
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-          Join the fastest way to find your next role
+          הצטרפו לדרך המהירה למצוא את התפקיד הבא
         </Text>
       </Animated.View>
 
       <GlassInput
-        label="Email"
+        label="אימייל"
         value={email}
         onChangeText={setEmail}
         placeholder="you@email.com"
@@ -208,10 +208,10 @@ export function RegisterScreen({ navigation }: Props) {
       />
 
       <GlassInput
-        label="Password"
+        label="סיסמה"
         value={password}
         onChangeText={setPassword}
-        placeholder="Min 6 characters"
+        placeholder="לפחות 6 תווים"
         secureTextEntry
         autoComplete="new-password"
         editable={!loading}
@@ -220,10 +220,10 @@ export function RegisterScreen({ navigation }: Props) {
       />
 
       <GlassInput
-        label="Confirm Password"
+        label="אימות סיסמה"
         value={confirmPassword}
         onChangeText={setConfirmPassword}
-        placeholder="Repeat your password"
+        placeholder="חזרו על הסיסמה"
         secureTextEntry
         autoComplete="new-password"
         editable={!loading}
@@ -241,7 +241,7 @@ export function RegisterScreen({ navigation }: Props) {
         ]}
       >
         <GradientButton
-          label="Sign up"
+          label="הרשמה"
           onPress={handleRegister}
           loading={loading}
           large
@@ -256,9 +256,13 @@ const styles = StyleSheet.create({
   title: {
     ...typography.displayLarge,
     marginBottom: spacing.xs,
+    textAlign: "right" as const,
+    writingDirection: "rtl" as const,
   },
   subtitle: {
     ...typography.body,
+    textAlign: "right" as const,
+    writingDirection: "rtl" as const,
   },
   inputWrap: {
     marginBottom: spacing.lg,
@@ -266,7 +270,8 @@ const styles = StyleSheet.create({
   inputLabel: {
     ...typography.label,
     marginBottom: spacing.sm,
-    textTransform: "uppercase",
+    textAlign: "right" as const,
+    writingDirection: "rtl" as const,
   },
   inputContainer: {
     height: 52,
@@ -280,6 +285,8 @@ const styles = StyleSheet.create({
     fontWeight: "400" as const,
     flex: 1,
     padding: 0,
+    textAlign: "right" as const,
+    writingDirection: "rtl" as const,
   },
   buttonWrap: {
     marginTop: spacing.lg,

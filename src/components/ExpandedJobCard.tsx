@@ -450,14 +450,14 @@ export function ExpandedJobCard({
                   <Text
                     style={[styles.aiHeaderText, { color: p.sectionTitle }]}
                   >
-                    Why this score?
+                    למה הציון הזה?
                   </Text>
                 </View>
                 <Text style={[styles.aiBody, { color: p.body }]}>
                   {job.matchExplanation}
                 </Text>
                 <Text style={[styles.aiFooter, { color: p.poweredBy }]}>
-                  Powered by Lynq AI
+                  מופעל על ידי Lynq AI
                 </Text>
               </View>
             )}
@@ -466,7 +466,7 @@ export function ExpandedJobCard({
             <View style={[styles.infoStrip, { backgroundColor: p.stripBg }]}>
               <InfoCell
                 icon="briefcase-outline"
-                label="Experience"
+                label="ניסיון"
                 value={job.experience}
                 labelColor={p.infoLabel}
                 valueColor={p.infoValue}
@@ -477,7 +477,7 @@ export function ExpandedJobCard({
               />
               <InfoCell
                 icon="calendar-outline"
-                label="Schedule"
+                label="לוח זמנים"
                 value={job.schedule}
                 labelColor={p.infoLabel}
                 valueColor={p.infoValue}
@@ -488,7 +488,7 @@ export function ExpandedJobCard({
               />
               <InfoCell
                 icon="location-outline"
-                label="Work Type"
+                label="סוג עבודה"
                 value={job.workType}
                 labelColor={p.infoLabel}
                 valueColor={p.infoValue}
@@ -499,7 +499,7 @@ export function ExpandedJobCard({
             {/* About this role */}
             <View style={styles.section}>
               <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
-                About this role
+                על התפקיד
               </Text>
               <Text style={[styles.body, { color: p.body }]}>
                 {job.description}
@@ -510,7 +510,7 @@ export function ExpandedJobCard({
             {job.responsibilities && job.responsibilities.length > 0 && (
               <View style={styles.section}>
                 <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
-                  What you'll do
+                  מה תעשו
                 </Text>
                 {job.responsibilities.map((item, i) => (
                   <View key={i} style={styles.bulletRow}>
@@ -532,7 +532,7 @@ export function ExpandedJobCard({
             {job.requirements && job.requirements.length > 0 && (
               <View style={styles.section}>
                 <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
-                  Requirements
+                  דרישות
                 </Text>
                 {job.requirements.map((item, i) => (
                   <View key={i} style={styles.bulletRow}>
@@ -552,7 +552,7 @@ export function ExpandedJobCard({
             {/* Benefits */}
             <View style={styles.section}>
               <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
-                Benefits
+                הטבות
               </Text>
               <View style={styles.benefitsWrap}>
                 {job.benefits.map((b) => (
@@ -585,7 +585,7 @@ export function ExpandedJobCard({
             {job.companyAbout && (
               <View style={styles.section}>
                 <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
-                  About {job.company}
+                  אודות {job.company}
                 </Text>
                 <Text style={[styles.body, { color: p.body }]}>
                   {job.companyAbout}
@@ -633,7 +633,7 @@ export function ExpandedJobCard({
               {applied ? (
                 <View style={styles.appliedRow}>
                   <Ionicons name="checkmark-circle" size={20} color="#22C55E" />
-                  <Text style={styles.appliedText}>Applied</Text>
+                  <Text style={styles.appliedText}>הוגשה מועמדות</Text>
                 </View>
               ) : (
                 <LinearGradient
@@ -643,7 +643,7 @@ export function ExpandedJobCard({
                   style={styles.applyGrad}
                 >
                   <Ionicons name="flash" size={18} color="#FFFFFF" />
-                  <Text style={styles.applyBtnText}>Apply Now</Text>
+                  <Text style={styles.applyBtnText}>הגשת מועמדות</Text>
                 </LinearGradient>
               )}
             </Pressable>
@@ -703,7 +703,7 @@ const styles = StyleSheet.create({
     marginBottom: spacing.xs,
   },
   header: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     paddingHorizontal: spacing.xl,
     paddingVertical: spacing.md,
@@ -719,7 +719,7 @@ const styles = StyleSheet.create({
   },
   headerCenter: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: spacing.sm,
   },
@@ -740,6 +740,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     flex: 1,
     letterSpacing: -0.2,
+    textAlign: "right",
   },
   // ─── Scrollable content ───────────────────────────────────────────
   contentWrap: { flex: 1 },
@@ -761,6 +762,7 @@ const styles = StyleSheet.create({
     letterSpacing: -1.4,
     lineHeight: 33,
     marginBottom: spacing.xs,
+    textAlign: "right",
   },
   tagline: {
     fontSize: 14,
@@ -768,9 +770,10 @@ const styles = StyleSheet.create({
     fontStyle: "italic",
     letterSpacing: 0.2,
     marginBottom: spacing.md,
+    textAlign: "right",
   },
   salaryLocationRow: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: spacing.sm,
   },
@@ -789,7 +792,7 @@ const styles = StyleSheet.create({
 
   // ─── Match hero ────────────────────────────────────────────────────
   matchHero: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: spacing.lg,
     borderWidth: 1,
@@ -806,11 +809,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "800",
     letterSpacing: -0.4,
+    textAlign: "right",
   },
   matchHeroBody: {
     fontSize: 13,
     lineHeight: 20,
     fontWeight: "400",
+    textAlign: "right",
   },
   matchHeroAccent: {
     position: "absolute",
@@ -829,7 +834,7 @@ const styles = StyleSheet.create({
     gap: spacing.md,
   },
   aiHeader: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: spacing.sm,
   },
@@ -843,11 +848,13 @@ const styles = StyleSheet.create({
     lineHeight: 22,
     fontWeight: "400",
     fontStyle: "italic",
+    textAlign: "right",
   },
   aiFooter: {
     fontSize: 11,
     fontWeight: "500",
     letterSpacing: 0.3,
+    textAlign: "right",
   },
 
   infoStrip: {
@@ -888,15 +895,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "800",
     letterSpacing: -0.4,
+    textAlign: "right",
   },
   body: {
     fontSize: 15,
     lineHeight: 24,
     fontWeight: "400",
+    textAlign: "right",
   },
 
   bulletRow: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "flex-start",
     gap: 10,
     marginBottom: spacing.sm,
@@ -912,15 +921,16 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 22,
     fontWeight: "400",
+    textAlign: "right",
   },
 
   benefitsWrap: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     flexWrap: "wrap",
     gap: spacing.sm,
   },
   benefitPill: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: 6,
     paddingHorizontal: 14,
@@ -975,7 +985,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   appliedRow: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: spacing.sm,
   },
@@ -987,7 +997,7 @@ const styles = StyleSheet.create({
   },
   applyGrad: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     justifyContent: "center",
     alignItems: "center",
     gap: spacing.sm,

@@ -209,8 +209,8 @@ export function SavedScreen() {
   }, [navigation]);
 
   const subtitleText = loaded
-    ? `${savedJobs.length} job${savedJobs.length === 1 ? "" : "s"} saved for later`
-    : "Loading...";
+    ? `${savedJobs.length} ${savedJobs.length === 1 ? "משרה שמורה" : "משרות שמורות"}`
+    : "טוען...";
 
   return (
     <View style={styles.root}>
@@ -222,7 +222,7 @@ export function SavedScreen() {
         end={{ x: 0.5, y: 1 }}
       />
 
-      <ScreenHeader title="Saved Jobs" subtitle={subtitleText} />
+      <ScreenHeader title="משרות שמורות" subtitle={subtitleText} />
 
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom: 130 }]}
@@ -239,10 +239,10 @@ export function SavedScreen() {
               <View style={styles.emptyContent}>
                 <PulsingBookmark />
                 <Text style={[styles.emptyTitle, { color: colors.text }]}>
-                  No saved jobs yet
+                  אין משרות שמורות עדיין
                 </Text>
                 <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-                  Start swiping to save jobs you're interested in!
+                  התחילו להחליק כדי לשמור משרות שמעניינות אתכם!
                 </Text>
               </View>
             </GlassCard>
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     height: 3,
   },
   cardContent: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     padding: spacing.lg,
     gap: spacing.md,
@@ -325,13 +325,17 @@ const styles = StyleSheet.create({
   jobTitle: {
     fontWeight: "700",
     letterSpacing: -0.3,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   company: {
     ...typography.bodySmall,
     fontWeight: "600",
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   metaRow: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: 4,
     marginTop: 2,
@@ -339,6 +343,7 @@ const styles = StyleSheet.create({
   metaText: {
     fontSize: 12,
     fontWeight: "500",
+    writingDirection: "rtl",
   },
   metaDot: {
     fontSize: 12,
@@ -365,9 +370,11 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     ...typography.heading,
+    writingDirection: "rtl",
   },
   emptyText: {
     ...typography.body,
     textAlign: "center",
+    writingDirection: "rtl",
   },
 });

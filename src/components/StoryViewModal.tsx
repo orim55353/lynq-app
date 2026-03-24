@@ -194,14 +194,14 @@ export function StoryViewModal({
           style={[styles.closeButton, { top: closeButtonTop, backgroundColor: colors.glass, borderColor: colors.glassBorder }]}
           onPress={onClose}
           hitSlop={12}
-          accessibilityLabel="Close story view"
+          accessibilityLabel="סגור תצוגת סטורי"
           accessibilityRole="button"
         >
           <Ionicons name="close" size={24} color={colors.text} />
         </Pressable>
 
-        <Pressable style={[styles.tapZone, styles.tapZoneLeft]} onPress={handleTapLeft} accessibilityLabel={currentIndex === 0 ? "Close" : "Previous"} accessibilityRole="button" />
-        <Pressable style={[styles.tapZone, styles.tapZoneRight]} onPress={handleTapRight} accessibilityLabel={currentIndex === jobs.length - 1 ? "Close" : "Next"} accessibilityRole="button" />
+        <Pressable style={[styles.tapZone, styles.tapZoneLeft]} onPress={handleTapLeft} accessibilityLabel={currentIndex === 0 ? "סגור" : "הקודם"} accessibilityRole="button" />
+        <Pressable style={[styles.tapZone, styles.tapZoneRight]} onPress={handleTapRight} accessibilityLabel={currentIndex === jobs.length - 1 ? "סגור" : "הבא"} accessibilityRole="button" />
       </View>
     </Modal>
   );
@@ -216,5 +216,5 @@ const styles = StyleSheet.create({
   tapZone: { position: "absolute", top: 0, bottom: 0, width: "40%", zIndex: 20 },
   tapZoneLeft: { left: 0 },
   tapZoneRight: { right: 0 },
-  closeButton: { position: "absolute", left: spacing.lg, zIndex: 30, width: CLOSE_BUTTON_SIZE, height: CLOSE_BUTTON_SIZE, borderRadius: CLOSE_BUTTON_SIZE / 2, borderWidth: 1, justifyContent: "center", alignItems: "center" },
+  closeButton: { position: "absolute", right: spacing.lg, zIndex: 30, width: CLOSE_BUTTON_SIZE, height: CLOSE_BUTTON_SIZE, borderRadius: CLOSE_BUTTON_SIZE / 2, borderWidth: 1, justifyContent: "center", alignItems: "center" },
 });

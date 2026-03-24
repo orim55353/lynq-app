@@ -153,8 +153,8 @@ export function MatchesScreen() {
       />
 
       <ScreenHeader
-        title="Your Matches"
-        subtitle="Companies that liked you back"
+        title="ההתאמות שלכם"
+        subtitle="חברות שאהבו אתכם בחזרה"
       />
 
       <ScrollView
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
     height: 3,
   },
   cardContent: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     padding: spacing.lg,
     gap: spacing.md,
@@ -236,13 +236,17 @@ const styles = StyleSheet.create({
   jobTitle: {
     fontWeight: "700",
     letterSpacing: -0.3,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   company: {
     ...typography.bodySmall,
     fontWeight: "600",
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   metaRow: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: 4,
     marginTop: 2,
@@ -250,6 +254,7 @@ const styles = StyleSheet.create({
   metaText: {
     fontSize: 12,
     fontWeight: "500",
+    writingDirection: "rtl",
   },
   metaDot: {
     fontSize: 12,

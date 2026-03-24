@@ -31,16 +31,16 @@ interface IndustryOption {
 }
 
 const INDUSTRIES: IndustryOption[] = [
-  { id: "warehouse", label: "Warehouse & Logistics", icon: "cube-outline" },
-  { id: "construction", label: "Construction & Trades", icon: "hammer-outline" },
-  { id: "food", label: "Food Service & Restaurant", icon: "restaurant-outline" },
-  { id: "healthcare", label: "Healthcare & Caregiving", icon: "medkit-outline" },
-  { id: "retail", label: "Retail & Sales", icon: "storefront-outline" },
-  { id: "hospitality", label: "Hospitality & Entertainment", icon: "bed-outline" },
-  { id: "manufacturing", label: "Manufacturing", icon: "cog-outline" },
-  { id: "transportation", label: "Transportation & Delivery", icon: "car-outline" },
-  { id: "cleaning", label: "Cleaning & Maintenance", icon: "sparkles-outline" },
-  { id: "other", label: "Other", icon: "ellipsis-horizontal-outline" },
+  { id: "warehouse", label: "מחסנאות ולוגיסטיקה", icon: "cube-outline" },
+  { id: "construction", label: "בנייה ומקצועות", icon: "hammer-outline" },
+  { id: "food", label: "שירותי מזון ומסעדנות", icon: "restaurant-outline" },
+  { id: "healthcare", label: "בריאות וסיעוד", icon: "medkit-outline" },
+  { id: "retail", label: "קמעונאות ומכירות", icon: "storefront-outline" },
+  { id: "hospitality", label: "אירוח ובידור", icon: "bed-outline" },
+  { id: "manufacturing", label: "ייצור", icon: "cog-outline" },
+  { id: "transportation", label: "תחבורה ומשלוחים", icon: "car-outline" },
+  { id: "cleaning", label: "ניקיון ותחזוקה", icon: "sparkles-outline" },
+  { id: "other", label: "אחר", icon: "ellipsis-horizontal-outline" },
 ];
 
 /** Match a saved experience value back to an industry id, or return "other". */
@@ -110,7 +110,7 @@ export function OnboardingRoleScreen({ navigation }: Props) {
       <View style={styles.content}>
         <Animated.View style={{ opacity: titleOpacity, transform: [{ translateY: titleTranslateY }] }}>
           <Text style={[styles.title, { color: colors.text }]}>
-            What kind of work{"\n"}do you do?
+            באיזה תחום אתם{"\n"}עובדים?
           </Text>
         </Animated.View>
 
@@ -157,7 +157,7 @@ export function OnboardingRoleScreen({ navigation }: Props) {
                 style={[styles.otherTextInput, { color: colors.text }]}
                 value={customRole}
                 onChangeText={setCustomRole}
-                placeholder="What kind of work?"
+                placeholder="באיזה תחום?"
                 placeholderTextColor={colors.textTertiary}
                 autoCapitalize="words"
                 autoFocus
@@ -167,7 +167,7 @@ export function OnboardingRoleScreen({ navigation }: Props) {
         </Animated.View>
 
         <GradientButton
-          label="Continue"
+          label="המשך"
           onPress={handleContinue}
           loading={submitting}
           large
@@ -190,13 +190,15 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     letterSpacing: -1.2,
     marginBottom: spacing.xl,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   listWrap: {
     flex: 1,
     marginBottom: spacing.lg,
   },
   row: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: spacing.md,
     paddingVertical: spacing.lg,
@@ -209,6 +211,8 @@ const styles = StyleSheet.create({
     flex: 1,
     fontSize: 16,
     fontWeight: "600",
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   keyboard: { flex: 1 },
   otherInput: {
@@ -222,6 +226,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     paddingVertical: spacing.xs,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   skipLink: {
     alignSelf: "center",

@@ -29,11 +29,11 @@ export function AppNavigator() {
         sceneStyle: { backgroundColor: colors.bg },
       }}
     >
-      <Tab.Screen name="Discover" component={DiscoverScreen} />
-      <Tab.Screen name="Matches" component={MatchesScreen} />
-      <Tab.Screen name="Saved" component={SavedScreen} />
-      <Tab.Screen name="Chat" component={ChatListScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      <Tab.Screen name="Discover" component={DiscoverScreen} options={{ tabBarLabel: "גלו" }} />
+      <Tab.Screen name="Matches" component={MatchesScreen} options={{ tabBarLabel: "התאמות" }} />
+      <Tab.Screen name="Saved" component={SavedScreen} options={{ tabBarLabel: "שמורות" }} />
+      <Tab.Screen name="Chat" component={ChatListScreen} options={{ tabBarLabel: "צ׳אט" }} />
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarLabel: "פרופיל" }} />
     </Tab.Navigator>
   );
 }

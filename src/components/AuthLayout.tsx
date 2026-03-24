@@ -109,15 +109,17 @@ const styles = StyleSheet.create({
     paddingTop: spacing.huge,
   },
   brandRow: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: spacing.md,
     marginBottom: spacing.xxxl,
+    alignSelf: "flex-end",
   },
   brandName: {
     fontSize: 30,
     fontWeight: "800",
     letterSpacing: -1,
+    writingDirection: "rtl" as const,
   },
   link: {
     alignSelf: "center",
@@ -128,5 +130,7 @@ const styles = StyleSheet.create({
   },
   linkText: {
     ...typography.body,
+    textAlign: "center" as const,
+    writingDirection: "rtl" as const,
   },
 });

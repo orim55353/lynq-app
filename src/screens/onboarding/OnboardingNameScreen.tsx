@@ -98,18 +98,18 @@ export function OnboardingNameScreen({ navigation }: Props) {
         <View style={styles.content}>
           <Animated.View style={{ opacity: titleOpacity, transform: [{ translateY: titleTranslateY }] }}>
             <Text style={[styles.title, { color: colors.text }]}>
-              What's your name?
+              מה השם שלכם?
             </Text>
           </Animated.View>
 
           <Animated.View style={{ opacity: formOpacity, transform: [{ translateY: formTranslateY }] }}>
             <View style={[styles.inputWrap, { backgroundColor: colors.glass, borderColor: colors.glassBorder }]}>
-              <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>First name</Text>
+              <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>שם פרטי</Text>
               <TextInput
                 style={[styles.input, { color: colors.text }]}
                 value={firstName}
                 onChangeText={setFirstName}
-                placeholder="John"
+                placeholder="ישראל"
                 placeholderTextColor={colors.textTertiary}
                 autoCapitalize="words"
                 autoComplete="given-name"
@@ -120,13 +120,13 @@ export function OnboardingNameScreen({ navigation }: Props) {
             </View>
 
             <View style={[styles.inputWrap, { backgroundColor: colors.glass, borderColor: colors.glassBorder }]}>
-              <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Last name</Text>
+              <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>שם משפחה</Text>
               <TextInput
                 ref={lastNameRef}
                 style={[styles.input, { color: colors.text }]}
                 value={lastName}
                 onChangeText={setLastName}
-                placeholder="Smith"
+                placeholder="ישראלי"
                 placeholderTextColor={colors.textTertiary}
                 autoCapitalize="words"
                 autoComplete="family-name"
@@ -140,7 +140,7 @@ export function OnboardingNameScreen({ navigation }: Props) {
           <View style={styles.spacer} />
 
           <GradientButton
-            label="Continue"
+            label="המשך"
             onPress={handleSubmit}
             loading={submitting}
             disabled={!canSubmit}
@@ -164,6 +164,8 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     letterSpacing: -1.2,
     marginBottom: spacing.xxxl,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   inputWrap: {
     borderRadius: radius.lg,
@@ -175,11 +177,15 @@ const styles = StyleSheet.create({
   inputLabel: {
     ...typography.label,
     marginBottom: spacing.xs,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   input: {
     fontSize: 18,
     fontWeight: "600",
     paddingVertical: spacing.xs,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   spacer: { flex: 1 },
 });

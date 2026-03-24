@@ -53,7 +53,7 @@ export function OnboardingLayout({ children, step, showBack = true }: Onboarding
               onPress={() => navigation.goBack()}
               hitSlop={12}
             >
-              <Ionicons name="chevron-back" size={22} color={colors.text} />
+              <Ionicons name="chevron-forward" size={22} color={colors.text} />
             </Pressable>
           </View>
         ) : (
@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
   backRow: {
     paddingHorizontal: spacing.xl,
     paddingTop: spacing.md,
+    alignItems: "flex-end",
   },
   backSpacer: {
     height: spacing.md + 40,

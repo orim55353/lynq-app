@@ -28,36 +28,36 @@ interface Trait {
 // Organized into rows — each row scrolls together horizontally
 const TRAIT_ROWS: Trait[][] = [
   [
-    { label: "Team\nplayer", gradient: ["#00687A", "#06B6D4"], size: 115 },
-    { label: "Reliable", gradient: ["#6366F1", "#818CF8"], size: 90 },
-    { label: "Problem\nsolver", gradient: ["#8B5CF6", "#A78BFA"], size: 105 },
-    { label: "Fast\nlearner", gradient: ["#059669", "#34D399"], size: 95 },
-    { label: "Bilingual", gradient: ["#F59E0B", "#FBBF24"], size: 88 },
-    { label: "Hands-on", gradient: ["#DC2626", "#F87171"], size: 100 },
+    { label: "שחקן\nקבוצתי", gradient: ["#00687A", "#06B6D4"], size: 115 },
+    { label: "אמין", gradient: ["#6366F1", "#818CF8"], size: 90 },
+    { label: "פותר\nבעיות", gradient: ["#8B5CF6", "#A78BFA"], size: 105 },
+    { label: "לומד\nמהר", gradient: ["#059669", "#34D399"], size: 95 },
+    { label: "דו\nלשוני", gradient: ["#F59E0B", "#FBBF24"], size: 88 },
+    { label: "מעשי", gradient: ["#DC2626", "#F87171"], size: 100 },
   ],
   [
-    { label: "Detail\noriented", gradient: ["#0891B2", "#22D3EE"], size: 100 },
-    { label: "Early\nriser", gradient: ["#F59E0B", "#FBBF24"], size: 88 },
-    { label: "Leader", gradient: ["#DC2626", "#F87171"], size: 115 },
-    { label: "Night\nowl", gradient: ["#6366F1", "#818CF8"], size: 90 },
-    { label: "People\nperson", gradient: ["#00687A", "#06B6D4"], size: 105 },
-    { label: "Punctual", gradient: ["#8B5CF6", "#A78BFA"], size: 95 },
+    { label: "מדויק\nבפרטים", gradient: ["#0891B2", "#22D3EE"], size: 100 },
+    { label: "משכים\nקום", gradient: ["#F59E0B", "#FBBF24"], size: 88 },
+    { label: "מנהיג", gradient: ["#DC2626", "#F87171"], size: 115 },
+    { label: "ינשוף\nלילה", gradient: ["#6366F1", "#818CF8"], size: 90 },
+    { label: "חברותי", gradient: ["#00687A", "#06B6D4"], size: 105 },
+    { label: "דייקן", gradient: ["#8B5CF6", "#A78BFA"], size: 95 },
   ],
   [
-    { label: "Calm\nunder\npressure", gradient: ["#8B5CF6", "#A78BFA"], size: 110 },
-    { label: "Physical\nstamina", gradient: ["#059669", "#34D399"], size: 100 },
-    { label: "Heavy\nlifting", gradient: ["#DC2626", "#F87171"], size: 90 },
-    { label: "On my\nfeet", gradient: ["#0891B2", "#22D3EE"], size: 88 },
-    { label: "Organized", gradient: ["#F59E0B", "#FBBF24"], size: 105 },
-    { label: "Self\nstarter", gradient: ["#6366F1", "#818CF8"], size: 95 },
+    { label: "רגוע\nתחת\nלחץ", gradient: ["#8B5CF6", "#A78BFA"], size: 110 },
+    { label: "סיבולת\nגופנית", gradient: ["#059669", "#34D399"], size: 100 },
+    { label: "הרמת\nמשאות", gradient: ["#DC2626", "#F87171"], size: 90 },
+    { label: "עבודה\nבעמידה", gradient: ["#0891B2", "#22D3EE"], size: 88 },
+    { label: "מאורגן", gradient: ["#F59E0B", "#FBBF24"], size: 105 },
+    { label: "יוזם\nעצמאי", gradient: ["#6366F1", "#818CF8"], size: 95 },
   ],
   [
-    { label: "Forklift\ncertified", gradient: ["#F59E0B", "#FBBF24"], size: 105 },
-    { label: "CDL\nholder", gradient: ["#6366F1", "#818CF8"], size: 90 },
-    { label: "Food\nhandler", gradient: ["#059669", "#34D399"], size: 100 },
-    { label: "OSHA\ntrained", gradient: ["#00687A", "#06B6D4"], size: 95 },
-    { label: "First aid\nCPR", gradient: ["#DC2626", "#F87171"], size: 110 },
-    { label: "Adaptable", gradient: ["#0891B2", "#22D3EE"], size: 88 },
+    { label: "מוסמך\nמלגזה", gradient: ["#F59E0B", "#FBBF24"], size: 105 },
+    { label: "בעל\nרישיון\nכבד", gradient: ["#6366F1", "#818CF8"], size: 90 },
+    { label: "מטפל\nבמזון", gradient: ["#059669", "#34D399"], size: 100 },
+    { label: "מוסמך\nבטיחות", gradient: ["#00687A", "#06B6D4"], size: 95 },
+    { label: "עזרה\nראשונה", gradient: ["#DC2626", "#F87171"], size: 110 },
+    { label: "גמיש", gradient: ["#0891B2", "#22D3EE"], size: 88 },
   ],
 ];
 
@@ -300,10 +300,10 @@ export function OnboardingTraitsScreen({ navigation }: Props) {
       <View style={styles.content}>
         <Animated.View style={{ opacity: titleOpacity, transform: [{ translateY: titleTranslateY }] }}>
           <Text style={[styles.title, { color: colors.text }]}>
-            What makes you, you?
+            מה מייחד אתכם?
           </Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Pick 3–8 that describe you
+            בחרו 3-8 שמתארים אתכם
           </Text>
         </Animated.View>
 
@@ -336,11 +336,11 @@ export function OnboardingTraitsScreen({ navigation }: Props) {
 
         {/* Counter */}
         <Text style={[styles.counter, { color: colors.textSecondary }]}>
-          {selectedTraits.size}/{MAX_TRAITS} selected
+          {selectedTraits.size}/{MAX_TRAITS} נבחרו
         </Text>
 
         <GradientButton
-          label="Start Exploring"
+          label="בואו נתחיל"
           onPress={handleFinish}
           loading={submitting}
           icon="rocket-outline"
@@ -348,7 +348,7 @@ export function OnboardingTraitsScreen({ navigation }: Props) {
         />
 
         <Pressable onPress={handleSkip} style={styles.skipLink}>
-          <Text style={[styles.skipText, { color: colors.textTertiary }]}>Skip for now</Text>
+          <Text style={[styles.skipText, { color: colors.textTertiary }]}>דלגו לעת עתה</Text>
         </Pressable>
       </View>
     </OnboardingLayout>
@@ -366,11 +366,15 @@ const styles = StyleSheet.create({
     letterSpacing: -1.2,
     marginBottom: spacing.sm,
     paddingHorizontal: spacing.xxl,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   subtitle: {
     ...typography.body,
     marginBottom: spacing.lg,
     paddingHorizontal: spacing.xxl,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   scrollWrap: {
     flex: 1,
@@ -400,5 +404,7 @@ const styles = StyleSheet.create({
   },
   skipText: {
     ...typography.body,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
 });

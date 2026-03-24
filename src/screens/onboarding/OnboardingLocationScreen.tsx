@@ -136,7 +136,7 @@ export function OnboardingLocationScreen({ navigation }: Props) {
         <View style={styles.content}>
           <Animated.View style={{ opacity: titleOpacity, transform: [{ translateY: titleTranslateY }] }}>
             <Text style={[styles.title, { color: colors.text }]}>
-              Where are you based?
+              איפה אתם נמצאים?
             </Text>
           </Animated.View>
 
@@ -153,11 +153,11 @@ export function OnboardingLocationScreen({ navigation }: Props) {
                 <Ionicons name="navigate" size={20} color={colors.accent} />
               )}
               <Text style={[styles.gpsText, { color: colors.accent }]}>
-                {detecting ? "Detecting..." : "Use my location"}
+                {detecting ? "מאתר..." : "השתמש במיקום שלי"}
               </Text>
             </Pressable>
 
-            <Text style={[styles.orText, { color: colors.textTertiary }]}>or type it in</Text>
+            <Text style={[styles.orText, { color: colors.textTertiary }]}>או הקלידו</Text>
 
             {/* Manual input */}
             <View style={[styles.inputWrap, { backgroundColor: colors.glass, borderColor: colors.glassBorder }]}>
@@ -165,7 +165,7 @@ export function OnboardingLocationScreen({ navigation }: Props) {
                 style={[styles.input, { color: colors.text }]}
                 value={location}
                 onChangeText={setLocation}
-                placeholder="Las Vegas, NV"
+                placeholder="תל אביב"
                 placeholderTextColor={colors.textTertiary}
                 autoCapitalize="words"
                 editable={!submitting && !detecting}
@@ -176,7 +176,7 @@ export function OnboardingLocationScreen({ navigation }: Props) {
           <View style={styles.spacer} />
 
           <GradientButton
-            label="Continue"
+            label="המשך"
             onPress={handleContinue}
             loading={submitting}
             disabled={!location.trim()}
@@ -200,6 +200,8 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     letterSpacing: -1.2,
     marginBottom: spacing.xxxl,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   gpsButton: {
     flexDirection: "row",
@@ -214,6 +216,8 @@ const styles = StyleSheet.create({
   gpsText: {
     fontSize: 16,
     fontWeight: "700",
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   orText: {
     ...typography.bodySmall,
@@ -230,6 +234,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     paddingVertical: spacing.xs,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   spacer: { flex: 1 },
 });

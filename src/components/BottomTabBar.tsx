@@ -24,6 +24,14 @@ const iconMapOutline: Record<string, keyof typeof Ionicons.glyphMap> = {
   Profile: "person-outline",
 };
 
+const hebrewLabels: Record<string, string> = {
+  Discover: "גלו",
+  Matches: "התאמות",
+  Saved: "שמורות",
+  Chat: "צ׳אט",
+  Profile: "פרופיל",
+};
+
 // ─── Component ──────────────────────────────────────────────────────────────
 
 export function BottomTabBar({
@@ -132,7 +140,7 @@ export function BottomTabBar({
                 onPressOut={onPressOut}
                 accessibilityRole="tab"
                 accessibilityState={{ selected: isFocused }}
-                accessibilityLabel={route.name}
+                accessibilityLabel={hebrewLabels[route.name] ?? route.name}
               >
                 <Ionicons
                   name={

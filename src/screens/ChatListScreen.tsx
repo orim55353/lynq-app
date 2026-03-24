@@ -190,8 +190,8 @@ export function ChatListScreen() {
       />
 
       <ScreenHeader
-        title="Messages"
-        subtitle="Chat with companies you've matched with"
+        title="הודעות"
+        subtitle="שוחחו עם חברות שהותאמתם אליהן"
       />
 
       <View style={styles.listContainer}>
@@ -207,7 +207,7 @@ export function ChatListScreen() {
         >
           <Ionicons name="search-outline" size={18} color={colors.textTertiary} />
           <TextInput
-            placeholder="Search messages..."
+            placeholder="חיפוש הודעות..."
             placeholderTextColor={colors.textTertiary}
             style={[styles.searchInput, { color: colors.text }]}
             onFocus={handleSearchFocus}
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
     height: 46,
     paddingHorizontal: spacing.lg,
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: spacing.sm,
     borderWidth: 1,
@@ -257,12 +257,14 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     ...typography.bodySmall,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   chatList: {
     paddingBottom: 130,
   },
   chatItem: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: spacing.md,
     padding: spacing.md,
@@ -310,12 +312,17 @@ const styles = StyleSheet.create({
   chatSender: {
     ...typography.bodySmall,
     fontWeight: "700",
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   chatTime: {
     ...typography.caption,
+    writingDirection: "rtl",
   },
   chatPreview: {
     ...typography.bodySmall,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   unreadDot: {
     width: 10,

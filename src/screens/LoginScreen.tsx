@@ -144,15 +144,15 @@ export function LoginScreen({ navigation }: Props) {
   const handleLogin = useCallback(async () => {
     const trimmedEmail = email.trim();
     if (!trimmedEmail || !password) {
-      Alert.alert("Error", "Please enter email and password.");
+      Alert.alert("שגיאה", "נא להזין אימייל וסיסמה.");
       return;
     }
     setLoading(true);
     try {
       await signIn(trimmedEmail, password);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Login failed.";
-      Alert.alert("Login failed", message);
+      const message = err instanceof Error ? err.message : "ההתחברות נכשלה.";
+      Alert.alert("ההתחברות נכשלה", message);
     } finally {
       setLoading(false);
     }
@@ -160,8 +160,8 @@ export function LoginScreen({ navigation }: Props) {
 
   return (
     <AuthLayout
-      linkPrefix="Don't have an account?"
-      linkAction="Sign up"
+      linkPrefix="אין לכם חשבון?"
+      linkAction="הרשמה"
       onLinkPress={() => navigation.navigate("Register")}
       linkDisabled={loading}
     >
@@ -171,7 +171,7 @@ export function LoginScreen({ navigation }: Props) {
           transform: [{ translateY: anims[0].translateY }],
         }}
       >
-        <Text style={[styles.title, { color: colors.text }]}>Welcome back</Text>
+        <Text style={[styles.title, { color: colors.text }]}>ברוכים השבים</Text>
       </Animated.View>
 
       <Animated.View
@@ -182,12 +182,12 @@ export function LoginScreen({ navigation }: Props) {
         }}
       >
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-          Sign in to continue your job search
+          התחברו כדי להמשיך לחפש עבודה
         </Text>
       </Animated.View>
 
       <GlassInput
-        label="Email"
+        label="אימייל"
         value={email}
         onChangeText={setEmail}
         placeholder="you@email.com"
@@ -200,10 +200,10 @@ export function LoginScreen({ navigation }: Props) {
       />
 
       <GlassInput
-        label="Password"
+        label="סיסמה"
         value={password}
         onChangeText={setPassword}
-        placeholder="Enter your password"
+        placeholder="הזינו את הסיסמה"
         secureTextEntry
         autoComplete="password"
         editable={!loading}
@@ -221,7 +221,7 @@ export function LoginScreen({ navigation }: Props) {
         ]}
       >
         <GradientButton
-          label="Log in"
+          label="התחברות"
           onPress={handleLogin}
           loading={loading}
           large
@@ -236,9 +236,13 @@ const styles = StyleSheet.create({
   title: {
     ...typography.displayLarge,
     marginBottom: spacing.xs,
+    textAlign: "right" as const,
+    writingDirection: "rtl" as const,
   },
   subtitle: {
     ...typography.body,
+    textAlign: "right" as const,
+    writingDirection: "rtl" as const,
   },
   inputWrap: {
     marginBottom: spacing.lg,
@@ -246,7 +250,8 @@ const styles = StyleSheet.create({
   inputLabel: {
     ...typography.label,
     marginBottom: spacing.sm,
-    textTransform: "uppercase",
+    textAlign: "right" as const,
+    writingDirection: "rtl" as const,
   },
   inputContainer: {
     height: 52,
@@ -260,6 +265,8 @@ const styles = StyleSheet.create({
     fontWeight: "400" as const,
     flex: 1,
     padding: 0,
+    textAlign: "right" as const,
+    writingDirection: "rtl" as const,
   },
   buttonWrap: {
     marginTop: spacing.lg,

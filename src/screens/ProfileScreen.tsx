@@ -68,9 +68,9 @@ export function ProfileScreen() {
   const signOutPress = useSpringPress({ pressedScale: 0.95 });
 
   const handleSignOut = useCallback(() => {
-    Alert.alert("Sign out", "Are you sure?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Sign out", style: "destructive", onPress: () => signOut() },
+    Alert.alert("התנתקות", "בטוחים?", [
+      { text: "ביטול", style: "cancel" },
+      { text: "התנתקות", style: "destructive", onPress: () => signOut() },
     ]);
   }, [signOut]);
 
@@ -85,7 +85,7 @@ export function ProfileScreen() {
           <GlassCard>
             <View style={styles.loadingContent}>
               <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
-                Loading profile...
+                טוען פרופיל...
               </Text>
             </View>
           </GlassCard>
@@ -186,7 +186,7 @@ export function ProfileScreen() {
           <GlassCard>
             <View style={styles.sectionTitleRow}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                Skills
+                כישורים
               </Text>
               <LinearGradient
                 colors={accentGradient}
@@ -218,7 +218,7 @@ export function ProfileScreen() {
           <GlassCard>
             <View style={styles.sectionTitleRow}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                Experience
+                ניסיון
               </Text>
               <LinearGradient
                 colors={warmGradient}
@@ -242,16 +242,16 @@ export function ProfileScreen() {
               </View>
               <View style={styles.timelineBody}>
                 <Text style={[styles.role, { color: colors.text }]}>
-                  Senior Software Engineer
+                  מהנדס תוכנה בכיר
                 </Text>
                 <Text style={[styles.companyName, { color: colors.accent }]}>
-                  Tech Company Inc.
+                  חברת טכנולוגיה בע״מ
                 </Text>
                 <Text style={[styles.dates, { color: colors.textTertiary }]}>
-                  2021 - Present
+                  2021 - היום
                 </Text>
                 <Text style={[styles.summary, { color: colors.textSecondary }]}>
-                  Led development of key features and mentored junior developers.
+                  הוביל פיתוח של פיצ׳רים מרכזיים וחניכת מפתחים צעירים.
                 </Text>
               </View>
             </View>
@@ -266,16 +266,16 @@ export function ProfileScreen() {
               </View>
               <View style={styles.timelineBody}>
                 <Text style={[styles.role, { color: colors.text }]}>
-                  Software Engineer
+                  מהנדס תוכנה
                 </Text>
                 <Text style={[styles.companyName, { color: colors.warm }]}>
-                  Startup XYZ
+                  סטארטאפ XYZ
                 </Text>
                 <Text style={[styles.dates, { color: colors.textTertiary }]}>
                   2019 - 2021
                 </Text>
                 <Text style={[styles.summary, { color: colors.textSecondary }]}>
-                  Built and scaled web applications from the ground up.
+                  בנה ושדרג אפליקציות ווב מאפס.
                 </Text>
               </View>
             </View>
@@ -304,7 +304,7 @@ export function ProfileScreen() {
             >
               <Ionicons name="log-out-outline" size={18} color={colors.danger} />
               <Text style={[styles.signOutText, { color: colors.danger }]}>
-                Sign out
+                התנתקות
               </Text>
             </Pressable>
           </Animated.View>
@@ -341,11 +341,12 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     ...typography.body,
+    writingDirection: "rtl",
   },
 
   // Profile header
   headerRow: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     gap: spacing.lg,
   },
   avatarRing: {
@@ -387,6 +388,8 @@ const styles = StyleSheet.create({
     fontWeight: typography.displayMedium.fontWeight,
     letterSpacing: typography.displayMedium.letterSpacing,
     flex: 1,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   editButton: {
     width: 34,
@@ -399,9 +402,11 @@ const styles = StyleSheet.create({
   tagline: {
     ...typography.body,
     marginBottom: spacing.md,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   infoWrap: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     flexWrap: "wrap",
     gap: spacing.sm,
   },
@@ -413,23 +418,26 @@ const styles = StyleSheet.create({
   sectionTitle: {
     ...typography.heading,
     marginBottom: spacing.sm,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   sectionAccent: {
     height: 3,
     width: 40,
     borderRadius: radius.pill,
+    alignSelf: "flex-end",
   },
 
   // Skills
   skillsWrap: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     flexWrap: "wrap",
     gap: spacing.sm,
   },
 
   // Timeline
   timelineItem: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     gap: spacing.md,
     marginBottom: spacing.lg,
   },
@@ -453,24 +461,32 @@ const styles = StyleSheet.create({
   },
   role: {
     ...typography.subheading,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   companyName: {
     ...typography.bodySmall,
     fontWeight: "700",
     marginTop: spacing.xxs,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   dates: {
     ...typography.caption,
     marginTop: spacing.xs,
     marginBottom: spacing.xs,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   summary: {
     ...typography.bodySmall,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
 
   // Sign out
   signOutButton: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     justifyContent: "center",
     gap: spacing.sm,
@@ -481,5 +497,6 @@ const styles = StyleSheet.create({
   signOutText: {
     ...typography.body,
     fontWeight: "600",
+    writingDirection: "rtl",
   },
 });

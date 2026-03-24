@@ -153,7 +153,7 @@ export function StoryHeader({
         {/* "All" pill — always first */}
         {renderPill({
           id: "__all__",
-          label: "For You",
+          label: "בשבילך",
           isSelected: selectedStory === null,
           colors,
           gradient: ["#00687A", "#06B6D4"],
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   pillGradient: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: 5,
     paddingHorizontal: 16,
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill,
   },
   pillInactive: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: 5,
     paddingHorizontal: 14,

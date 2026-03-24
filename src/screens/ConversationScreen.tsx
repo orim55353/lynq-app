@@ -77,7 +77,7 @@ export function ConversationScreen() {
         <TextInput
           defaultValue={messageText}
           onChangeText={setMessageText}
-          placeholder="Type a message..."
+          placeholder="הקלידו הודעה..."
           placeholderTextColor={colors.textTertiary}
           style={[
             styles.messageInput,
@@ -118,20 +118,25 @@ const styles = StyleSheet.create({
   incomingBubble: {
     maxWidth: "85%",
     borderRadius: radius.md,
-    borderTopLeftRadius: 0,
+    borderTopRightRadius: 0,
     borderWidth: 1,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,
+    alignSelf: "flex-end",
   },
   incomingText: {
     ...typography.bodySmall,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   incomingTime: {
     ...typography.caption,
     marginTop: spacing.xs,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   inputBar: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     paddingHorizontal: spacing.md,
     paddingTop: spacing.sm,
     gap: spacing.sm,
@@ -144,6 +149,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: spacing.lg,
     borderWidth: 1,
     ...typography.bodySmall,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   sendWrap: {
     borderRadius: radius.pill,

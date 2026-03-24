@@ -2,6 +2,7 @@ import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/
 import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, useColorScheme, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+
 import { AuthNavigator } from "./src/navigation/AuthNavigator";
 import { OnboardingNavigator } from "./src/navigation/OnboardingNavigator";
 import { AppStack } from "./src/navigation/AppStack";

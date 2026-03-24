@@ -108,8 +108,10 @@ const styles = StyleSheet.create({
     fontWeight: typography.displayLarge.fontWeight,
     letterSpacing: typography.displayLarge.letterSpacing,
     marginBottom: spacing.xxs,
+    textAlign: "right",
   },
   subtitle: {
     ...typography.body,
+    textAlign: "right",
   },
 });

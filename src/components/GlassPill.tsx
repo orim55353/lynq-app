@@ -36,7 +36,7 @@ export function GlassPill({ label, icon, tint, bg }: GlassPillProps) {
 
 const styles = StyleSheet.create({
   pill: {
-    flexDirection: "row",
+    flexDirection: "row-reverse",
     alignItems: "center",
     gap: 4,
     paddingHorizontal: spacing.md,

@@ -43,10 +43,10 @@ export function OnboardingWelcomeScreen({ navigation }: Props) {
         {/* Hero */}
         <Animated.View style={{ opacity: heroOpacity, transform: [{ translateY: heroTranslateY }] }}>
           <Text style={[styles.hero, { color: colors.text }]}>
-            Let's find your{"\n"}next job in{"\n"}60 seconds
+            בואו נמצא את{"\n"}המשרה הבאה שלכם{"\n"}תוך 60 שניות
           </Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Quick setup, better matches
+            הגדרה מהירה, התאמות טובות יותר
           </Text>
         </Animated.View>
 
@@ -55,7 +55,7 @@ export function OnboardingWelcomeScreen({ navigation }: Props) {
         {/* CTA */}
         <Animated.View style={{ opacity: ctaOpacity, transform: [{ translateY: ctaTranslateY }] }}>
           <GradientButton
-            label="Let's Go"
+            label="בואו נתחיל"
             onPress={() => navigation.navigate("Name")}
             icon="arrow-forward"
             large
@@ -74,6 +74,7 @@ const styles = StyleSheet.create({
   },
   brandRow: {
     marginBottom: spacing.xxxl,
+    alignItems: "flex-end",
   },
   brandIcon: {
     width: 56,
@@ -94,10 +95,14 @@ const styles = StyleSheet.create({
     letterSpacing: -1.5,
     lineHeight: 44,
     marginBottom: spacing.lg,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   subtitle: {
     ...typography.body,
     fontSize: 17,
+    textAlign: "right",
+    writingDirection: "rtl",
   },
   spacer: { flex: 1 },
 });
