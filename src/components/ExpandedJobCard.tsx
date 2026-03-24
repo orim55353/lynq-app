@@ -32,6 +32,7 @@ interface ExpandedJobCardProps {
   cardTopY: number;
   onToggleSaved: (jobId: string) => void;
   onClose: () => void;
+  onGoToChat?: () => void;
 }
 
 const DISMISS_THRESHOLD = 100;
@@ -124,6 +125,7 @@ export function ExpandedJobCard({
   cardTopY,
   onToggleSaved,
   onClose,
+  onGoToChat,
 }: ExpandedJobCardProps) {
   const { height: windowHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -608,45 +610,64 @@ export function ExpandedJobCard({
           <View style={[styles.stickyBarBg, { backgroundColor: p.stickyBg }]} />
 
           <View style={styles.stickyBarContent}>
-            <Pressable
-              style={[
-                styles.bookmarkBtn,
-                { backgroundColor: p.saveBg, borderColor: p.saveBorder },
-                isSaved && styles.bookmarkSaved,
-              ]}
-              onPress={handleToggleSave}
-              hitSlop={8}
-            >
-              <Ionicons
-                name={isSaved ? "bookmark" : "bookmark-outline"}
-                size={22}
-                color={isSaved ? "#171D1E" : p.saveIcon}
-              />
-            </Pressable>
-
-            <Pressable
-              style={
-                applied ? styles.applyBtnDone : [styles.applyBtn, shadows.glow]
-              }
-              onPress={handleApply}
-            >
-              {applied ? (
-                <View style={styles.appliedRow}>
-                  <Ionicons name="checkmark-circle" size={20} color="#22C55E" />
-                  <Text style={styles.appliedText}>הוגשה מועמדות</Text>
-                </View>
-              ) : (
+            {onGoToChat != null ? (
+              <Pressable
+                style={[styles.applyBtn, shadows.glow]}
+                onPress={onGoToChat}
+              >
                 <LinearGradient
                   colors={["#00687A", "#06B6D4"]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   style={styles.applyGrad}
                 >
-                  <Ionicons name="flash" size={18} color="#FFFFFF" />
-                  <Text style={styles.applyBtnText}>הגשת מועמדות</Text>
+                  <Ionicons name="chatbubble-ellipses" size={18} color="#FFFFFF" />
+                  <Text style={styles.applyBtnText}>מעבר לצ׳אט</Text>
                 </LinearGradient>
-              )}
-            </Pressable>
+              </Pressable>
+            ) : (
+              <>
+                <Pressable
+                  style={[
+                    styles.bookmarkBtn,
+                    { backgroundColor: p.saveBg, borderColor: p.saveBorder },
+                    isSaved && styles.bookmarkSaved,
+                  ]}
+                  onPress={handleToggleSave}
+                  hitSlop={8}
+                >
+                  <Ionicons
+                    name={isSaved ? "bookmark" : "bookmark-outline"}
+                    size={22}
+                    color={isSaved ? "#171D1E" : p.saveIcon}
+                  />
+                </Pressable>
+
+                <Pressable
+                  style={
+                    applied ? styles.applyBtnDone : [styles.applyBtn, shadows.glow]
+                  }
+                  onPress={handleApply}
+                >
+                  {applied ? (
+                    <View style={styles.appliedRow}>
+                      <Ionicons name="checkmark-circle" size={20} color="#22C55E" />
+                      <Text style={styles.appliedText}>הוגשה מועמדות</Text>
+                    </View>
+                  ) : (
+                    <LinearGradient
+                      colors={["#00687A", "#06B6D4"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                      style={styles.applyGrad}
+                    >
+                      <Ionicons name="flash" size={18} color="#FFFFFF" />
+                      <Text style={styles.applyBtnText}>הגשת מועמדות</Text>
+                    </LinearGradient>
+                  )}
+                </Pressable>
+              </>
+            )}
           </View>
         </Animated.View>
       </Animated.View>

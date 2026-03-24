@@ -1,9 +1,10 @@
 import { useNavigation, useRoute } from "@react-navigation/native";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import type { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useMemo } from "react";
 import { View } from "react-native";
 import { ExpandedJobCard } from "../components/ExpandedJobCard";
 import { useSavedJobs } from "../context/SavedJobsContext";
+import { chats } from "../data/chat";
 import { useJobs } from "../hooks/useJobs";
 import { useTheme } from "../hooks/useTheme";
 import type { AppStackParamList } from "../navigation/AppStack";
@@ -12,7 +13,7 @@ type Props = NativeStackScreenProps<AppStackParamList, "JobDetail">;
 
 export function JobDetailScreen() {
   const { colors } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const route = useRoute<Props["route"]>();
   const { jobs } = useJobs();
   const { isSaved, toggleSaved } = useSavedJobs();
@@ -24,6 +25,12 @@ export function JobDetailScreen() {
 
   if (job == null) return null;
 
+  const fromMatches = route.params.source === "matches";
+  const chat = useMemo(
+    () => chats.find((c) => c.jobId === job.id) ?? null,
+    [job.id],
+  );
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <ExpandedJobCard
@@ -33,6 +40,10 @@ export function JobDetailScreen() {
         cardTopY={0}
         onToggleSaved={toggleSaved}
         onClose={() => navigation.goBack()}
+        onGoToChat={fromMatches && chat != null ? () => {
+          navigation.goBack();
+          navigation.navigate("Conversation", { chatId: chat.id });
+        } : undefined}
       />
     </View>
   );

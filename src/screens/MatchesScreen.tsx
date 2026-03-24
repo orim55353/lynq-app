@@ -139,7 +139,7 @@ export function MatchesScreen() {
   );
 
   const handleExpand = useCallback((job: Job) => {
-    navigation.navigate("JobDetail", { jobId: job.id });
+    navigation.navigate("JobDetail", { jobId: job.id, source: "matches" });
   }, [navigation]);
 
   return (
