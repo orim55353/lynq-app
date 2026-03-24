@@ -459,7 +459,7 @@ export function ExpandedJobCard({
                   {job.matchExplanation}
                 </Text>
                 <Text style={[styles.aiFooter, { color: p.poweredBy }]}>
-                  מופעל על ידי Jobli AI
+                  מופעל על ידי Jobli HI
                 </Text>
               </View>
             )}
@@ -621,7 +621,11 @@ export function ExpandedJobCard({
                   end={{ x: 1, y: 1 }}
                   style={styles.applyGrad}
                 >
-                  <Ionicons name="chatbubble-ellipses" size={18} color="#FFFFFF" />
+                  <Ionicons
+                    name="chatbubble-ellipses"
+                    size={18}
+                    color="#FFFFFF"
+                  />
                   <Text style={styles.applyBtnText}>מעבר לצ׳אט</Text>
                 </LinearGradient>
               </Pressable>
@@ -645,13 +649,19 @@ export function ExpandedJobCard({
 
                 <Pressable
                   style={
-                    applied ? styles.applyBtnDone : [styles.applyBtn, shadows.glow]
+                    applied
+                      ? styles.applyBtnDone
+                      : [styles.applyBtn, shadows.glow]
                   }
                   onPress={handleApply}
                 >
                   {applied ? (
                     <View style={styles.appliedRow}>
-                      <Ionicons name="checkmark-circle" size={20} color="#22C55E" />
+                      <Ionicons
+                        name="checkmark-circle"
+                        size={20}
+                        color="#22C55E"
+                      />
                       <Text style={styles.appliedText}>הוגשה מועמדות</Text>
                     </View>
                   ) : (

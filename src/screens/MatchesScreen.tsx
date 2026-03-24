@@ -14,13 +14,12 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { ScreenHeader } from "../components/ScreenHeader";
-import { bottomFade, screenGradient, spotlightGradient } from "../constants/gradients";
 import {
-  getFontScale,
-  radius,
-  spacing,
-  typography,
-} from "../constants/theme";
+  bottomFade,
+  screenGradient,
+  spotlightGradient,
+} from "../constants/gradients";
+import { getFontScale, radius, spacing, typography } from "../constants/theme";
 import { useEntranceAnimations } from "../hooks/useEntranceAnimations";
 import { useJobs } from "../hooks/useJobs";
 import { useSpringPress } from "../hooks/useSpringPress";
@@ -42,15 +41,15 @@ function MatchCard({
   const { colors } = useTheme();
   const { width } = useWindowDimensions();
   const fontScale = getFontScale(width);
-  const { scale, onPressIn, onPressOut } = useSpringPress({ pressedScale: 0.97 });
+  const { scale, onPressIn, onPressOut } = useSpringPress({
+    pressedScale: 0.97,
+  });
 
   const titleSize = Math.round(17 * fontScale);
   const titleLineHeight = Math.round(22 * fontScale);
 
   return (
-    <Animated.View
-      style={{ opacity, transform: [{ translateY }, { scale }] }}
-    >
+    <Animated.View style={{ opacity, transform: [{ translateY }, { scale }] }}>
       <Pressable
         onPressIn={onPressIn}
         onPressOut={onPressOut}
@@ -73,7 +72,10 @@ function MatchCard({
           <View
             style={[
               styles.logoWrap,
-              { backgroundColor: "rgba(255,255,255,0.95)", borderColor: colors.glassBorder },
+              {
+                backgroundColor: "rgba(255,255,255,0.95)",
+                borderColor: colors.glassBorder,
+              },
             ]}
           >
             <Image
@@ -88,21 +90,37 @@ function MatchCard({
             <Text
               style={[
                 styles.jobTitle,
-                { color: colors.text, fontSize: titleSize, lineHeight: titleLineHeight },
+                {
+                  color: colors.text,
+                  fontSize: titleSize,
+                  lineHeight: titleLineHeight,
+                },
               ]}
               numberOfLines={1}
             >
               {job.title}
             </Text>
-            <Text style={[styles.company, { color: colors.textSecondary }]} numberOfLines={1}>
+            <Text
+              style={[styles.company, { color: colors.textSecondary }]}
+              numberOfLines={1}
+            >
               {job.company}
             </Text>
             <View style={styles.metaRow}>
-              <Ionicons name="location-outline" size={12} color={colors.textTertiary} />
-              <Text style={[styles.metaText, { color: colors.textTertiary }]} numberOfLines={1}>
+              <Ionicons
+                name="location-outline"
+                size={12}
+                color={colors.textTertiary}
+              />
+              <Text
+                style={[styles.metaText, { color: colors.textTertiary }]}
+                numberOfLines={1}
+              >
                 {job.location}
               </Text>
-              <Text style={[styles.metaDot, { color: colors.textTertiary }]}>{"\u00B7"}</Text>
+              <Text style={[styles.metaDot, { color: colors.textTertiary }]}>
+                {"\u00B7"}
+              </Text>
               <Text style={[styles.metaText, { color: colors.accent }]}>
                 {job.salary}
               </Text>
@@ -110,7 +128,9 @@ function MatchCard({
           </View>
 
           {/* Match badge */}
-          <View style={[styles.matchBadge, { backgroundColor: colors.accentSoft }]}>
+          <View
+            style={[styles.matchBadge, { backgroundColor: colors.accentSoft }]}
+          >
             <Text style={[styles.matchPercent, { color: colors.accent }]}>
               {job.compatibilityScore}%
             </Text>
@@ -124,7 +144,8 @@ function MatchCard({
 
 export function MatchesScreen() {
   const { jobs } = useJobs();
-  const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const matchedJobs = jobs.slice(0, 5);
 
   const { opacities, translateYs, trigger } = useEntranceAnimations(
@@ -138,9 +159,12 @@ export function MatchesScreen() {
     }, [trigger]),
   );
 
-  const handleExpand = useCallback((job: Job) => {
-    navigation.navigate("JobDetail", { jobId: job.id, source: "matches" });
-  }, [navigation]);
+  const handleExpand = useCallback(
+    (job: Job) => {
+      navigation.navigate("JobDetail", { jobId: job.id, source: "matches" });
+    },
+    [navigation],
+  );
 
   return (
     <View style={styles.root}>
@@ -152,10 +176,7 @@ export function MatchesScreen() {
         end={{ x: 0.5, y: 1 }}
       />
 
-      <ScreenHeader
-        title="ההתאמות שלכם"
-        subtitle="משרות שמחכות שתגידו כן"
-      />
+      <ScreenHeader title="ההתאמות שלכם" subtitle="המשרות שמחכות לצעד הבא" />
 
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom: 130 }]}
