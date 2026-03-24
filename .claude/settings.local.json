@@ -20,7 +20,15 @@
       "Bash(mv android/app/src/main/java/com/jovloo/app/MainActivity.kt android/app/src/main/java/com/lynq/app/)",
       "Bash(mv android/app/src/main/java/com/jovloo/app/MainApplication.kt android/app/src/main/java/com/lynq/app/)",
       "Bash(rm -rf android/app/src/main/java/com/jovloo)",
-      "Skill(product-management:prd)"
+      "Skill(product-management:prd)",
+      "Skill(humanizer)",
+      "WebSearch",
+      "WebFetch(domain:en.wikipedia.org)",
+      "WebFetch(domain:commons.wikimedia.org)",
+      "Bash(curl -s \"https://en.wikipedia.org/w/api.php?action=query&titles=Four_Seasons_Hotels_and_Resorts&prop=pageimages&pithumbsize=200&format=json\")",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s \"https://en.wikipedia.org/w/api.php?action=query&titles=MGM_Resorts_International&prop=pageimages&pithumbsize=200&format=json\")",
+      "Bash(curl -s \"https://en.wikipedia.org/w/api.php?action=query&titles=Hilton_Hotels_%26_Resorts&prop=pageimages&pithumbsize=200&format=json\")"
     ]
   }
 }

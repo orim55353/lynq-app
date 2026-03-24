@@ -11,7 +11,7 @@ import { useTheme } from "../hooks/useTheme";
 
 export type AppStackParamList = {
   Tabs: undefined;
-  JobDetail: { jobId: string };
+  JobDetail: { jobId: string; source?: "matches" };
   Conversation: { chatId: string };
 };
 

@@ -125,7 +125,12 @@ function MatchCard({
 export function MatchesScreen() {
   const { jobs } = useJobs();
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
-  const matchedJobs = jobs.slice(0, 5);
+
+  // Curated matches — one from each company, highest compatibility scores
+  const MATCHED_JOB_IDS = ["5", "36", "22", "40", "18", "8", "11"];
+  const matchedJobs = MATCHED_JOB_IDS
+    .map(id => jobs.find(j => j.id === id))
+    .filter((j): j is Job => j !== undefined);
 
   const { opacities, translateYs, trigger } = useEntranceAnimations(
     matchedJobs.length,
@@ -139,7 +144,7 @@ export function MatchesScreen() {
   );
 
   const handleExpand = useCallback((job: Job) => {
-    navigation.navigate("JobDetail", { jobId: job.id });
+    navigation.navigate("JobDetail", { jobId: job.id, source: "matches" });
   }, [navigation]);
 
   return (
