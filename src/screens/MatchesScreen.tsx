@@ -154,7 +154,7 @@ export function MatchesScreen() {
 
       <ScreenHeader
         title="ההתאמות שלכם"
-        subtitle="חברות שאהבו אתכם בחזרה"
+        subtitle="משרות שמחכות שתגידו כן"
       />
 
       <ScrollView

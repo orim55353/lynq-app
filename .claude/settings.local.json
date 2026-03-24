@@ -22,7 +22,8 @@
       "Bash(rm -rf android/app/src/main/java/com/jovloo)",
       "Skill(product-management:prd)",
       "Bash(find /Users/orimizrachi/Desktop/Ori/Lynq -name landing* -o -name web* -o -name marketing*)",
-      "Bash(find /Users/orimizrachi/Desktop/Ori/Lynq -name *shape* -type f)"
+      "Bash(find /Users/orimizrachi/Desktop/Ori/Lynq -name *shape* -type f)",
+      "Skill(humanizer)"
     ]
   }
 }
