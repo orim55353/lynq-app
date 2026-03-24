@@ -110,7 +110,7 @@ export function StoryCircle({ story, isSeen, onPress }: StoryCircleProps) {
   const logoContainerSize = spacerSize - 4; // 2px gap on each side inside spacer
   const logoImageSize = logoContainerSize - 6; // 3px padding inside white circle
 
-  const ringColors: [string, string] = isSeen
+  const ringColors: string[] = isSeen
     ? ["rgba(255,255,255,0.2)", "rgba(255,255,255,0.2)"]
     : [story.brandColors.primary, story.brandColors.secondary];
 
@@ -133,65 +133,83 @@ export function StoryCircle({ story, isSeen, onPress }: StoryCircleProps) {
         accessibilityLabel={`${story.companyName} story${isSeen ? "" : ", new"}`}
         accessibilityRole="button"
       >
-        {/* Outer: Gradient ring */}
-        <Animated.View
-          style={[
-            styles.outerRing,
-            {
-              width: outerSize,
-              height: outerSize,
-              borderRadius: outerSize / 2,
-            },
-            ringAnimStyle,
-          ]}
+        {/* Container for ring + logo layers */}
+        <View
+          style={{
+            width: outerSize,
+            height: outerSize,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
         >
-          <LinearGradient
-            colors={ringColors}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 1 }}
+          {/* Layer 1: Gradient ring (absolute, behind logo) */}
+          <Animated.View
+            style={[
+              StyleSheet.absoluteFill,
+              styles.outerRing,
+              { borderRadius: outerSize / 2 },
+              ringAnimStyle,
+            ]}
+          >
+            {/* Top half: primary → secondary */}
+            <LinearGradient
+              colors={[story.brandColors.primary, story.brandColors.secondary]}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={{
+                width: outerSize,
+                height: outerSize / 2,
+                borderTopLeftRadius: outerSize / 2,
+                borderTopRightRadius: outerSize / 2,
+              }}
+            />
+            {/* Bottom half: secondary → primary */}
+            <LinearGradient
+              colors={[story.brandColors.primary, story.brandColors.secondary]}
+              start={{ x: 1, y: 0.5 }}
+              end={{ x: 0, y: 0.5 }}
+              style={{
+                width: outerSize,
+                height: outerSize / 2,
+                borderBottomLeftRadius: outerSize / 2,
+                borderBottomRightRadius: outerSize / 2,
+              }}
+            />
+          </Animated.View>
+
+          {/* Layer 2: Static logo (centered on top) */}
+          <View
             style={{
-              width: outerSize,
-              height: outerSize,
-              borderRadius: outerSize / 2,
+              width: spacerSize,
+              height: spacerSize,
+              borderRadius: spacerSize / 2,
+              backgroundColor: colors.bg,
               justifyContent: "center",
               alignItems: "center",
             }}
           >
-            {/* Middle: Dark spacer (matches background) */}
             <View
               style={{
-                width: spacerSize,
-                height: spacerSize,
-                borderRadius: spacerSize / 2,
-                backgroundColor: colors.bg,
+                width: logoContainerSize,
+                height: logoContainerSize,
+                borderRadius: logoContainerSize / 2,
+                backgroundColor: "#FFFFFF",
                 justifyContent: "center",
                 alignItems: "center",
+                overflow: "hidden",
               }}
             >
-              {/* Inner: White logo circle */}
-              <View
+              <Image
+                source={{ uri: story.companyLogo }}
                 style={{
-                  width: logoContainerSize,
-                  height: logoContainerSize,
-                  borderRadius: logoContainerSize / 2,
-                  backgroundColor: "#FFFFFF",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  overflow: "hidden",
+                  width: logoImageSize,
+                  height: logoImageSize,
                 }}
-              >
-                <Image
-                  source={{ uri: story.companyLogo }}
-                  style={{
-                    width: logoImageSize,
-                    height: logoImageSize,
-                  }}
-                  contentFit="contain"
-                />
-              </View>
+                contentFit="contain"
+              />
             </View>
-          </LinearGradient>
-        </Animated.View>
+          </View>
+        </View>
 
         {/* NEW badge */}
         {!isSeen && (

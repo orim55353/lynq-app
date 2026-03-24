@@ -423,7 +423,7 @@ export function ExpandedJobCard({
                 <Text
                   style={[styles.matchHeroTitle, { color: p.sectionTitle }]}
                 >
-                  You're a {matchLabel(job.compatibilityScore)} Match!
+                  התאמה {matchLabel(job.compatibilityScore)}!
                 </Text>
                 <Text style={[styles.matchHeroBody, { color: p.body }]}>
                   {matchDescription(job.compatibilityScore)}
@@ -457,7 +457,7 @@ export function ExpandedJobCard({
                   {job.matchExplanation}
                 </Text>
                 <Text style={[styles.aiFooter, { color: p.poweredBy }]}>
-                  מופעל על ידי Lynq AI
+                  מופעל על ידי Jobli AI
                 </Text>
               </View>
             )}

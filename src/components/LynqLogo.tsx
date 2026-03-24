@@ -1,45 +1,36 @@
 import Svg, { Defs, LinearGradient, Path, Stop } from "react-native-svg";
 
-interface LynqLogoProps {
+interface JobliLogoProps {
   readonly size?: number;
-  /** Use white fill instead of brand cyan (for dark backgrounds) */
+  /** Use white fill instead of brand colors (for dark backgrounds) */
   readonly white?: boolean;
 }
 
 /**
- * Lynq brand logo rendered as an SVG.
- * Uses the official logo paths from brand/logo_color.svg.
+ * Jobli brand logo rendered as an SVG.
+ * Uses the official logo paths from jobli-landing-page/src/shape.svg.
  */
-export function LynqLogo({ size = 48, white = false }: LynqLogoProps) {
-  const mainFill = white ? "#FFFFFF" : "#06B6D4";
+export function JobliLogo({ size = 48, white = false }: JobliLogoProps) {
+  const cyanFill = white ? "#FFFFFF" : "#06B6D4";
+  const orangeFill = "#F97316";
 
   return (
-    <Svg width={size} height={size} viewBox="0 0 1200 1200" fill="none">
+    <Svg width={size} height={size} viewBox="0 0 281 272" fill="none">
       <Path
-        d="M0 977.067V1.37076C161.691 -12.6483 220.253 84.3169 229.322 134.552V777.298H454.757L349.813 977.067H0Z"
-        fill={mainFill}
+        d="M277.802 8.7229L260.383 65.0286C259.657 67.3765 257.005 68.5202 254.799 67.4369L204.96 42.9627C203.71 42.3489 202.261 42.2841 200.962 42.784L185.934 48.564C185.078 48.8931 184.267 47.9935 184.684 47.1767L195.598 25.7512C196.491 23.9985 198.08 22.7024 199.977 22.18L271.697 2.42475C275.505 1.37577 278.969 4.94924 277.802 8.7229Z"
+        fill={orangeFill}
       />
       <Path
-        d="M1200 456.99V1200H1126.15C1020.43 1183.18 983.631 1094.86 978.448 1052.8V947.657C791.881 1026.16 667.922 963.645 608.324 921.588L752.136 767.378C914.474 797.44 978.448 729.573 978.448 670.781V492.038C970.923 298.616 699.967 325.763 682.173 427.416L523.094 507.308L617.176 573.478C590.833 607.412 534.383 682.066 511.804 702.426C489.224 722.786 470.99 737.004 460.625 739.34C242.964 52.406 1126.15 -54.7061 1200 456.99Z"
-        fill={mainFill}
+        d="M240.521 68.7391L199.998 66.8094C196.335 66.635 193.158 69.3176 192.716 72.9583L179 186C174.069 202.703 158.508 239.359 134.493 257.965C133.655 258.614 134.241 260.017 135.287 259.845C194.67 250.047 221.197 215.304 229.5 186L245.234 74.4316C245.645 71.5166 243.461 68.8791 240.521 68.7391Z"
+        fill={cyanFill}
       />
       <Path
-        d="M446.984 777.326L342.04 977.098C361.474 977.098 429.882 972.892 501.4 961.677C572.917 950.462 668.533 888.077 699.627 849.524L831.779 646.248L928.949 688.305L866.76 397.409L583.023 509.562L668.533 562.133C624.482 622.883 536.381 746.484 536.381 754.896C536.381 763.307 475.488 772.653 446.984 777.326Z"
-        fill="url(#lynq-logo-gradient)"
+        d="M73.8505 99.9678L128.186 86.5L112.983 187.53C112.787 188.831 112.316 190.122 111.621 191.238C75.8174 248.727 33.928 222.198 61.4027 178.667C62.8459 176.38 60.9936 173.251 58.3239 173.681C45.6338 175.721 20.6608 179.759 17.1861 180.5C12.4986 181.5 8.18608 189.5 8.18608 189.5C-38.3139 282.5 126.874 313.5 162.686 189.5L185.086 29.7813C185.376 27.7086 183.509 25.9828 181.465 26.4358L82.1941 48.4462C78.0057 49.3748 74.8764 52.8715 74.4164 57.1369L70.1461 96.7342C69.9226 98.8062 71.8278 100.469 73.8505 99.9678Z"
+        fill={cyanFill}
       />
-      <Defs>
-        <LinearGradient
-          id="lynq-logo-gradient"
-          x1="635.495"
-          y1="397.409"
-          x2="635.495"
-          y2="977.098"
-          gradientUnits="userSpaceOnUse"
-        >
-          <Stop stopColor="#FB923C" />
-          <Stop offset="1" stopColor="#F97316" />
-        </LinearGradient>
-      </Defs>
     </Svg>
   );
 }
+
+/** @deprecated Use JobliLogo instead */
+export const LynqLogo = JobliLogo;

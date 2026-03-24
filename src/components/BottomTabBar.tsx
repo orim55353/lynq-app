@@ -79,8 +79,10 @@ export function BottomTabBar({
           },
         ]}
       >
-        {state.routes.map((route, index) => {
-          const isFocused = state.index === index;
+        {[...state.routes].reverse().map((route, index) => {
+          // Reverse tab order for RTL layout
+          const originalIndex = state.routes.length - 1 - index;
+          const isFocused = state.index === originalIndex;
           const scale = getScale(route.key);
 
           const onPress = () => {

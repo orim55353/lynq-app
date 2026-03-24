@@ -187,7 +187,7 @@ export function StoryViewer({
   const handleShare = useCallback(() => {
     if (!currentCompany) return;
     Share.share({
-      message: `Check out ${currentCompany.companyName} on Lynq!`,
+      message: `Check out ${currentCompany.companyName} on Jobli!`,
     }).catch(() => {});
   }, [currentCompany]);
 

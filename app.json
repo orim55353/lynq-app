@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Lynq",
-    "slug": "lynq",
+    "name": "Jobli",
+    "slug": "jobli",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
@@ -9,12 +9,12 @@
     "experiments": {
       "reactCompiler": true
     },
-    "scheme": "com.lynq.app",
+    "scheme": "com.jobli.app",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.lynq.app",
+      "bundleIdentifier": "com.jobli.app",
       "infoPlist": {
-        "NSLocationWhenInUseUsageDescription": "Lynq uses your location to show jobs near you."
+        "NSLocationWhenInUseUsageDescription": "Jobli uses your location to show jobs near you."
       }
     },
     "android": {
@@ -25,13 +25,13 @@
     },
     "extra": {
       "eas": {
-        "projectId": "1ef62c07-4667-4445-8bbf-2bfc49b886a1"
+        "projectId": "c73a6525-420c-44f2-b44e-f4ae7c07e146"
       }
     },
     "owner": "lynq-jobs",
     "runtimeVersion": "1.0.0",
     "updates": {
-      "url": "https://u.expo.dev/1ef62c07-4667-4445-8bbf-2bfc49b886a1"
+      "url": "https://u.expo.dev/c73a6525-420c-44f2-b44e-f4ae7c07e146"
     }
   }
 }

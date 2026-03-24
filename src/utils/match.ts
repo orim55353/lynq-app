@@ -10,19 +10,19 @@ export function matchColor(score: number): string {
 }
 
 export function matchLabel(score: number): string {
-  if (score >= 90) return "Excellent";
-  if (score >= 80) return "Strong";
-  if (score >= 60) return "Good";
-  return "Fair";
+  if (score >= 90) return "מצוין";
+  if (score >= 80) return "חזק";
+  if (score >= 60) return "טוב";
+  return "סביר";
 }
 
 export function matchLabelFull(score: number): string {
-  return `${matchLabel(score)} Match`;
+  return `התאמה ${matchLabel(score)}`;
 }
 
 export function matchDescription(score: number): string {
-  if (score >= 90) return "Your profile is an exceptional fit for this role.";
-  if (score >= 80) return "Your skills and experience align well with this role.";
-  if (score >= 60) return "You meet several key qualifications for this position.";
-  return "This role could be a stretch, but worth exploring.";
+  if (score >= 90) return "הפרופיל שלכם מתאים בצורה יוצאת דופן לתפקיד הזה.";
+  if (score >= 80) return "הכישורים והניסיון שלכם מתאימים היטב לתפקיד הזה.";
+  if (score >= 60) return "אתם עומדים בכמה מהדרישות המרכזיות למשרה הזו.";
+  return "התפקיד הזה יכול להיות אתגר, אבל שווה לבדוק.";
 }

@@ -1,7 +1,7 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { useCallback } from "react";
+import { useCallback, useRef } from "react";
 import type { LayoutChangeEvent } from "react-native";
-import { ScrollView, StyleSheet, View, useWindowDimensions } from "react-native";
+import { type ScrollView as ScrollViewType, ScrollView, StyleSheet, View, useWindowDimensions } from "react-native";
 import { spacing } from "../../constants/theme";
 import { useTheme } from "../../hooks/useTheme";
 import type { CompanyStory } from "../../types/story";
@@ -26,6 +26,7 @@ export function StoryCirclesRow({
   const { width } = useWindowDimensions();
   const { colors } = useTheme();
 
+  const scrollRef = useRef<ScrollViewType>(null);
   const horizontalPadding = clamp(width * 0.05, spacing.lg, spacing.xxl);
 
   const handleLayout = useCallback(
@@ -62,8 +63,12 @@ export function StoryCirclesRow({
       />
 
       <ScrollView
+        ref={scrollRef}
         horizontal
         showsHorizontalScrollIndicator={false}
+        onContentSizeChange={() => {
+          scrollRef.current?.scrollToEnd({ animated: false });
+        }}
         contentContainerStyle={[
           styles.scrollContent,
           { paddingHorizontal: horizontalPadding, gap: 12 },

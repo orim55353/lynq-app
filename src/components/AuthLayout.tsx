@@ -60,7 +60,7 @@ export function AuthLayout({
             {/* Brand header */}
             <View style={styles.brandRow}>
               <LynqLogo size={48} white={mode === "dark"} />
-              <Text style={[styles.brandName, { color: colors.text }]}>Lynq</Text>
+              <Text style={[styles.brandName, { color: colors.text }]}>Jobli</Text>
             </View>
 
             {/* Form content */}

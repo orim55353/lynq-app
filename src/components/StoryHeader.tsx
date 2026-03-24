@@ -145,39 +145,40 @@ export function StoryHeader({
         contentContainerStyle={[
           styles.scrollContent,
           {
-            gap: layout.pillGap,
             paddingHorizontal: layout.horizontalPadding,
           },
         ]}
       >
-        {/* "All" pill — always first */}
-        {renderPill({
-          id: "__all__",
-          label: "בשבילך",
-          isSelected: selectedStory === null,
-          colors,
-          gradient: ["#00687A", "#06B6D4"],
-          getScale,
-          onPress: () => onSelectStory("__all__"),
-          onPressIn: () => handlePressIn("__all__"),
-          onPressOut: () => handlePressOut("__all__"),
-        })}
-
-        {categories.map((cat) => {
-          const isSelected = selectedStory === cat.id;
-          return renderPill({
-            id: cat.id,
-            label: cat.label,
-            icon: getCategoryIcon(cat.id),
-            isSelected,
+        <View style={[styles.pillsRow, { gap: layout.pillGap }]}>
+          {/* "All" pill — always first (rightmost in RTL) */}
+          {renderPill({
+            id: "__all__",
+            label: "בשבילך",
+            isSelected: selectedStory === null,
             colors,
-            gradient: cat.gradient,
+            gradient: ["#00687A", "#06B6D4"],
             getScale,
-            onPress: () => onSelectStory(cat.id),
-            onPressIn: () => handlePressIn(cat.id),
-            onPressOut: () => handlePressOut(cat.id),
-          });
-        })}
+            onPress: () => onSelectStory("__all__"),
+            onPressIn: () => handlePressIn("__all__"),
+            onPressOut: () => handlePressOut("__all__"),
+          })}
+
+          {categories.map((cat) => {
+            const isSelected = selectedStory === cat.id;
+            return renderPill({
+              id: cat.id,
+              label: cat.label,
+              icon: getCategoryIcon(cat.id),
+              isSelected,
+              colors,
+              gradient: cat.gradient,
+              getScale,
+              onPress: () => onSelectStory(cat.id),
+              onPressIn: () => handlePressIn(cat.id),
+              onPressOut: () => handlePressOut(cat.id),
+            });
+          })}
+        </View>
       </ScrollView>
     </View>
   );
@@ -279,6 +280,10 @@ const styles = StyleSheet.create({
   scrollContent: {
     alignItems: "center",
     paddingVertical: spacing.xs,
+  },
+  pillsRow: {
+    flexDirection: "row-reverse",
+    alignItems: "center",
   },
 
   // Pill styles
