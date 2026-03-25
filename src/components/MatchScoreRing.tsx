@@ -28,11 +28,13 @@ const ringColors = {
     track: "rgba(255,255,255,0.1)",
     scoreText: "#FFFFFF",
     percentText: "rgba(255,255,255,0.5)",
+    labelText: null, // use matchColor
   },
   light: {
-    track: "rgba(0,0,0,0.08)",
-    scoreText: "#171D1E",
-    percentText: "rgba(0,0,0,0.35)",
+    track: "rgba(255,255,255,0.15)",
+    scoreText: "#FFFFFF",
+    percentText: "rgba(255,255,255,0.6)",
+    labelText: "rgba(255,255,255,0.7)" as string | null, // white — readable over image bg
   },
 } as const;
 
@@ -202,7 +204,7 @@ export function MatchScoreRing({
               styles.labelText,
               {
                 fontSize: labelFontSize,
-                color,
+                color: colors.labelText ?? color,
               },
             ]}
             numberOfLines={1}

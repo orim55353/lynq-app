@@ -33,14 +33,20 @@ export function GlassCard({
   heavy = false,
   padding = spacing.xl,
 }: GlassCardProps) {
-  const { colors } = useTheme();
+  const { colors, mode } = useTheme();
+
+  // In light mode cards use solid surface hierarchy (white) for tonal depth.
+  // In dark mode they use glassmorphism (semi-transparent).
+  const bgColor = mode === "light"
+    ? (heavy ? colors.bgElevated : colors.bgCard)
+    : (heavy ? colors.glassHeavy : colors.glass);
 
   return (
     <View
       style={[
         styles.card,
         {
-          backgroundColor: heavy ? colors.glassHeavy : colors.glass,
+          backgroundColor: bgColor,
           borderColor: colors.glassBorder,
         },
         style,

@@ -16,7 +16,9 @@ import { Image } from "expo-image";
 import { ScreenHeader } from "../components/ScreenHeader";
 import {
   bottomFade,
+  bottomFadeLight,
   screenGradient,
+  screenGradientLight,
   spotlightGradient,
 } from "../constants/gradients";
 import { getFontScale, radius, spacing, typography } from "../constants/theme";
@@ -38,12 +40,13 @@ function MatchCard({
   readonly translateY: Animated.Value;
   readonly onExpand: (job: Job) => void;
 }) {
-  const { colors } = useTheme();
+  const { colors, mode } = useTheme();
   const { width } = useWindowDimensions();
   const fontScale = getFontScale(width);
   const { scale, onPressIn, onPressOut } = useSpringPress({
     pressedScale: 0.97,
   });
+  const cardBg = mode === "light" ? colors.bgCard : colors.glass;
 
   const titleSize = Math.round(17 * fontScale);
   const titleLineHeight = Math.round(22 * fontScale);
@@ -56,7 +59,7 @@ function MatchCard({
         onPress={() => onExpand(job)}
         style={[
           styles.card,
-          { backgroundColor: colors.glass, borderColor: colors.glassBorder },
+          { backgroundColor: cardBg, borderColor: colors.glassBorder },
         ]}
       >
         {/* Accent strip */}
@@ -110,15 +113,15 @@ function MatchCard({
               <Ionicons
                 name="location-outline"
                 size={12}
-                color={colors.textTertiary}
+                color={colors.textSecondary}
               />
               <Text
-                style={[styles.metaText, { color: colors.textTertiary }]}
+                style={[styles.metaText, { color: colors.textSecondary }]}
                 numberOfLines={1}
               >
                 {job.location}
               </Text>
-              <Text style={[styles.metaDot, { color: colors.textTertiary }]}>
+              <Text style={[styles.metaDot, { color: colors.textSecondary }]}>
                 {"\u00B7"}
               </Text>
               <Text style={[styles.metaText, { color: colors.accent }]}>
@@ -144,9 +147,14 @@ function MatchCard({
 
 export function MatchesScreen() {
   const { jobs } = useJobs();
+  const { mode } = useTheme();
   const navigation =
     useNavigation<NativeStackNavigationProp<AppStackParamList>>();
-  const matchedJobs = jobs.slice(0, 5);
+
+  const MATCHED_JOB_IDS = ["5", "36", "22", "40", "18", "8", "11"];
+  const matchedJobs = MATCHED_JOB_IDS
+    .map(id => jobs.find(j => j.id === id))
+    .filter((j): j is Job => j !== undefined);
 
   const { opacities, translateYs, trigger } = useEntranceAnimations(
     matchedJobs.length,
@@ -168,7 +176,7 @@ export function MatchesScreen() {
 
   return (
     <View style={styles.root}>
-      <LinearGradient colors={screenGradient} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={mode === "dark" ? screenGradient : screenGradientLight} style={StyleSheet.absoluteFill} />
       <LinearGradient
         colors={spotlightGradient}
         style={styles.spotlight}
@@ -194,7 +202,7 @@ export function MatchesScreen() {
       </ScrollView>
 
       <LinearGradient
-        colors={bottomFade}
+        colors={mode === "dark" ? bottomFade : bottomFadeLight}
         style={styles.bottomFade}
         pointerEvents="none"
       />

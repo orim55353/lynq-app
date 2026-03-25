@@ -65,30 +65,32 @@ const overlayColors = {
     infoIcon: "rgba(255,255,255,0.8)",
   },
   light: {
+    // Cards render over a background image — white text is always more readable
+    // than dark text on a variable-contrast photo background.
     pageBg: "#F5FAFC",
-    blurTint: "rgba(255, 255, 255, 0.15)",
-    topVignette: ["rgba(255,255,255,0.3)", "transparent"] as [string, string],
-    ringBg: "rgba(255,255,255,0.7)",
-    ringBorder: "rgba(0,0,0,0.08)",
-    title: "#171D1E",
-    subtitle: "#3D494C",
-    accent: "#00687A",
-    body: "#3D494C",
-    muted: "rgba(0,0,0,0.4)",
-    icon: "#00687A",
-    divider: "rgba(0,0,0,0.1)",
-    pillBg: "rgba(0, 104, 122, 0.08)",
-    pillBorder: "rgba(0, 104, 122, 0.12)",
-    saveBg: "rgba(0,0,0,0.06)",
-    saveBorder: "rgba(0,0,0,0.1)",
-    saveIcon: "#3D494C",
-    expandBg: "rgba(0,0,0,0.05)",
-    expandBorder: "rgba(0,0,0,0.08)",
-    expandIcon: "#3D494C",
-    stripBg: "#FFFFFF",
-    infoLabel: "rgba(0,0,0,0.45)",
-    infoValue: "#171D1E",
-    infoIcon: "rgba(0,0,0,0.6)",
+    blurTint: "rgba(255, 255, 255, 0.12)",
+    topVignette: ["rgba(0,0,0,0.35)", "transparent"] as [string, string],
+    ringBg: "rgba(255,255,255,0.25)",
+    ringBorder: "rgba(255,255,255,0.15)",
+    title: "#FFFFFF",
+    subtitle: "rgba(255,255,255,0.85)",
+    accent: "#22D3EE",
+    body: "rgba(255,255,255,0.9)",
+    muted: "rgba(255,255,255,0.55)",
+    icon: "rgba(6, 182, 212, 0.8)",
+    divider: "rgba(255,255,255,0.12)",
+    pillBg: "rgba(255,255,255,0.1)",
+    pillBorder: "rgba(255,255,255,0.08)",
+    saveBg: "rgba(255,255,255,0.15)",
+    saveBorder: "rgba(255,255,255,0.12)",
+    saveIcon: "#FFFFFF",
+    expandBg: "rgba(255,255,255,0.12)",
+    expandBorder: "rgba(255,255,255,0.08)",
+    expandIcon: "rgba(255,255,255,0.9)",
+    stripBg: "rgba(255,255,255,0.12)",
+    infoLabel: "rgba(255,255,255,0.5)",
+    infoValue: "#FFFFFF",
+    infoIcon: "rgba(255,255,255,0.95)",
   },
 } as const;
 
@@ -203,7 +205,7 @@ export const JobCard = memo(function JobCard({
       {/* ─── Layer 3: Frosted glass blur + light tint for text contrast ─── */}
       <BlurView
         intensity={Platform.OS === "ios" ? 20 : 35}
-        tint={mode === "dark" ? "dark" : "light"}
+        tint="dark"
         style={StyleSheet.absoluteFill}
       />
       <View style={[StyleSheet.absoluteFill, { backgroundColor: c.blurTint }]} />

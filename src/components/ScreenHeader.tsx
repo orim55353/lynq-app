@@ -32,7 +32,9 @@ export function ScreenHeader({
   subtitle,
   animate = true,
 }: ScreenHeaderProps) {
-  const { colors } = useTheme();
+  const { colors, mode } = useTheme();
+  // In light mode use a solid surface step for tonal depth (glassmorphism is invisible over light bg)
+  const headerBg = mode === "light" ? colors.bgElevated : colors.glass;
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const fontScale = getFontScale(width);
@@ -70,7 +72,7 @@ export function ScreenHeader({
         styles.container,
         {
           paddingTop: insets.top + spacing.md,
-          backgroundColor: colors.glass,
+          backgroundColor: headerBg,
           borderBottomColor: colors.glassBorder,
           opacity,
           transform: [{ translateY }],

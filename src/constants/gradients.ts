@@ -7,6 +7,9 @@
 /** Screen background gradient — subtle depth, not flat */
 export const screenGradient: [string, string] = ["#0B1220", "#111827"];
 
+/** Screen background gradient — light mode */
+export const screenGradientLight: [string, string] = ["#F5FAFC", "#EFF4F7"];
+
 /** Auth screen background — warm, inviting */
 export const authGradient: [string, string, string] = ["#0B1220", "#0F1D2E", "#111827"];
 
@@ -32,6 +35,13 @@ export const bottomFade: [string, string, string] = [
   "transparent",
   "rgba(11, 18, 32, 0.6)",
   "rgba(11, 18, 32, 0.95)",
+];
+
+/** Bottom fade for tab bar area — light mode */
+export const bottomFadeLight: [string, string, string] = [
+  "transparent",
+  "rgba(245, 250, 252, 0.6)",
+  "rgba(245, 250, 252, 0.95)",
 ];
 
 /**

@@ -18,6 +18,7 @@ import { GlassPill } from "../components/GlassPill";
 import {
   accentGradient,
   screenGradient,
+  screenGradientLight,
   spotlightGradient,
   warmGradient,
 } from "../constants/gradients";
@@ -35,7 +36,7 @@ import { useTheme } from "../hooks/useTheme";
 
 export function ProfileScreen() {
   const { signOut, profile, profileLoading: loading } = useAuth();
-  const { colors } = useTheme();
+  const { colors, mode } = useTheme();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const fontScale = getFontScale(width);
@@ -80,7 +81,7 @@ export function ProfileScreen() {
   if (loading) {
     return (
       <View style={styles.root}>
-        <LinearGradient colors={screenGradient} style={StyleSheet.absoluteFill} />
+        <LinearGradient colors={mode === "dark" ? screenGradient : screenGradientLight} style={StyleSheet.absoluteFill} />
         <View style={styles.loadingCenter}>
           <GlassCard>
             <View style={styles.loadingContent}>
@@ -96,7 +97,7 @@ export function ProfileScreen() {
 
   return (
     <View style={styles.root}>
-      <LinearGradient colors={screenGradient} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={mode === "dark" ? screenGradient : screenGradientLight} style={StyleSheet.absoluteFill} />
       <LinearGradient
         colors={spotlightGradient}
         style={styles.spotlight}

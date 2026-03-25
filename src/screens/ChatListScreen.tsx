@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { ScreenHeader } from "../components/ScreenHeader";
-import { accentGradient, screenGradient, spotlightGradient } from "../constants/gradients";
+import { accentGradient, screenGradient, screenGradientLight, spotlightGradient } from "../constants/gradients";
 import { radius, shadows, spacing, typography } from "../constants/theme";
 import { chats } from "../data/chat";
 import { useEntranceAnimations } from "../hooks/useEntranceAnimations";
@@ -122,7 +122,9 @@ function ChatRow({
 }
 
 export function ChatListScreen() {
-  const { colors } = useTheme();
+  const { colors, mode } = useTheme();
+  const searchBg = mode === "light" ? colors.bgElevated : colors.glass;
+  const searchBgFocused = mode === "light" ? colors.bgCard : colors.glassHeavy;
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
   const [searchFocused, setSearchFocused] = useState(false);
 
@@ -181,7 +183,7 @@ export function ChatListScreen() {
 
   return (
     <View style={styles.root}>
-      <LinearGradient colors={screenGradient} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={mode === "dark" ? screenGradient : screenGradientLight} style={StyleSheet.absoluteFill} />
       <LinearGradient
         colors={spotlightGradient}
         style={styles.spotlight}
@@ -200,7 +202,7 @@ export function ChatListScreen() {
           style={[
             styles.searchWrap,
             {
-              backgroundColor: searchFocused ? colors.glassHeavy : colors.glass,
+              backgroundColor: searchFocused ? searchBgFocused : searchBg,
               borderColor: searchBorderColor,
             },
           ]}
