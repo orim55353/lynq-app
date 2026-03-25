@@ -33,14 +33,16 @@ export function GlassCard({
   heavy = false,
   padding = spacing.xl,
 }: GlassCardProps) {
-  const { colors } = useTheme();
+  const { colors, mode } = useTheme();
 
   return (
     <View
       style={[
         styles.card,
         {
-          backgroundColor: heavy ? colors.glassHeavy : colors.glass,
+          backgroundColor: mode === "light"
+            ? (heavy ? colors.bgElevated : colors.bgCard)
+            : (heavy ? colors.glassHeavy : colors.glass),
           borderColor: colors.glassBorder,
         },
         style,

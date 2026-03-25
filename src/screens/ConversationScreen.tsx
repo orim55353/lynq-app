@@ -12,7 +12,7 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { accentGradient, screenGradient } from "../constants/gradients";
+import { accentGradient, screenGradient, screenGradientLight } from "../constants/gradients";
 import { radius, shadows, spacing, typography } from "../constants/theme";
 import { chats } from "../data/chat";
 import { useSpringPress } from "../hooks/useSpringPress";
@@ -22,7 +22,8 @@ import type { AppStackParamList } from "../navigation/AppStack";
 type Props = NativeStackScreenProps<AppStackParamList, "Conversation">;
 
 export function ConversationScreen() {
-  const { colors } = useTheme();
+  const { colors, mode } = useTheme();
+  const bubbleBg = mode === "light" ? colors.bgCard : colors.glass;
   const insets = useSafeAreaInsets();
   const navigation = useNavigation();
   const route = useRoute<Props["route"]>();
@@ -38,7 +39,7 @@ export function ConversationScreen() {
 
   return (
     <View style={[styles.root, { backgroundColor: colors.bg }]}>
-      <LinearGradient colors={screenGradient} style={StyleSheet.absoluteFill} />
+      <LinearGradient colors={mode === "dark" ? screenGradient : screenGradientLight} style={StyleSheet.absoluteFill} />
 
       {/* Messages */}
       <ScrollView
@@ -49,7 +50,7 @@ export function ConversationScreen() {
           style={[
             styles.incomingBubble,
             {
-              backgroundColor: colors.glass,
+              backgroundColor: bubbleBg,
               borderColor: colors.glassBorder,
             },
           ]}
