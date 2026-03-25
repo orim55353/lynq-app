@@ -9,10 +9,14 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { authGradient, authGradientLight, spotlightGradient } from "../constants/gradients";
+import {
+  authGradient,
+  authGradientLight,
+  spotlightGradient,
+} from "../constants/gradients";
 import { spacing, typography } from "../constants/theme";
 import { useTheme } from "../hooks/useTheme";
-import { LynqLogo } from "./LynqLogo";
+import { JobliLogo } from "./JobliLogo";
 
 interface AuthLayoutProps {
   /** Form content rendered between brand header and bottom link */
@@ -59,8 +63,10 @@ export function AuthLayout({
           <View style={styles.content}>
             {/* Brand header */}
             <View style={styles.brandRow}>
-              <LynqLogo size={48} white={mode === "dark"} />
-              <Text style={[styles.brandName, { color: colors.text }]}>Jobli</Text>
+              <JobliLogo size={48} white={mode === "dark"} />
+              <Text style={[styles.brandName, { color: colors.text }]}>
+                Jobli
+              </Text>
             </View>
 
             {/* Form content */}
@@ -69,7 +75,10 @@ export function AuthLayout({
             {/* Bottom navigation link */}
             <Pressable
               onPress={onLinkPress}
-              style={({ pressed }) => [styles.link, pressed && styles.linkPressed]}
+              style={({ pressed }) => [
+                styles.link,
+                pressed && styles.linkPressed,
+              ]}
               disabled={linkDisabled}
             >
               <Text style={[styles.linkText, { color: colors.textSecondary }]}>

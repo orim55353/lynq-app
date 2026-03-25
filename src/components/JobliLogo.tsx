@@ -31,6 +31,3 @@ export function JobliLogo({ size = 48, white = false }: JobliLogoProps) {
     </Svg>
   );
 }
-
-/** @deprecated Use JobliLogo instead */
-export const LynqLogo = JobliLogo;

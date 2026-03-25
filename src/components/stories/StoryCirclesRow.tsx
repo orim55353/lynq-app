@@ -1,12 +1,18 @@
 import { LinearGradient } from "expo-linear-gradient";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import type { LayoutChangeEvent } from "react-native";
-import { type ScrollView as ScrollViewType, ScrollView, StyleSheet, View, useWindowDimensions } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  View,
+  useWindowDimensions,
+} from "react-native";
 import { spacing } from "../../constants/theme";
 import { useTheme } from "../../hooks/useTheme";
 import type { CompanyStory } from "../../types/story";
 import { clamp } from "../../utils/math";
 import { StoryCircle } from "./StoryCircle";
+import { JobliLogo } from "../JobliLogo";
 
 interface StoryCirclesRowProps {
   stories: CompanyStory[];
@@ -24,9 +30,8 @@ export function StoryCirclesRow({
   onHeightChange,
 }: StoryCirclesRowProps) {
   const { width } = useWindowDimensions();
-  const { colors } = useTheme();
+  const { colors, mode } = useTheme();
 
-  const scrollRef = useRef<ScrollViewType>(null);
   const horizontalPadding = clamp(width * 0.05, spacing.lg, spacing.xxl);
 
   const handleLayout = useCallback(
@@ -62,27 +67,33 @@ export function StoryCirclesRow({
         style={styles.bottomGlow}
       />
 
-      <ScrollView
-        ref={scrollRef}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        onContentSizeChange={() => {
-          scrollRef.current?.scrollToEnd({ animated: false });
-        }}
-        contentContainerStyle={[
-          styles.scrollContent,
-          { paddingHorizontal: horizontalPadding, gap: 12 },
-        ]}
-      >
-        {stories.map((story) => (
-          <StoryCircle
-            key={story.id}
-            story={story}
-            isSeen={isFullySeen(story.companyId)}
-            onPress={onSelectStory}
-          />
-        ))}
-      </ScrollView>
+      <View style={styles.row}>
+        {/* Scrollable story circles */}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={[
+            styles.scrollContent,
+            { paddingRight: horizontalPadding, gap: 12 },
+          ]}
+        >
+          {stories.map((story) => (
+            <StoryCircle
+              key={story.id}
+              story={story}
+              isSeen={isFullySeen(story.companyId)}
+              onPress={onSelectStory}
+            />
+          ))}
+        </ScrollView>
+        {/* Fixed Jobli logo on the right */}
+        <View
+          style={[styles.logoWrap, { paddingLeft: horizontalPadding }]}
+          pointerEvents="none"
+        >
+          <JobliLogo size={30} white={mode === "dark"} />
+        </View>
+      </View>
     </View>
   );
 }
@@ -103,8 +114,18 @@ const styles = StyleSheet.create({
     right: 0,
     height: 1,
   },
+  row: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+  },
+  logoWrap: {
+    // Center the 30px logo against the 56px circle (circle starts at paddingVertical=2px)
+    // circle center = 2 + 56/2 = 30px; logo center offset = 30 - 30/2 = 15px
+    marginTop: 15,
+    paddingRight: spacing.md,
+  },
   scrollContent: {
-    alignItems: "flex-end",
+    alignItems: "flex-start",
     paddingVertical: 2,
   },
 });
