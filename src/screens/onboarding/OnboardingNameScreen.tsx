@@ -63,6 +63,10 @@ export function OnboardingNameScreen({ navigation }: Props) {
       const now = new Date().toISOString();
       const { error } = await supabase.from("app_users").upsert(
         {
+          id: "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+            const r = (Math.random() * 16) | 0;
+            return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+          }),
           authId: user.id,
           email: user.email ?? "",
           name,
@@ -71,7 +75,7 @@ export function OnboardingNameScreen({ navigation }: Props) {
           createdAt: now,
           updatedAt: now,
         },
-        { onConflict: "authId" },
+        { onConflict: "authId", ignoreDuplicates: false },
       );
 
       if (error) {

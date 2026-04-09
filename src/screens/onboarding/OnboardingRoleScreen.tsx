@@ -98,7 +98,7 @@ export function OnboardingRoleScreen({ navigation }: Props) {
       setSubmitting(false);
     }
 
-    navigation.navigate("Traits");
+    navigation.navigate("Certifications");
   }, [uid, selected, navigation]);
 
   return (

@@ -21,9 +21,16 @@ export interface OnboardingProfile {
   readonly location: string | null;
   readonly experience: string | null;
   readonly skills: string[] | null;
+  readonly certifications: string[] | null;
+  readonly preferredShiftTypes: string[] | null;
+  readonly preferredJobTypes: string[] | null;
+  readonly hasOwnTransport: boolean | null;
 }
 
-const EMPTY_PROFILE: OnboardingProfile = { name: null, location: null, experience: null, skills: null };
+const EMPTY_PROFILE: OnboardingProfile = {
+  name: null, location: null, experience: null, skills: null,
+  certifications: null, preferredShiftTypes: null, preferredJobTypes: null, hasOwnTransport: null,
+};
 
 interface AuthContextValue {
   user: User | null;
@@ -57,11 +64,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     name?: string | null;
     location?: string | null;
     experience?: string | null;
+    certifications?: string[] | null;
+    preferredShiftTypes?: string[] | null;
     skills?: string[] | null;
   }): OnboardingRoute {
     if (!profile.name) return "Welcome";
     if (!profile.location) return "Location";
     if (!profile.experience) return "Role";
+    if (!profile.certifications || profile.certifications.length === 0) return "Certifications";
+    if (!profile.preferredShiftTypes || profile.preferredShiftTypes.length === 0) return "WorkPreferences";
     return "Traits";
   }
 
@@ -70,19 +81,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { data } = await supabase
         .from("app_users")
-        .select("onboardingCompleted, name, location, experience, skills")
+        .select("onboardingCompleted, name, location, experience, skills, certifications, preferredShiftTypes, preferredJobTypes, hasOwnTransport")
         .eq("authId", uid)
         .single();
 
       if (!data || !data.onboardingCompleted) {
         setNeedsOnboarding(true);
         if (data) {
-          setOnboardingResumeRoute(deriveResumeRoute(data));
+          const d = data as Record<string, unknown>;
+          setOnboardingResumeRoute(deriveResumeRoute(d as Parameters<typeof deriveResumeRoute>[0]));
           setOnboardingProfile({
-            name: data.name ?? null,
-            location: data.location ?? null,
-            experience: data.experience ?? null,
-            skills: data.skills ?? null,
+            name: d.name as string | null ?? null,
+            location: d.location as string | null ?? null,
+            experience: d.experience as string | null ?? null,
+            skills: d.skills as string[] | null ?? null,
+            certifications: d.certifications as string[] | null ?? null,
+            preferredShiftTypes: d.preferredShiftTypes as string[] | null ?? null,
+            preferredJobTypes: d.preferredJobTypes as string[] | null ?? null,
+            hasOwnTransport: d.hasOwnTransport as boolean | null ?? null,
           });
         } else {
           setOnboardingResumeRoute("Welcome");

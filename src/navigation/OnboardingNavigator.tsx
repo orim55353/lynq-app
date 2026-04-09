@@ -5,6 +5,8 @@ import { OnboardingWelcomeScreen } from "../screens/onboarding/OnboardingWelcome
 import { OnboardingNameScreen } from "../screens/onboarding/OnboardingNameScreen";
 import { OnboardingLocationScreen } from "../screens/onboarding/OnboardingLocationScreen";
 import { OnboardingRoleScreen } from "../screens/onboarding/OnboardingRoleScreen";
+import { OnboardingCertificationsScreen } from "../screens/onboarding/OnboardingCertificationsScreen";
+import { OnboardingWorkPreferencesScreen } from "../screens/onboarding/OnboardingWorkPreferencesScreen";
 import { OnboardingTraitsScreen } from "../screens/onboarding/OnboardingTraitsScreen";
 import { useTheme } from "../hooks/useTheme";
 
@@ -13,6 +15,8 @@ export type OnboardingStackParamList = {
   Name: undefined;
   Location: undefined;
   Role: undefined;
+  Certifications: undefined;
+  WorkPreferences: undefined;
   Traits: undefined;
 };
 
@@ -22,6 +26,8 @@ const ROUTE_ORDER: (keyof OnboardingStackParamList)[] = [
   "Name",
   "Location",
   "Role",
+  "Certifications",
+  "WorkPreferences",
   "Traits",
 ];
 
@@ -68,6 +74,8 @@ export function OnboardingNavigator({
       <Stack.Screen name="Name" component={OnboardingNameScreen} />
       <Stack.Screen name="Location" component={OnboardingLocationScreen} />
       <Stack.Screen name="Role" component={OnboardingRoleScreen} />
+      <Stack.Screen name="Certifications" component={OnboardingCertificationsScreen} />
+      <Stack.Screen name="WorkPreferences" component={OnboardingWorkPreferencesScreen} />
       <Stack.Screen name="Traits" component={OnboardingTraitsScreen} />
     </Stack.Navigator>
   );

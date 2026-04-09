@@ -43,7 +43,7 @@ export function OnboardingLayout({ children, step, showBack = true }: Onboarding
         start={{ x: 0.5, y: 0 }}
         end={{ x: 0.5, y: 1 }}
       />
-      <OnboardingProgressBar step={step} totalSteps={5} />
+      <OnboardingProgressBar step={step} totalSteps={7} />
 
       <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
         {showBack && canGoBack ? (

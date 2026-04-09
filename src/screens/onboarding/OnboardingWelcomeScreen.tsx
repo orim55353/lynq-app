@@ -2,8 +2,9 @@ import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect, useRef } from "react";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { GradientButton } from "../../components/GradientButton";
+import { LynqLogo } from "../../components/LynqLogo";
 import { OnboardingLayout } from "../../components/OnboardingLayout";
-import { radius, shadows, spacing, typography } from "../../constants/theme";
+import { spacing, typography } from "../../constants/theme";
 import { useTheme } from "../../hooks/useTheme";
 import type { OnboardingStackParamList } from "../../navigation/OnboardingNavigator";
 
@@ -35,9 +36,7 @@ export function OnboardingWelcomeScreen({ navigation }: Props) {
       <View style={styles.content}>
         {/* Brand */}
         <View style={styles.brandRow}>
-          <View style={[styles.brandIcon, shadows.glow, { backgroundColor: colors.accent }]}>
-            <Text style={styles.brandLetter}>Lq</Text>
-          </View>
+          <LynqLogo size={56} />
         </View>
 
         {/* Hero */}
@@ -74,19 +73,6 @@ const styles = StyleSheet.create({
   },
   brandRow: {
     marginBottom: spacing.xxxl,
-  },
-  brandIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: radius.md,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  brandLetter: {
-    fontSize: 24,
-    fontWeight: "800",
-    color: "#FFFFFF",
-    letterSpacing: -0.5,
   },
   hero: {
     fontSize: 38,
