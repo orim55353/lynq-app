@@ -13,6 +13,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { Image } from "expo-image";
+import { useTranslation } from "react-i18next";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { bottomFade, bottomFadeLight, screenGradient, screenGradientLight, spotlightGradient } from "../constants/gradients";
 import {
@@ -124,6 +125,7 @@ function MatchCard({
 }
 
 export function MatchesScreen() {
+  const { t } = useTranslation("matches");
   const { jobs } = useJobs();
   const { mode } = useTheme();
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
@@ -160,8 +162,8 @@ export function MatchesScreen() {
       />
 
       <ScreenHeader
-        title="Your Matches"
-        subtitle="Companies that liked you back"
+        title={t("title")}
+        subtitle={t("subtitle")}
       />
 
       <ScrollView

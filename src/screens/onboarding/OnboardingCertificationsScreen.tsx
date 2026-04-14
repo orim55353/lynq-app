@@ -1,6 +1,7 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LinearGradient } from "expo-linear-gradient";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Animated,
   Pressable,
@@ -19,31 +20,35 @@ import type { OnboardingStackParamList } from "../../navigation/OnboardingNaviga
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, "Certifications">;
 
-interface Certification {
-  readonly label: string;
+interface CertDef {
+  readonly i18nKey: string;
   readonly value: string;
   readonly gradient: readonly [string, string];
   readonly size: number;
 }
 
-const CERT_ROWS: Certification[][] = [
+interface Certification extends CertDef {
+  readonly label: string;
+}
+
+const CERT_ROW_DEFS: CertDef[][] = [
   [
-    { label: "Forklift\ncertified", value: "Forklift Certification", gradient: ["#F59E0B", "#FBBF24"], size: 105 },
-    { label: "CDL\nholder", value: "CDL Class A", gradient: ["#6366F1", "#818CF8"], size: 90 },
-    { label: "Food\nhandler", value: "Food Handler", gradient: ["#059669", "#34D399"], size: 100 },
-    { label: "OSHA\ntrained", value: "OSHA 10", gradient: ["#00687A", "#06B6D4"], size: 95 },
+    { i18nKey: "forklift", value: "Forklift Certification", gradient: ["#F59E0B", "#FBBF24"], size: 105 },
+    { i18nKey: "cdl", value: "CDL Class A", gradient: ["#6366F1", "#818CF8"], size: 90 },
+    { i18nKey: "food_handler", value: "Food Handler", gradient: ["#059669", "#34D399"], size: 100 },
+    { i18nKey: "osha", value: "OSHA 10", gradient: ["#00687A", "#06B6D4"], size: 95 },
   ],
   [
-    { label: "First aid", value: "First Aid", gradient: ["#DC2626", "#F87171"], size: 95 },
-    { label: "CPR", value: "CPR", gradient: ["#0891B2", "#22D3EE"], size: 80 },
-    { label: "HAZMAT", value: "HAZMAT", gradient: ["#8B5CF6", "#A78BFA"], size: 90 },
-    { label: "Electrician", value: "Electrician", gradient: ["#F59E0B", "#FBBF24"], size: 100 },
+    { i18nKey: "first_aid", value: "First Aid", gradient: ["#DC2626", "#F87171"], size: 95 },
+    { i18nKey: "cpr", value: "CPR", gradient: ["#0891B2", "#22D3EE"], size: 80 },
+    { i18nKey: "hazmat", value: "HAZMAT", gradient: ["#8B5CF6", "#A78BFA"], size: 90 },
+    { i18nKey: "electrician", value: "Electrician", gradient: ["#F59E0B", "#FBBF24"], size: 100 },
   ],
   [
-    { label: "Certified\nwelder", value: "Certified Welder", gradient: ["#DC2626", "#F87171"], size: 105 },
-    { label: "Mechanic", value: "Mechanic", gradient: ["#059669", "#34D399"], size: 88 },
-    { label: "PIT\ncertified", value: "PIT Certified", gradient: ["#6366F1", "#818CF8"], size: 95 },
-    { label: "EPA 608", value: "EPA 608", gradient: ["#00687A", "#06B6D4"], size: 85 },
+    { i18nKey: "welder", value: "Certified Welder", gradient: ["#DC2626", "#F87171"], size: 105 },
+    { i18nKey: "mechanic", value: "Mechanic", gradient: ["#059669", "#34D399"], size: 88 },
+    { i18nKey: "pit", value: "PIT Certified", gradient: ["#6366F1", "#818CF8"], size: 95 },
+    { i18nKey: "epa", value: "EPA 608", gradient: ["#00687A", "#06B6D4"], size: 85 },
   ],
 ];
 
@@ -157,7 +162,7 @@ function CertBubble({
                 height: size + 6,
                 borderRadius: (size + 6) / 2,
                 top: -3,
-                left: -3,
+                start: -3,
               },
             ]}
           />
@@ -187,10 +192,10 @@ const bubbleStyles = StyleSheet.create({
   },
 });
 
-/** Restore saved certifications back to bubble labels. */
+/** Restore saved certifications back to bubble values. */
 function restoreSavedCerts(saved: string[] | null): Set<string> {
   if (!saved || saved.length === 0) return new Set();
-  const allCerts = CERT_ROWS.flat();
+  const allCerts = CERT_ROW_DEFS.flat();
   const restored = new Set<string>();
   for (const val of saved) {
     const match = allCerts.find((c) => c.value === val);
@@ -201,7 +206,16 @@ function restoreSavedCerts(saved: string[] | null): Set<string> {
 
 export function OnboardingCertificationsScreen({ navigation }: Props) {
   const { colors } = useTheme();
+  const { t } = useTranslation("onboarding");
   const { uid, onboardingProfile } = useAuth();
+
+  const certRows: Certification[][] = useMemo(
+    () => CERT_ROW_DEFS.map((row) =>
+      row.map((def) => ({ ...def, label: t(`certifications.certs.${def.i18nKey}`) })),
+    ),
+    [t],
+  );
+
   const [selectedCerts, setSelectedCerts] = useState<Set<string>>(
     () => restoreSavedCerts(onboardingProfile.certifications),
   );
@@ -258,10 +272,10 @@ export function OnboardingCertificationsScreen({ navigation }: Props) {
       <View style={styles.content}>
         <Animated.View style={{ opacity: titleOpacity, transform: [{ translateY: titleTranslateY }] }}>
           <Text style={[styles.title, { color: colors.text }]}>
-            Got any{"\n"}certifications?
+            {t("certifications.title")}
           </Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Select all that apply
+            {t("certifications.subtitle")}
           </Text>
         </Animated.View>
 
@@ -272,7 +286,7 @@ export function OnboardingCertificationsScreen({ navigation }: Props) {
           style={styles.scrollWrap}
         >
           <View style={styles.columnsContainer}>
-            {CERT_ROWS.map((row, rowIndex) => (
+            {certRows.map((row, rowIndex) => (
               <View key={rowIndex} style={styles.bubbleRow}>
                 {row.map((cert) => {
                   const idx = globalIndex++;
@@ -292,19 +306,19 @@ export function OnboardingCertificationsScreen({ navigation }: Props) {
         </ScrollView>
 
         <Text style={[styles.counter, { color: colors.textSecondary }]}>
-          {selectedCerts.size} selected
+          {t("common:selected_count", { count: selectedCerts.size })}
         </Text>
 
         <View style={styles.ctaWrap}>
           <GradientButton
-            label="Continue"
+            label={t("common:continue")}
             onPress={handleContinue}
             loading={submitting}
             large
           />
 
           <Pressable onPress={handleSkip} style={styles.skipLink}>
-            <Text style={[styles.skipText, { color: colors.textTertiary }]}>I don't have any</Text>
+            <Text style={[styles.skipText, { color: colors.textTertiary }]}>{t("certifications.skip")}</Text>
           </Pressable>
         </View>
       </View>

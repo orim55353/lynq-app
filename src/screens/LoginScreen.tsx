@@ -10,6 +10,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 import { AuthLayout } from "../components/AuthLayout";
 import { GradientButton } from "../components/GradientButton";
 import { radius, spacing, typography } from "../constants/theme";
@@ -106,6 +107,7 @@ function GlassInput({
 }
 
 export function LoginScreen({ navigation }: Props) {
+  const { t } = useTranslation("auth");
   const { signIn } = useAuth();
   const { colors } = useTheme();
   const [email, setEmail] = useState("");
@@ -144,15 +146,15 @@ export function LoginScreen({ navigation }: Props) {
   const handleLogin = useCallback(async () => {
     const trimmedEmail = email.trim();
     if (!trimmedEmail || !password) {
-      Alert.alert("Error", "Please enter email and password.");
+      Alert.alert(t("common:error"), t("login.error_empty"));
       return;
     }
     setLoading(true);
     try {
       await signIn(trimmedEmail, password);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Login failed.";
-      Alert.alert("Login failed", message);
+      const message = err instanceof Error ? err.message : t("login.error_failed");
+      Alert.alert(t("login.error_failed"), message);
     } finally {
       setLoading(false);
     }
@@ -160,8 +162,8 @@ export function LoginScreen({ navigation }: Props) {
 
   return (
     <AuthLayout
-      linkPrefix="Don't have an account?"
-      linkAction="Sign up"
+      linkPrefix={t("login.no_account")}
+      linkAction={t("login.sign_up_link")}
       onLinkPress={() => navigation.navigate("Register")}
       linkDisabled={loading}
     >
@@ -171,7 +173,7 @@ export function LoginScreen({ navigation }: Props) {
           transform: [{ translateY: anims[0].translateY }],
         }}
       >
-        <Text style={[styles.title, { color: colors.text }]}>Welcome back</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t("login.title")}</Text>
       </Animated.View>
 
       <Animated.View
@@ -182,15 +184,15 @@ export function LoginScreen({ navigation }: Props) {
         }}
       >
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-          Sign in to continue your job search
+          {t("login.subtitle")}
         </Text>
       </Animated.View>
 
       <GlassInput
-        label="Email"
+        label={t("login.email_label")}
         value={email}
         onChangeText={setEmail}
-        placeholder="you@email.com"
+        placeholder={t("login.email_placeholder")}
         autoCapitalize="none"
         keyboardType="email-address"
         autoComplete="email"
@@ -200,10 +202,10 @@ export function LoginScreen({ navigation }: Props) {
       />
 
       <GlassInput
-        label="Password"
+        label={t("login.password_label")}
         value={password}
         onChangeText={setPassword}
-        placeholder="Enter your password"
+        placeholder={t("login.password_placeholder")}
         secureTextEntry
         autoComplete="password"
         editable={!loading}
@@ -221,7 +223,7 @@ export function LoginScreen({ navigation }: Props) {
         ]}
       >
         <GradientButton
-          label="Log in"
+          label={t("login.submit")}
           onPress={handleLogin}
           loading={loading}
           large

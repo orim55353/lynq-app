@@ -14,6 +14,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { Image } from "expo-image";
+import { useTranslation } from "react-i18next";
 import { GlassCard } from "../components/GlassCard";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { bottomFade, bottomFadeLight, screenGradient, screenGradientLight, spotlightGradient } from "../constants/gradients";
@@ -188,6 +189,7 @@ function SavedCard({
 }
 
 export function SavedScreen() {
+  const { t } = useTranslation("saved");
   const { jobs } = useJobs();
   const { colors, mode } = useTheme();
   const navigation = useNavigation<NativeStackNavigationProp<AppStackParamList>>();
@@ -210,8 +212,8 @@ export function SavedScreen() {
   }, [navigation]);
 
   const subtitleText = loaded
-    ? `${savedJobs.length} job${savedJobs.length === 1 ? "" : "s"} saved for later`
-    : "Loading...";
+    ? t("subtitle", { count: savedJobs.length })
+    : t("common:loading");
 
   return (
     <View style={styles.root}>
@@ -223,7 +225,7 @@ export function SavedScreen() {
         end={{ x: 0.5, y: 1 }}
       />
 
-      <ScreenHeader title="Saved Jobs" subtitle={subtitleText} />
+      <ScreenHeader title={t("title")} subtitle={subtitleText} />
 
       <ScrollView
         contentContainerStyle={[styles.content, { paddingBottom: 130 }]}
@@ -240,10 +242,10 @@ export function SavedScreen() {
               <View style={styles.emptyContent}>
                 <PulsingBookmark />
                 <Text style={[styles.emptyTitle, { color: colors.text }]}>
-                  No saved jobs yet
+                  {t("empty_title")}
                 </Text>
                 <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
-                  Start swiping to save jobs you're interested in!
+                  {t("empty_text")}
                 </Text>
               </View>
             </GlassCard>

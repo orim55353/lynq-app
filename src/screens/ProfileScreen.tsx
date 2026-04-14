@@ -13,6 +13,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 import { GlassCard } from "../components/GlassCard";
 import { GlassPill } from "../components/GlassPill";
 import {
@@ -35,6 +36,7 @@ import { useSpringPress } from "../hooks/useSpringPress";
 import { useTheme } from "../hooks/useTheme";
 
 export function ProfileScreen() {
+  const { t } = useTranslation("profile");
   const { signOut, profile, profileLoading: loading } = useAuth();
   const { colors, mode } = useTheme();
   const insets = useSafeAreaInsets();
@@ -69,9 +71,9 @@ export function ProfileScreen() {
   const signOutPress = useSpringPress({ pressedScale: 0.95 });
 
   const handleSignOut = useCallback(() => {
-    Alert.alert("Sign out", "Are you sure?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Sign out", style: "destructive", onPress: () => signOut() },
+    Alert.alert(t("sign_out"), t("sign_out_confirm"), [
+      { text: t("common:cancel"), style: "cancel" },
+      { text: t("sign_out"), style: "destructive", onPress: () => signOut() },
     ]);
   }, [signOut]);
 
@@ -86,7 +88,7 @@ export function ProfileScreen() {
           <GlassCard>
             <View style={styles.loadingContent}>
               <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
-                Loading profile...
+                {t("loading")}
               </Text>
             </View>
           </GlassCard>
@@ -187,7 +189,7 @@ export function ProfileScreen() {
           <GlassCard>
             <View style={styles.sectionTitleRow}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                Skills
+                {t("skills_title")}
               </Text>
               <LinearGradient
                 colors={accentGradient}
@@ -219,7 +221,7 @@ export function ProfileScreen() {
           <GlassCard>
             <View style={styles.sectionTitleRow}>
               <Text style={[styles.sectionTitle, { color: colors.text }]}>
-                Experience
+                {t("experience_title")}
               </Text>
               <LinearGradient
                 colors={warmGradient}
@@ -305,7 +307,7 @@ export function ProfileScreen() {
             >
               <Ionicons name="log-out-outline" size={18} color={colors.danger} />
               <Text style={[styles.signOutText, { color: colors.danger }]}>
-                Sign out
+                {t("sign_out")}
               </Text>
             </Pressable>
           </Animated.View>

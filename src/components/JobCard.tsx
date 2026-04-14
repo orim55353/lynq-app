@@ -13,6 +13,7 @@ import {
   View,
 } from "react-native";
 import { Image } from "expo-image";
+import { useTranslation } from "react-i18next";
 import {
   getFontScale,
   radius,
@@ -106,6 +107,7 @@ export const JobCard = memo(function JobCard({
   isVisible = false,
 }: JobCardProps) {
   const { width, height } = useWindowDimensions();
+  const { t } = useTranslation("common");
   const [applied, setApplied] = useState(false);
   const applyScale = useRef(new Animated.Value(1)).current;
   const saveScale = useRef(new Animated.Value(1)).current;
@@ -315,19 +317,19 @@ export const JobCard = memo(function JobCard({
         <View style={[styles.infoStrip, { backgroundColor: c.stripBg }]}>
           <View style={styles.infoCell}>
             <Ionicons name="briefcase-outline" size={18} color={c.infoIcon} />
-            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>Experience</Text>
+            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>{t("experience")}</Text>
             <Text style={[styles.infoValue, { fontSize: fs.highlight, color: c.infoValue }]}>{job.experience}</Text>
           </View>
           <View style={[styles.infoDivider, { backgroundColor: c.divider }]} />
           <View style={styles.infoCell}>
             <Ionicons name="calendar-outline" size={18} color={c.infoIcon} />
-            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>Schedule</Text>
+            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>{t("schedule")}</Text>
             <Text style={[styles.infoValue, { fontSize: fs.highlight, color: c.infoValue }]}>{job.schedule}</Text>
           </View>
           <View style={[styles.infoDivider, { backgroundColor: c.divider }]} />
           <View style={styles.infoCell}>
             <Ionicons name="location-outline" size={18} color={c.infoIcon} />
-            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>Type</Text>
+            <Text style={[styles.infoLabel, { fontSize: fs.meta, color: c.infoLabel }]}>{t("type")}</Text>
             <Text style={[styles.infoValue, { fontSize: fs.highlight, color: c.infoValue }]}>{job.workType}</Text>
           </View>
         </View>
@@ -360,7 +362,7 @@ export const JobCard = memo(function JobCard({
               {applied ? (
                 <View style={styles.appliedInner}>
                   <Ionicons name="checkmark-circle" size={20} color="#22C55E" />
-                  <Text style={[styles.appliedText, { fontSize: fs.apply }]}>Applied</Text>
+                  <Text style={[styles.appliedText, { fontSize: fs.apply }]}>{t("applied")}</Text>
                 </View>
               ) : (
                 <LinearGradient
@@ -370,7 +372,7 @@ export const JobCard = memo(function JobCard({
                   style={styles.applyGradient}
                 >
                   <Ionicons name="flash" size={17} color="#FFFFFF" />
-                  <Text style={[styles.applyText, { fontSize: fs.apply }]}>Apply Now</Text>
+                  <Text style={[styles.applyText, { fontSize: fs.apply }]}>{t("apply_now")}</Text>
                 </LinearGradient>
               )}
             </Pressable>

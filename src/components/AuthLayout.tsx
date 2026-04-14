@@ -8,6 +8,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { authGradient, authGradientLight, spotlightGradient } from "../constants/gradients";
 import { spacing, typography } from "../constants/theme";
@@ -39,6 +40,7 @@ export function AuthLayout({
   onLinkPress,
   linkDisabled = false,
 }: AuthLayoutProps) {
+  const { t } = useTranslation("auth");
   const { colors, mode } = useTheme();
   const bgGradient = mode === "dark" ? authGradient : authGradientLight;
 
@@ -60,7 +62,7 @@ export function AuthLayout({
             {/* Brand header */}
             <View style={styles.brandRow}>
               <LynqLogo size={48} white={mode === "dark"} />
-              <Text style={[styles.brandName, { color: colors.text }]}>Lynq</Text>
+              <Text style={[styles.brandName, { color: colors.text }]}>{t("brand_name")}</Text>
             </View>
 
             {/* Form content */}

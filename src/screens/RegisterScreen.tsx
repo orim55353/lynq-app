@@ -9,6 +9,7 @@ import {
   TextInput,
   View,
 } from "react-native";
+import { useTranslation } from "react-i18next";
 import { AuthLayout } from "../components/AuthLayout";
 import { GradientButton } from "../components/GradientButton";
 import { radius, spacing, typography } from "../constants/theme";
@@ -105,6 +106,7 @@ function GlassInput({
 }
 
 export function RegisterScreen({ navigation }: Props) {
+  const { t } = useTranslation("auth");
   const { register } = useAuth();
   const { colors } = useTheme();
   const [email, setEmail] = useState("");
@@ -144,23 +146,23 @@ export function RegisterScreen({ navigation }: Props) {
   const handleRegister = useCallback(async () => {
     const trimmedEmail = email.trim();
     if (!trimmedEmail || !password || !confirmPassword) {
-      Alert.alert("Error", "Please fill in all fields.");
+      Alert.alert(t("common:error"), t("register.error_empty"));
       return;
     }
     if (password !== confirmPassword) {
-      Alert.alert("Error", "Passwords do not match.");
+      Alert.alert(t("common:error"), t("register.error_mismatch"));
       return;
     }
     if (password.length < 6) {
-      Alert.alert("Error", "Password must be at least 6 characters.");
+      Alert.alert(t("common:error"), t("register.error_short"));
       return;
     }
     setLoading(true);
     try {
       await register(trimmedEmail, password);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Sign up failed.";
-      Alert.alert("Sign up failed", message);
+      const message = err instanceof Error ? err.message : t("register.error_failed");
+      Alert.alert(t("register.error_failed"), message);
     } finally {
       setLoading(false);
     }
@@ -168,8 +170,8 @@ export function RegisterScreen({ navigation }: Props) {
 
   return (
     <AuthLayout
-      linkPrefix="Already have an account?"
-      linkAction="Log in"
+      linkPrefix={t("register.has_account")}
+      linkAction={t("register.login_link")}
       onLinkPress={() => navigation.navigate("Login")}
       linkDisabled={loading}
     >
@@ -179,7 +181,7 @@ export function RegisterScreen({ navigation }: Props) {
           transform: [{ translateY: anims[0].translateY }],
         }}
       >
-        <Text style={[styles.title, { color: colors.text }]}>Create account</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{t("register.title")}</Text>
       </Animated.View>
 
       <Animated.View
@@ -190,15 +192,15 @@ export function RegisterScreen({ navigation }: Props) {
         }}
       >
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-          Join the fastest way to find your next role
+          {t("register.subtitle")}
         </Text>
       </Animated.View>
 
       <GlassInput
-        label="Email"
+        label={t("register.email_label")}
         value={email}
         onChangeText={setEmail}
-        placeholder="you@email.com"
+        placeholder={t("register.email_placeholder")}
         autoCapitalize="none"
         keyboardType="email-address"
         autoComplete="email"
@@ -208,10 +210,10 @@ export function RegisterScreen({ navigation }: Props) {
       />
 
       <GlassInput
-        label="Password"
+        label={t("register.password_label")}
         value={password}
         onChangeText={setPassword}
-        placeholder="Min 6 characters"
+        placeholder={t("register.password_placeholder")}
         secureTextEntry
         autoComplete="new-password"
         editable={!loading}
@@ -220,10 +222,10 @@ export function RegisterScreen({ navigation }: Props) {
       />
 
       <GlassInput
-        label="Confirm Password"
+        label={t("register.confirm_label")}
         value={confirmPassword}
         onChangeText={setConfirmPassword}
-        placeholder="Repeat your password"
+        placeholder={t("register.confirm_placeholder")}
         secureTextEntry
         autoComplete="new-password"
         editable={!loading}
@@ -241,7 +243,7 @@ export function RegisterScreen({ navigation }: Props) {
         ]}
       >
         <GradientButton
-          label="Sign up"
+          label={t("register.submit")}
           onPress={handleRegister}
           loading={loading}
           large

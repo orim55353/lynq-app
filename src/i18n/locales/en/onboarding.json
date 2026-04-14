@@ -1,0 +1,106 @@
+{
+  "welcome": {
+    "hero": "Let's find your\nnext job in\n60 seconds",
+    "subtitle": "Quick setup, better matches",
+    "cta": "Let's Go"
+  },
+  "name": {
+    "title": "What's your name?",
+    "first_name_label": "First name",
+    "first_name_placeholder": "John",
+    "last_name_label": "Last name",
+    "last_name_placeholder": "Smith"
+  },
+  "location": {
+    "title": "Where are you based?",
+    "detecting": "Detecting...",
+    "use_my_location": "Use my location",
+    "or_type": "or type it in",
+    "placeholder": "Las Vegas, NV"
+  },
+  "role": {
+    "title": "What kind of work\ndo you do?",
+    "other_placeholder": "What kind of work?",
+    "industries": {
+      "warehouse": "Warehouse & Logistics",
+      "construction": "Construction & Trades",
+      "food": "Food Service & Restaurant",
+      "healthcare": "Healthcare & Caregiving",
+      "retail": "Retail & Sales",
+      "hospitality": "Hospitality & Entertainment",
+      "manufacturing": "Manufacturing",
+      "transportation": "Transportation & Delivery",
+      "cleaning": "Cleaning & Maintenance",
+      "other": "Other"
+    }
+  },
+  "certifications": {
+    "title": "Got any\ncertifications?",
+    "subtitle": "Select all that apply",
+    "skip": "I don't have any",
+    "certs": {
+      "forklift": "Forklift\ncertified",
+      "cdl": "CDL\nholder",
+      "food_handler": "Food\nhandler",
+      "osha": "OSHA\ntrained",
+      "first_aid": "First aid",
+      "cpr": "CPR",
+      "hazmat": "HAZMAT",
+      "electrician": "Electrician",
+      "welder": "Certified\nwelder",
+      "mechanic": "Mechanic",
+      "pit": "PIT\ncertified",
+      "epa": "EPA 608"
+    }
+  },
+  "work_preferences": {
+    "title": "What works\nfor you?",
+    "when_section": "When can you work?",
+    "type_section": "What type of work?",
+    "transport_section": "Do you have your own transport?",
+    "shifts": {
+      "day": "Day shift",
+      "night": "Night shift",
+      "evening": "Evening",
+      "rotating": "Rotating",
+      "flexible": "Flexible"
+    },
+    "job_types": {
+      "full_time": "Full-time",
+      "part_time": "Part-time",
+      "contract": "Contract",
+      "temporary": "Temporary"
+    }
+  },
+  "traits": {
+    "title": "What makes you, you?",
+    "subtitle": "Pick 3–8 that describe you",
+    "cta": "Start Exploring",
+    "traits": {
+      "team_player": "Team\nplayer",
+      "reliable": "Reliable",
+      "problem_solver": "Problem\nsolver",
+      "fast_learner": "Fast\nlearner",
+      "bilingual": "Bilingual",
+      "hands_on": "Hands-on",
+      "detail_oriented": "Detail\noriented",
+      "early_riser": "Early\nriser",
+      "leader": "Leader",
+      "night_owl": "Night\nowl",
+      "people_person": "People\nperson",
+      "punctual": "Punctual",
+      "calm_under_pressure": "Calm\nunder\npressure",
+      "physical_stamina": "Physical\nstamina",
+      "heavy_lifting": "Heavy\nlifting",
+      "on_my_feet": "On my\nfeet",
+      "organized": "Organized",
+      "self_starter": "Self\nstarter",
+      "adaptable": "Adaptable",
+      "patient": "Patient",
+      "creative": "Creative",
+      "focused": "Focused",
+      "resilient": "Resilient",
+      "curious": "Curious"
+    }
+  }
+}

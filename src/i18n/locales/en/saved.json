@@ -1,0 +1,7 @@
+{
+  "title": "Saved Jobs",
+  "subtitle_one": "{{count}} job saved for later",
+  "subtitle_other": "{{count}} jobs saved for later",
+  "empty_title": "No saved jobs yet",
+  "empty_text": "Start swiping to save jobs you're interested in!"
+}

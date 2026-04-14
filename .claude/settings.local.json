@@ -28,7 +28,19 @@
       "Bash(curl -s \"https://en.wikipedia.org/w/api.php?action=query&titles=Four_Seasons_Hotels_and_Resorts&prop=pageimages&pithumbsize=200&format=json\")",
       "Bash(python3 -m json.tool)",
       "Bash(curl -s \"https://en.wikipedia.org/w/api.php?action=query&titles=MGM_Resorts_International&prop=pageimages&pithumbsize=200&format=json\")",
-      "Bash(curl -s \"https://en.wikipedia.org/w/api.php?action=query&titles=Hilton_Hotels_%26_Resorts&prop=pageimages&pithumbsize=200&format=json\")"
+      "Bash(curl -s \"https://en.wikipedia.org/w/api.php?action=query&titles=Hilton_Hotels_%26_Resorts&prop=pageimages&pithumbsize=200&format=json\")",
+      "Bash(git stash *)",
+      "Bash(git checkout *)",
+      "Bash(npm ls *)",
+      "Bash(npm install *)",
+      "Bash(rm -rf Pods Podfile.lock build ~/Library/Developer/Xcode/DerivedData/Lynq-*)",
+      "Bash(pod install *)",
+      "Bash(npm info *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(d.get\\('packages',{}\\).get\\('node_modules/react-native-reanimated',{}\\).get\\('version','?'\\)\\)\")",
+      "Bash(xcodebuild -workspace ios/Lynq.xcworkspace -scheme Lynq -configuration Debug -sdk iphonesimulator build)",
+      "Bash(npx expo-doctor *)",
+      "Bash(lsof -ti:8081)",
+      "Bash(xargs kill *)"
     ]
   }
 }

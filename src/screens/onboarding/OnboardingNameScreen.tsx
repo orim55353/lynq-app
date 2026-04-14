@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Alert,
   Animated,
@@ -22,6 +23,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, "Name">;
 
 export function OnboardingNameScreen({ navigation }: Props) {
   const { colors } = useTheme();
+  const { t } = useTranslation("onboarding");
   const { user, onboardingProfile } = useAuth();
 
   // Autofill from saved profile data
@@ -80,14 +82,14 @@ export function OnboardingNameScreen({ navigation }: Props) {
 
       if (error) {
         console.error("[Onboarding] Failed to create app_users row:", error.message);
-        Alert.alert("Something went wrong", "Please try again.");
+        Alert.alert(t("common:something_went_wrong"), t("common:please_try_again"));
         return;
       }
 
       navigation.navigate("Location");
     } catch (err) {
       console.error("[Onboarding] Name submit error:", err);
-      Alert.alert("Something went wrong", "Please try again.");
+      Alert.alert(t("common:something_went_wrong"), t("common:please_try_again"));
     } finally {
       setSubmitting(false);
     }
@@ -102,18 +104,18 @@ export function OnboardingNameScreen({ navigation }: Props) {
         <View style={styles.content}>
           <Animated.View style={{ opacity: titleOpacity, transform: [{ translateY: titleTranslateY }] }}>
             <Text style={[styles.title, { color: colors.text }]}>
-              What's your name?
+              {t("name.title")}
             </Text>
           </Animated.View>
 
           <Animated.View style={{ opacity: formOpacity, transform: [{ translateY: formTranslateY }] }}>
             <View style={[styles.inputWrap, { backgroundColor: colors.glass, borderColor: colors.glassBorder }]}>
-              <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>First name</Text>
+              <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>{t("name.first_name_label")}</Text>
               <TextInput
                 style={[styles.input, { color: colors.text }]}
                 value={firstName}
                 onChangeText={setFirstName}
-                placeholder="John"
+                placeholder={t("name.first_name_placeholder")}
                 placeholderTextColor={colors.textTertiary}
                 autoCapitalize="words"
                 autoComplete="given-name"
@@ -124,13 +126,13 @@ export function OnboardingNameScreen({ navigation }: Props) {
             </View>
 
             <View style={[styles.inputWrap, { backgroundColor: colors.glass, borderColor: colors.glassBorder }]}>
-              <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Last name</Text>
+              <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>{t("name.last_name_label")}</Text>
               <TextInput
                 ref={lastNameRef}
                 style={[styles.input, { color: colors.text }]}
                 value={lastName}
                 onChangeText={setLastName}
-                placeholder="Smith"
+                placeholder={t("name.last_name_placeholder")}
                 placeholderTextColor={colors.textTertiary}
                 autoCapitalize="words"
                 autoComplete="family-name"
@@ -144,7 +146,7 @@ export function OnboardingNameScreen({ navigation }: Props) {
           <View style={styles.spacer} />
 
           <GradientButton
-            label="Continue"
+            label={t("common:continue")}
             onPress={handleSubmit}
             loading={submitting}
             disabled={!canSubmit}

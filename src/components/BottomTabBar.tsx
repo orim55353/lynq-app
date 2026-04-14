@@ -3,6 +3,7 @@ import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
 import { Animated, Pressable, StyleSheet, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
+import { useTranslation } from "react-i18next";
 import { radius, spacing } from "../constants/theme";
 import { useTheme } from "../hooks/useTheme";
 
@@ -33,6 +34,7 @@ export function BottomTabBar({
 }: BottomTabBarProps) {
   const insets = useSafeAreaInsets();
   const { colors, mode } = useTheme();
+  const { t } = useTranslation("tabs");
 
   // Scale animation refs
   const scaleRefs = useRef<Record<string, Animated.Value>>({});
@@ -132,7 +134,7 @@ export function BottomTabBar({
                 onPressOut={onPressOut}
                 accessibilityRole="tab"
                 accessibilityState={{ selected: isFocused }}
-                accessibilityLabel={route.name}
+                accessibilityLabel={t(route.name.toLowerCase())}
               >
                 <Ionicons
                   name={

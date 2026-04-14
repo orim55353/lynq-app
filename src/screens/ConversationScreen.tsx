@@ -12,6 +12,8 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
+import { flipStyle } from "../i18n/useDirection";
 import { accentGradient, screenGradient, screenGradientLight } from "../constants/gradients";
 import { radius, shadows, spacing, typography } from "../constants/theme";
 import { chats } from "../data/chat";
@@ -22,6 +24,7 @@ import type { AppStackParamList } from "../navigation/AppStack";
 type Props = NativeStackScreenProps<AppStackParamList, "Conversation">;
 
 export function ConversationScreen() {
+  const { t } = useTranslation("chat");
   const { colors, mode } = useTheme();
   const bubbleBg = mode === "light" ? colors.bgCard : colors.glass;
   const insets = useSafeAreaInsets();
@@ -78,7 +81,7 @@ export function ConversationScreen() {
         <TextInput
           defaultValue={messageText}
           onChangeText={setMessageText}
-          placeholder="Type a message..."
+          placeholder={t("input_placeholder")}
           placeholderTextColor={colors.textTertiary}
           style={[
             styles.messageInput,
@@ -98,7 +101,7 @@ export function ConversationScreen() {
             colors={accentGradient}
             style={[styles.sendButton, shadows.glow]}
           >
-            <Ionicons name="send" size={16} color="#FFFFFF" />
+            <Ionicons name="send" size={16} color="#FFFFFF" style={flipStyle()} />
           </LinearGradient>
         </Pressable>
       </View>
@@ -119,7 +122,7 @@ const styles = StyleSheet.create({
   incomingBubble: {
     maxWidth: "85%",
     borderRadius: radius.md,
-    borderTopLeftRadius: 0,
+    borderTopStartRadius: 0,
     borderWidth: 1,
     paddingHorizontal: spacing.lg,
     paddingVertical: spacing.md,

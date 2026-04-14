@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import * as Location from "expo-location";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ActivityIndicator,
   Animated,
@@ -47,6 +48,7 @@ async function normalizeLocation(input: string): Promise<string | null> {
 
 export function OnboardingLocationScreen({ navigation }: Props) {
   const { colors } = useTheme();
+  const { t } = useTranslation("onboarding");
   const { uid, onboardingProfile } = useAuth();
   const [location, setLocation] = useState(onboardingProfile.location ?? "");
   const [detecting, setDetecting] = useState(false);
@@ -136,7 +138,7 @@ export function OnboardingLocationScreen({ navigation }: Props) {
         <View style={styles.content}>
           <Animated.View style={{ opacity: titleOpacity, transform: [{ translateY: titleTranslateY }] }}>
             <Text style={[styles.title, { color: colors.text }]}>
-              Where are you based?
+              {t("location.title")}
             </Text>
           </Animated.View>
 
@@ -153,11 +155,11 @@ export function OnboardingLocationScreen({ navigation }: Props) {
                 <Ionicons name="navigate" size={20} color={colors.accent} />
               )}
               <Text style={[styles.gpsText, { color: colors.accent }]}>
-                {detecting ? "Detecting..." : "Use my location"}
+                {detecting ? t("location.detecting") : t("location.use_my_location")}
               </Text>
             </Pressable>
 
-            <Text style={[styles.orText, { color: colors.textTertiary }]}>or type it in</Text>
+            <Text style={[styles.orText, { color: colors.textTertiary }]}>{t("location.or_type")}</Text>
 
             {/* Manual input */}
             <View style={[styles.inputWrap, { backgroundColor: colors.glass, borderColor: colors.glassBorder }]}>
@@ -165,7 +167,7 @@ export function OnboardingLocationScreen({ navigation }: Props) {
                 style={[styles.input, { color: colors.text }]}
                 value={location}
                 onChangeText={setLocation}
-                placeholder="Las Vegas, NV"
+                placeholder={t("location.placeholder")}
                 placeholderTextColor={colors.textTertiary}
                 autoCapitalize="words"
                 editable={!submitting && !detecting}
@@ -176,7 +178,7 @@ export function OnboardingLocationScreen({ navigation }: Props) {
           <View style={styles.spacer} />
 
           <GradientButton
-            label="Continue"
+            label={t("common:continue")}
             onPress={handleContinue}
             loading={submitting}
             disabled={!location.trim()}

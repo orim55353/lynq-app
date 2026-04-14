@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Animated,
   KeyboardAvoidingView,
@@ -30,33 +31,48 @@ interface IndustryOption {
   readonly icon: IconName;
 }
 
-const INDUSTRIES: IndustryOption[] = [
-  { id: "warehouse", label: "Warehouse & Logistics", icon: "cube-outline" },
-  { id: "construction", label: "Construction & Trades", icon: "hammer-outline" },
-  { id: "food", label: "Food Service & Restaurant", icon: "restaurant-outline" },
-  { id: "healthcare", label: "Healthcare & Caregiving", icon: "medkit-outline" },
-  { id: "retail", label: "Retail & Sales", icon: "storefront-outline" },
-  { id: "hospitality", label: "Hospitality & Entertainment", icon: "bed-outline" },
-  { id: "manufacturing", label: "Manufacturing", icon: "cog-outline" },
-  { id: "transportation", label: "Transportation & Delivery", icon: "car-outline" },
-  { id: "cleaning", label: "Cleaning & Maintenance", icon: "sparkles-outline" },
-  { id: "other", label: "Other", icon: "ellipsis-horizontal-outline" },
-];
+const INDUSTRY_IDS = [
+  "warehouse", "construction", "food", "healthcare", "retail",
+  "hospitality", "manufacturing", "transportation", "cleaning", "other",
+] as const;
+
+const INDUSTRY_ICONS: Record<string, IconName> = {
+  warehouse: "cube-outline",
+  construction: "hammer-outline",
+  food: "restaurant-outline",
+  healthcare: "medkit-outline",
+  retail: "storefront-outline",
+  hospitality: "bed-outline",
+  manufacturing: "cog-outline",
+  transportation: "car-outline",
+  cleaning: "sparkles-outline",
+  other: "ellipsis-horizontal-outline",
+};
 
 /** Match a saved experience value back to an industry id, or return "other". */
-function matchSavedExperience(saved: string | null): { id: string | null; custom: string } {
+function matchSavedExperience(saved: string | null, industries: IndustryOption[]): { id: string | null; custom: string } {
   if (!saved) return { id: null, custom: "" };
-  const match = INDUSTRIES.find((i) => i.label === saved);
+  const match = industries.find((i) => i.label === saved);
   if (match) return { id: match.id, custom: "" };
   return { id: "other", custom: saved };
 }
 
 export function OnboardingRoleScreen({ navigation }: Props) {
   const { colors } = useTheme();
+  const { t } = useTranslation("onboarding");
   const { uid, onboardingProfile } = useAuth();
 
+  const industries: IndustryOption[] = useMemo(
+    () => INDUSTRY_IDS.map((id) => ({
+      id,
+      label: t(`role.industries.${id}`),
+      icon: INDUSTRY_ICONS[id],
+    })),
+    [t],
+  );
+
   // Autofill from saved profile data
-  const savedMatch = matchSavedExperience(onboardingProfile.experience);
+  const savedMatch = matchSavedExperience(onboardingProfile.experience, industries);
   const [selected, setSelected] = useState<string | null>(savedMatch.id);
   const [customRole, setCustomRole] = useState(savedMatch.custom);
   const [submitting, setSubmitting] = useState(false);
@@ -86,7 +102,7 @@ export function OnboardingRoleScreen({ navigation }: Props) {
       setSubmitting(true);
       const value = selected === "other"
         ? customRole.trim() || "Other"
-        : INDUSTRIES.find((i) => i.id === selected)?.label ?? selected;
+        : industries.find((i) => i.id === selected)?.label ?? selected;
       try {
         await supabase
           .from("app_users")
@@ -110,13 +126,13 @@ export function OnboardingRoleScreen({ navigation }: Props) {
       <View style={styles.content}>
         <Animated.View style={{ opacity: titleOpacity, transform: [{ translateY: titleTranslateY }] }}>
           <Text style={[styles.title, { color: colors.text }]}>
-            What kind of work{"\n"}do you do?
+            {t("role.title")}
           </Text>
         </Animated.View>
 
         <Animated.View style={[styles.listWrap, { opacity: listOpacity, transform: [{ translateY: listTranslateY }] }]}>
           <ScrollView showsVerticalScrollIndicator={false}>
-            {INDUSTRIES.map((industry) => {
+            {industries.map((industry) => {
               const isSelected = selected === industry.id;
               return (
                 <Pressable
@@ -157,7 +173,7 @@ export function OnboardingRoleScreen({ navigation }: Props) {
                 style={[styles.otherTextInput, { color: colors.text }]}
                 value={customRole}
                 onChangeText={setCustomRole}
-                placeholder="What kind of work?"
+                placeholder={t("role.other_placeholder")}
                 placeholderTextColor={colors.textTertiary}
                 autoCapitalize="words"
                 autoFocus
@@ -167,7 +183,7 @@ export function OnboardingRoleScreen({ navigation }: Props) {
         </Animated.View>
 
         <GradientButton
-          label="Continue"
+          label={t("common:continue")}
           onPress={handleContinue}
           loading={submitting}
           large

@@ -16,6 +16,7 @@ import {
   View,
 } from "react-native";
 import { Image } from "expo-image";
+import { useTranslation } from "react-i18next";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { radius, shadows, spacing } from "../constants/theme";
 import { useTheme } from "../hooks/useTheme";
@@ -131,6 +132,7 @@ export function ExpandedJobCard({
   const { height: windowHeight } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const { mode } = useTheme();
+  const { t } = useTranslation("common");
   const [applied, setApplied] = useState(false);
 
   const p = palette[mode];
@@ -426,7 +428,7 @@ export function ExpandedJobCard({
                 <Text
                   style={[styles.matchHeroTitle, { color: p.sectionTitle }]}
                 >
-                  You're a {matchLabel(job.compatibilityScore)} Match!
+                  {t("match_title", { label: matchLabel(job.compatibilityScore) })}
                 </Text>
                 <Text style={[styles.matchHeroBody, { color: p.body }]}>
                   {matchDescription(job.compatibilityScore)}
@@ -453,14 +455,14 @@ export function ExpandedJobCard({
                   <Text
                     style={[styles.aiHeaderText, { color: p.sectionTitle }]}
                   >
-                    Why this score?
+                    {t("why_this_score")}
                   </Text>
                 </View>
                 <Text style={[styles.aiBody, { color: p.body }]}>
                   {job.matchExplanation}
                 </Text>
                 <Text style={[styles.aiFooter, { color: p.poweredBy }]}>
-                  Powered by Lynq HI
+                  {t("powered_by_lynq")}
                 </Text>
               </View>
             )}
@@ -469,7 +471,7 @@ export function ExpandedJobCard({
             <View style={[styles.infoStrip, { backgroundColor: p.stripBg }]}>
               <InfoCell
                 icon="briefcase-outline"
-                label="Experience"
+                label={t("experience")}
                 value={job.experience}
                 labelColor={p.infoLabel}
                 valueColor={p.infoValue}
@@ -480,7 +482,7 @@ export function ExpandedJobCard({
               />
               <InfoCell
                 icon="calendar-outline"
-                label="Schedule"
+                label={t("schedule")}
                 value={job.schedule}
                 labelColor={p.infoLabel}
                 valueColor={p.infoValue}
@@ -491,7 +493,7 @@ export function ExpandedJobCard({
               />
               <InfoCell
                 icon="location-outline"
-                label="Work Type"
+                label={t("work_type")}
                 value={job.workType}
                 labelColor={p.infoLabel}
                 valueColor={p.infoValue}
@@ -502,7 +504,7 @@ export function ExpandedJobCard({
             {/* About this role */}
             <View style={styles.section}>
               <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
-                About this role
+                {t("about_this_role")}
               </Text>
               <Text style={[styles.body, { color: p.body }]}>
                 {job.description}
@@ -513,7 +515,7 @@ export function ExpandedJobCard({
             {job.responsibilities && job.responsibilities.length > 0 && (
               <View style={styles.section}>
                 <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
-                  What you'll do
+                  {t("what_youll_do")}
                 </Text>
                 {job.responsibilities.map((item, i) => (
                   <View key={i} style={styles.bulletRow}>
@@ -535,7 +537,7 @@ export function ExpandedJobCard({
             {job.requirements && job.requirements.length > 0 && (
               <View style={styles.section}>
                 <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
-                  Requirements
+                  {t("requirements")}
                 </Text>
                 {job.requirements.map((item, i) => (
                   <View key={i} style={styles.bulletRow}>
@@ -555,7 +557,7 @@ export function ExpandedJobCard({
             {/* Benefits */}
             <View style={styles.section}>
               <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
-                Benefits
+                {t("benefits")}
               </Text>
               <View style={styles.benefitsWrap}>
                 {job.benefits.map((b) => (
@@ -588,7 +590,7 @@ export function ExpandedJobCard({
             {job.companyAbout && (
               <View style={styles.section}>
                 <Text style={[styles.sectionTitle, { color: p.sectionTitle }]}>
-                  About {job.company}
+                  {t("about_company", { company: job.company })}
                 </Text>
                 <Text style={[styles.body, { color: p.body }]}>
                   {job.companyAbout}
@@ -627,7 +629,7 @@ export function ExpandedJobCard({
                     size={18}
                     color="#FFFFFF"
                   />
-                  <Text style={styles.applyBtnText}>Go to chat</Text>
+                  <Text style={styles.applyBtnText}>{t("go_to_chat")}</Text>
                 </LinearGradient>
               </Pressable>
             ) : (
@@ -663,7 +665,7 @@ export function ExpandedJobCard({
                         size={20}
                         color="#22C55E"
                       />
-                      <Text style={styles.appliedText}>Applied</Text>
+                      <Text style={styles.appliedText}>{t("applied")}</Text>
                     </View>
                   ) : (
                     <LinearGradient
@@ -673,7 +675,7 @@ export function ExpandedJobCard({
                       style={styles.applyGrad}
                     >
                       <Ionicons name="flash" size={18} color="#FFFFFF" />
-                      <Text style={styles.applyBtnText}>Apply Now</Text>
+                      <Text style={styles.applyBtnText}>{t("apply_now")}</Text>
                     </LinearGradient>
                   )}
                 </Pressable>

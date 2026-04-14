@@ -32,6 +32,15 @@
     "runtimeVersion": "1.0.0",
     "updates": {
       "url": "https://u.expo.dev/1ef62c07-4667-4445-8bbf-2bfc49b886a1"
-    }
+    },
+    "plugins": [
+      [
+        "expo-localization",
+        {
+          "supportsRTL": true
+        }
+      ],
+      "expo-font"
+    ]
   }
 }

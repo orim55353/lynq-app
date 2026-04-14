@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Animated,
   Pressable,
@@ -25,20 +26,20 @@ interface ChipOption {
   readonly icon: string;
 }
 
-const SHIFT_OPTIONS: ChipOption[] = [
-  { id: "DAY", label: "Day shift", icon: "sunny-outline" },
-  { id: "NIGHT", label: "Night shift", icon: "moon-outline" },
-  { id: "SWING", label: "Evening", icon: "partly-sunny-outline" },
-  { id: "ROTATING", label: "Rotating", icon: "sync-outline" },
-  { id: "FLEXIBLE", label: "Flexible", icon: "options-outline" },
-];
+const SHIFT_OPTION_DEFS = [
+  { id: "DAY", key: "day", icon: "sunny-outline" },
+  { id: "NIGHT", key: "night", icon: "moon-outline" },
+  { id: "SWING", key: "evening", icon: "partly-sunny-outline" },
+  { id: "ROTATING", key: "rotating", icon: "sync-outline" },
+  { id: "FLEXIBLE", key: "flexible", icon: "options-outline" },
+] as const;
 
-const JOB_TYPE_OPTIONS: ChipOption[] = [
-  { id: "FULL_TIME", label: "Full-time", icon: "briefcase-outline" },
-  { id: "PART_TIME", label: "Part-time", icon: "time-outline" },
-  { id: "CONTRACT", label: "Contract", icon: "document-text-outline" },
-  { id: "TEMPORARY", label: "Temporary", icon: "hourglass-outline" },
-];
+const JOB_TYPE_OPTION_DEFS = [
+  { id: "FULL_TIME", key: "full_time", icon: "briefcase-outline" },
+  { id: "PART_TIME", key: "part_time", icon: "time-outline" },
+  { id: "CONTRACT", key: "contract", icon: "document-text-outline" },
+  { id: "TEMPORARY", key: "temporary", icon: "hourglass-outline" },
+] as const;
 
 function Chip({
   option,
@@ -101,7 +102,18 @@ const chipStyles = StyleSheet.create({
 
 export function OnboardingWorkPreferencesScreen({ navigation }: Props) {
   const { colors } = useTheme();
+  const { t } = useTranslation("onboarding");
   const { uid } = useAuth();
+
+  const shiftOptions: ChipOption[] = useMemo(
+    () => SHIFT_OPTION_DEFS.map((d) => ({ id: d.id, label: t(`work_preferences.shifts.${d.key}`), icon: d.icon })),
+    [t],
+  );
+
+  const jobTypeOptions: ChipOption[] = useMemo(
+    () => JOB_TYPE_OPTION_DEFS.map((d) => ({ id: d.id, label: t(`work_preferences.job_types.${d.key}`), icon: d.icon })),
+    [t],
+  );
 
   const [selectedShifts, setSelectedShifts] = useState<Set<string>>(new Set());
   const [selectedJobTypes, setSelectedJobTypes] = useState<Set<string>>(new Set());
@@ -177,7 +189,7 @@ export function OnboardingWorkPreferencesScreen({ navigation }: Props) {
       <View style={styles.content}>
         <Animated.View style={{ opacity: titleOpacity, transform: [{ translateY: titleTranslateY }] }}>
           <Text style={[styles.title, { color: colors.text }]}>
-            What works{"\n"}for you?
+            {t("work_preferences.title")}
           </Text>
         </Animated.View>
 
@@ -185,10 +197,10 @@ export function OnboardingWorkPreferencesScreen({ navigation }: Props) {
           <ScrollView showsVerticalScrollIndicator={false}>
             {/* Shift Preferences */}
             <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
-              When can you work?
+              {t("work_preferences.when_section")}
             </Text>
             <View style={styles.chipGrid}>
-              {SHIFT_OPTIONS.map((option) => (
+              {shiftOptions.map((option) => (
                 <Chip
                   key={option.id}
                   option={option}
@@ -201,10 +213,10 @@ export function OnboardingWorkPreferencesScreen({ navigation }: Props) {
 
             {/* Job Type */}
             <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
-              What type of work?
+              {t("work_preferences.type_section")}
             </Text>
             <View style={styles.chipGrid}>
-              {JOB_TYPE_OPTIONS.map((option) => (
+              {jobTypeOptions.map((option) => (
                 <Chip
                   key={option.id}
                   option={option}
@@ -217,7 +229,7 @@ export function OnboardingWorkPreferencesScreen({ navigation }: Props) {
 
             {/* Transport */}
             <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>
-              Do you have your own transport?
+              {t("work_preferences.transport_section")}
             </Text>
             <View style={styles.transportRow}>
               <Pressable
@@ -241,7 +253,7 @@ export function OnboardingWorkPreferencesScreen({ navigation }: Props) {
                     { color: hasTransport === true ? colors.accent : colors.text },
                   ]}
                 >
-                  Yes
+                  {t("common:yes")}
                 </Text>
               </Pressable>
 
@@ -266,7 +278,7 @@ export function OnboardingWorkPreferencesScreen({ navigation }: Props) {
                     { color: hasTransport === false ? colors.accent : colors.text },
                   ]}
                 >
-                  No
+                  {t("common:no")}
                 </Text>
               </Pressable>
             </View>
@@ -274,14 +286,14 @@ export function OnboardingWorkPreferencesScreen({ navigation }: Props) {
         </Animated.View>
 
         <GradientButton
-          label="Continue"
+          label={t("common:continue")}
           onPress={handleContinue}
           loading={submitting}
           large
         />
 
         <Pressable onPress={handleSkip} style={styles.skipLink}>
-          <Text style={[styles.skipText, { color: colors.textTertiary }]}>Skip for now</Text>
+          <Text style={[styles.skipText, { color: colors.textTertiary }]}>{t("common:skip")}</Text>
         </Pressable>
       </View>
     </OnboardingLayout>

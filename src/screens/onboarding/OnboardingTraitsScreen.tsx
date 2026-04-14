@@ -1,6 +1,7 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { LinearGradient } from "expo-linear-gradient";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
   Animated,
   Pressable,
@@ -19,45 +20,49 @@ import type { OnboardingStackParamList } from "../../navigation/OnboardingNaviga
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, "Traits">;
 
-interface Trait {
-  readonly label: string;
+interface TraitDef {
+  readonly key: string;
   readonly gradient: readonly [string, string];
   readonly size: number;
 }
 
+interface Trait extends TraitDef {
+  readonly label: string;
+}
+
 // Organized into rows — each row scrolls together horizontally
-const TRAIT_ROWS: Trait[][] = [
+const TRAIT_ROW_DEFS: TraitDef[][] = [
   [
-    { label: "Team\nplayer", gradient: ["#00687A", "#06B6D4"], size: 115 },
-    { label: "Reliable", gradient: ["#6366F1", "#818CF8"], size: 90 },
-    { label: "Problem\nsolver", gradient: ["#8B5CF6", "#A78BFA"], size: 105 },
-    { label: "Fast\nlearner", gradient: ["#059669", "#34D399"], size: 95 },
-    { label: "Bilingual", gradient: ["#F59E0B", "#FBBF24"], size: 88 },
-    { label: "Hands-on", gradient: ["#DC2626", "#F87171"], size: 100 },
+    { key: "team_player", gradient: ["#00687A", "#06B6D4"], size: 115 },
+    { key: "reliable", gradient: ["#6366F1", "#818CF8"], size: 90 },
+    { key: "problem_solver", gradient: ["#8B5CF6", "#A78BFA"], size: 105 },
+    { key: "fast_learner", gradient: ["#059669", "#34D399"], size: 95 },
+    { key: "bilingual", gradient: ["#F59E0B", "#FBBF24"], size: 88 },
+    { key: "hands_on", gradient: ["#DC2626", "#F87171"], size: 100 },
   ],
   [
-    { label: "Detail\noriented", gradient: ["#0891B2", "#22D3EE"], size: 100 },
-    { label: "Early\nriser", gradient: ["#F59E0B", "#FBBF24"], size: 88 },
-    { label: "Leader", gradient: ["#DC2626", "#F87171"], size: 115 },
-    { label: "Night\nowl", gradient: ["#6366F1", "#818CF8"], size: 90 },
-    { label: "People\nperson", gradient: ["#00687A", "#06B6D4"], size: 105 },
-    { label: "Punctual", gradient: ["#8B5CF6", "#A78BFA"], size: 95 },
+    { key: "detail_oriented", gradient: ["#0891B2", "#22D3EE"], size: 100 },
+    { key: "early_riser", gradient: ["#F59E0B", "#FBBF24"], size: 88 },
+    { key: "leader", gradient: ["#DC2626", "#F87171"], size: 115 },
+    { key: "night_owl", gradient: ["#6366F1", "#818CF8"], size: 90 },
+    { key: "people_person", gradient: ["#00687A", "#06B6D4"], size: 105 },
+    { key: "punctual", gradient: ["#8B5CF6", "#A78BFA"], size: 95 },
   ],
   [
-    { label: "Calm\nunder\npressure", gradient: ["#8B5CF6", "#A78BFA"], size: 110 },
-    { label: "Physical\nstamina", gradient: ["#059669", "#34D399"], size: 100 },
-    { label: "Heavy\nlifting", gradient: ["#DC2626", "#F87171"], size: 90 },
-    { label: "On my\nfeet", gradient: ["#0891B2", "#22D3EE"], size: 88 },
-    { label: "Organized", gradient: ["#F59E0B", "#FBBF24"], size: 105 },
-    { label: "Self\nstarter", gradient: ["#6366F1", "#818CF8"], size: 95 },
+    { key: "calm_under_pressure", gradient: ["#8B5CF6", "#A78BFA"], size: 110 },
+    { key: "physical_stamina", gradient: ["#059669", "#34D399"], size: 100 },
+    { key: "heavy_lifting", gradient: ["#DC2626", "#F87171"], size: 90 },
+    { key: "on_my_feet", gradient: ["#0891B2", "#22D3EE"], size: 88 },
+    { key: "organized", gradient: ["#F59E0B", "#FBBF24"], size: 105 },
+    { key: "self_starter", gradient: ["#6366F1", "#818CF8"], size: 95 },
   ],
   [
-    { label: "Adaptable", gradient: ["#0891B2", "#22D3EE"], size: 95 },
-    { label: "Patient", gradient: ["#059669", "#34D399"], size: 88 },
-    { label: "Creative", gradient: ["#8B5CF6", "#A78BFA"], size: 100 },
-    { label: "Focused", gradient: ["#F59E0B", "#FBBF24"], size: 90 },
-    { label: "Resilient", gradient: ["#DC2626", "#F87171"], size: 105 },
-    { label: "Curious", gradient: ["#00687A", "#06B6D4"], size: 88 },
+    { key: "adaptable", gradient: ["#0891B2", "#22D3EE"], size: 95 },
+    { key: "patient", gradient: ["#059669", "#34D399"], size: 88 },
+    { key: "creative", gradient: ["#8B5CF6", "#A78BFA"], size: 100 },
+    { key: "focused", gradient: ["#F59E0B", "#FBBF24"], size: 90 },
+    { key: "resilient", gradient: ["#DC2626", "#F87171"], size: 105 },
+    { key: "curious", gradient: ["#00687A", "#06B6D4"], size: 88 },
   ],
 ];
 
@@ -186,7 +191,7 @@ function Bubble({
                 height: size + 6,
                 borderRadius: (size + 6) / 2,
                 top: -3,
-                left: -3,
+                start: -3,
               },
             ]}
           />
@@ -216,24 +221,33 @@ const bubbleStyles = StyleSheet.create({
   },
 });
 
-/** Restore saved skills (spaces) back to trait labels (newlines). */
-function restoreSavedSkills(saved: string[] | null): Set<string> {
+/** Restore saved skills back to trait keys. */
+function restoreSavedSkills(saved: string[] | null, traitRows: Trait[][]): Set<string> {
   if (!saved || saved.length === 0) return new Set();
-  const allLabels = TRAIT_ROWS.flat().map((t) => t.label);
+  const allTraits = traitRows.flat();
   const restored = new Set<string>();
   for (const skill of saved) {
-    // Match by comparing with newlines stripped
-    const match = allLabels.find((label) => label.replace(/\n/g, " ") === skill);
-    if (match) restored.add(match);
+    // Match by comparing label with newlines stripped
+    const match = allTraits.find((t) => t.label.replace(/\n/g, " ") === skill);
+    if (match) restored.add(match.key);
   }
   return restored;
 }
 
 export function OnboardingTraitsScreen({ navigation }: Props) {
   const { colors } = useTheme();
+  const { t } = useTranslation("onboarding");
   const { uid, completeOnboarding, onboardingProfile } = useAuth();
+
+  const traitRows: Trait[][] = useMemo(
+    () => TRAIT_ROW_DEFS.map((row) =>
+      row.map((def) => ({ ...def, label: t(`traits.traits.${def.key}`) })),
+    ),
+    [t],
+  );
+
   const [selectedTraits, setSelectedTraits] = useState<Set<string>>(
-    () => restoreSavedSkills(onboardingProfile.skills),
+    () => restoreSavedSkills(onboardingProfile.skills, traitRows),
   );
   const [submitting, setSubmitting] = useState(false);
 
@@ -249,13 +263,13 @@ export function OnboardingTraitsScreen({ navigation }: Props) {
 
   const MAX_TRAITS = 8;
 
-  const toggleTrait = useCallback((label: string) => {
+  const toggleTrait = useCallback((key: string) => {
     setSelectedTraits((prev) => {
       const next = new Set(prev);
-      if (next.has(label)) {
-        next.delete(label);
+      if (next.has(key)) {
+        next.delete(key);
       } else if (next.size < MAX_TRAITS) {
-        next.add(label);
+        next.add(key);
       }
       return next;
     });
@@ -266,8 +280,12 @@ export function OnboardingTraitsScreen({ navigation }: Props) {
     setSubmitting(true);
 
     try {
-      // Clean up newlines from labels before saving
-      const skills = Array.from(selectedTraits).map((s) => s.replace(/\n/g, " "));
+      // Look up translated labels from keys, strip newlines for DB storage
+      const allTraits = traitRows.flat();
+      const skills = Array.from(selectedTraits).map((key) => {
+        const trait = allTraits.find((t) => t.key === key);
+        return trait ? trait.label.replace(/\n/g, " ") : key;
+      });
       await supabase
         .from("app_users")
         .update({ skills, onboardingCompleted: true })
@@ -300,10 +318,10 @@ export function OnboardingTraitsScreen({ navigation }: Props) {
       <View style={styles.content}>
         <Animated.View style={{ opacity: titleOpacity, transform: [{ translateY: titleTranslateY }] }}>
           <Text style={[styles.title, { color: colors.text }]}>
-            What makes you, you?
+            {t("traits.title")}
           </Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Pick 3–8 that describe you
+            {t("traits.subtitle")}
           </Text>
         </Animated.View>
 
@@ -315,16 +333,16 @@ export function OnboardingTraitsScreen({ navigation }: Props) {
           style={styles.scrollWrap}
         >
           <View style={styles.columnsContainer}>
-            {TRAIT_ROWS.map((row, rowIndex) => (
+            {traitRows.map((row, rowIndex) => (
               <View key={rowIndex} style={styles.bubbleRow}>
                 {row.map((trait) => {
                   const idx = globalIndex++;
                   return (
                     <Bubble
-                      key={trait.label}
+                      key={trait.key}
                       trait={trait}
-                      isSelected={selectedTraits.has(trait.label)}
-                      onToggle={() => toggleTrait(trait.label)}
+                      isSelected={selectedTraits.has(trait.key)}
+                      onToggle={() => toggleTrait(trait.key)}
                       index={idx}
                     />
                   );
@@ -336,12 +354,12 @@ export function OnboardingTraitsScreen({ navigation }: Props) {
 
         {/* Counter */}
         <Text style={[styles.counter, { color: colors.textSecondary }]}>
-          {selectedTraits.size}/{MAX_TRAITS} selected
+          {t("common:selected_of_max", { count: selectedTraits.size, max: MAX_TRAITS })}
         </Text>
 
         <View style={styles.ctaWrap}>
           <GradientButton
-            label="Start Exploring"
+            label={t("traits.cta")}
             onPress={handleFinish}
             loading={submitting}
             icon="rocket-outline"
@@ -349,7 +367,7 @@ export function OnboardingTraitsScreen({ navigation }: Props) {
           />
 
           <Pressable onPress={handleSkip} style={styles.skipLink}>
-            <Text style={[styles.skipText, { color: colors.textTertiary }]}>Skip for now</Text>
+            <Text style={[styles.skipText, { color: colors.textTertiary }]}>{t("common:skip")}</Text>
           </Pressable>
         </View>
       </View>

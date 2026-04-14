@@ -216,5 +216,5 @@ const styles = StyleSheet.create({
   tapZone: { position: "absolute", top: 0, bottom: 0, width: "40%", zIndex: 20 },
   tapZoneLeft: { left: 0 },
   tapZoneRight: { right: 0 },
-  closeButton: { position: "absolute", left: spacing.lg, zIndex: 30, width: CLOSE_BUTTON_SIZE, height: CLOSE_BUTTON_SIZE, borderRadius: CLOSE_BUTTON_SIZE / 2, borderWidth: 1, justifyContent: "center", alignItems: "center" },
+  closeButton: { position: "absolute", start: spacing.lg, zIndex: 30, width: CLOSE_BUTTON_SIZE, height: CLOSE_BUTTON_SIZE, borderRadius: CLOSE_BUTTON_SIZE / 2, borderWidth: 1, justifyContent: "center", alignItems: "center" },
 });

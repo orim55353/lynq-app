@@ -1,0 +1,106 @@
+{
+  "welcome": {
+    "hero": "בוא נמצא לך\nעבודה תוך\n60 שניות",
+    "subtitle": "הגדרה מהירה, התאמות טובות יותר",
+    "cta": "יאללה"
+  },
+  "name": {
+    "title": "איך קוראים לך?",
+    "first_name_label": "שם פרטי",
+    "first_name_placeholder": "ישראל",
+    "last_name_label": "שם משפחה",
+    "last_name_placeholder": "ישראלי"
+  },
+  "location": {
+    "title": "איפה אתה גר?",
+    "detecting": "מאתר...",
+    "use_my_location": "השתמש במיקום שלי",
+    "or_type": "או הקלד ידנית",
+    "placeholder": "תל אביב"
+  },
+  "role": {
+    "title": "באיזה תחום\nאתה עובד?",
+    "other_placeholder": "באיזה תחום?",
+    "industries": {
+      "warehouse": "מחסנאות ולוגיסטיקה",
+      "construction": "בנייה ומקצועות טכניים",
+      "food": "מזון ומסעדנות",
+      "healthcare": "בריאות וסיעוד",
+      "retail": "קמעונאות ומכירות",
+      "hospitality": "אירוח ובידור",
+      "manufacturing": "ייצור",
+      "transportation": "הובלה ומשלוחים",
+      "cleaning": "ניקיון ותחזוקה",
+      "other": "אחר"
+    }
+  },
+  "certifications": {
+    "title": "יש לך\nהסמכות?",
+    "subtitle": "בחר את כל מה שרלוונטי",
+    "skip": "אין לי",
+    "certs": {
+      "forklift": "מלגזן\nמוסמך",
+      "cdl": "רישיון\nמשאית",
+      "food_handler": "תעודת\nמזון",
+      "osha": "הכשרת\nבטיחות",
+      "first_aid": "עזרה ראשונה",
+      "cpr": "החייאה",
+      "hazmat": "חומרים\nמסוכנים",
+      "electrician": "חשמלאי",
+      "welder": "רתך\nמוסמך",
+      "mechanic": "מכונאי",
+      "pit": "ציוד\nכבד",
+      "epa": "מיזוג\nאוויר"
+    }
+  },
+  "work_preferences": {
+    "title": "מה מתאים\nלך?",
+    "when_section": "מתי אתה יכול לעבוד?",
+    "type_section": "איזה סוג עבודה?",
+    "transport_section": "יש לך רכב?",
+    "shifts": {
+      "day": "משמרת בוקר",
+      "night": "משמרת לילה",
+      "evening": "משמרת ערב",
+      "rotating": "משמרות מתחלפות",
+      "flexible": "גמיש"
+    },
+    "job_types": {
+      "full_time": "משרה מלאה",
+      "part_time": "משרה חלקית",
+      "contract": "חוזה",
+      "temporary": "זמני"
+    }
+  },
+  "traits": {
+    "title": "מה מייחד אותך?",
+    "subtitle": "בחר 3-8 תכונות שמתארות אותך",
+    "cta": "בוא נתחיל",
+    "traits": {
+      "team_player": "שחקן\nקבוצתי",
+      "reliable": "אמין",
+      "problem_solver": "פותר\nבעיות",
+      "fast_learner": "לומד\nמהר",
+      "bilingual": "דו\nלשוני",
+      "hands_on": "שטח",
+      "detail_oriented": "דייקן",
+      "early_riser": "ציפור\nבוקר",
+      "leader": "מוביל",
+      "night_owl": "ינשוף\nלילה",
+      "people_person": "חברותי",
+      "punctual": "דייקן",
+      "calm_under_pressure": "רגוע\nתחת\nלחץ",
+      "physical_stamina": "כושר\nגופני",
+      "heavy_lifting": "הרמת\nמשקל",
+      "on_my_feet": "עבודה\nבעמידה",
+      "organized": "מסודר",
+      "self_starter": "יוזם",
+      "adaptable": "גמיש",
+      "patient": "סבלני",
+      "creative": "יצירתי",
+      "focused": "ממוקד",
+      "resilient": "עמיד",
+      "curious": "סקרן"
+    }
+  }
+}

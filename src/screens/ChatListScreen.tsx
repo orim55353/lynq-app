@@ -15,6 +15,7 @@ import {
   View,
 } from "react-native";
 import { FlashList } from "@shopify/flash-list";
+import { useTranslation } from "react-i18next";
 import { ScreenHeader } from "../components/ScreenHeader";
 import { accentGradient, screenGradient, screenGradientLight, spotlightGradient } from "../constants/gradients";
 import { radius, shadows, spacing, typography } from "../constants/theme";
@@ -122,6 +123,7 @@ function ChatRow({
 }
 
 export function ChatListScreen() {
+  const { t } = useTranslation("chat");
   const { colors, mode } = useTheme();
   const searchBg = mode === "light" ? colors.bgElevated : colors.glass;
   const searchBgHeavy = mode === "light" ? colors.bgCard : colors.glassHeavy;
@@ -192,8 +194,8 @@ export function ChatListScreen() {
       />
 
       <ScreenHeader
-        title="Messages"
-        subtitle="Chat with companies you've matched with"
+        title={t("title")}
+        subtitle={t("subtitle")}
       />
 
       <View style={styles.listContainer}>
@@ -209,7 +211,7 @@ export function ChatListScreen() {
         >
           <Ionicons name="search-outline" size={18} color={colors.textTertiary} />
           <TextInput
-            placeholder="Search messages..."
+            placeholder={t("search_placeholder")}
             placeholderTextColor={colors.textTertiary}
             style={[styles.searchInput, { color: colors.text }]}
             onFocus={handleSearchFocus}

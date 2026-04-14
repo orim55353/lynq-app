@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { GradientButton } from "../../components/GradientButton";
 import { LynqLogo } from "../../components/LynqLogo";
@@ -12,6 +13,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, "Welcome">;
 
 export function OnboardingWelcomeScreen({ navigation }: Props) {
   const { colors } = useTheme();
+  const { t } = useTranslation("onboarding");
 
   const heroOpacity = useRef(new Animated.Value(0)).current;
   const heroTranslateY = useRef(new Animated.Value(20)).current;
@@ -42,10 +44,10 @@ export function OnboardingWelcomeScreen({ navigation }: Props) {
         {/* Hero */}
         <Animated.View style={{ opacity: heroOpacity, transform: [{ translateY: heroTranslateY }] }}>
           <Text style={[styles.hero, { color: colors.text }]}>
-            Let's find your{"\n"}next job in{"\n"}60 seconds
+            {t("welcome.hero")}
           </Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Quick setup, better matches
+            {t("welcome.subtitle")}
           </Text>
         </Animated.View>
 
@@ -54,7 +56,7 @@ export function OnboardingWelcomeScreen({ navigation }: Props) {
         {/* CTA */}
         <Animated.View style={{ opacity: ctaOpacity, transform: [{ translateY: ctaTranslateY }] }}>
           <GradientButton
-            label="Let's Go"
+            label={t("welcome.cta")}
             onPress={() => navigation.navigate("Name")}
             icon="arrow-forward"
             large
