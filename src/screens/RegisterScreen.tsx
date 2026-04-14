@@ -1,188 +1,292 @@
 import type { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { LinearGradient } from "expo-linear-gradient";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
+  Animated,
+  Easing,
+  I18nManager,
   StyleSheet,
   Text,
   TextInput,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { colors, radius, spacing } from "../constants/theme";
+import { useTranslation } from "react-i18next";
+import { AuthLayout } from "../components/AuthLayout";
+import { GradientButton } from "../components/GradientButton";
+import { radius, spacing, typography } from "../constants/theme";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../hooks/useTheme";
 import type { AuthStackParamList } from "../navigation/AuthNavigator";
 
 type Props = NativeStackScreenProps<AuthStackParamList, "Register">;
 
+/** Glass input with focus animation */
+function GlassInput({
+  label,
+  value,
+  onChangeText,
+  placeholder,
+  secureTextEntry,
+  autoCapitalize,
+  keyboardType,
+  autoComplete,
+  editable,
+  opacity,
+  translateY,
+}: {
+  readonly label: string;
+  readonly value: string;
+  readonly onChangeText: (t: string) => void;
+  readonly placeholder: string;
+  readonly secureTextEntry?: boolean;
+  readonly autoCapitalize?: "none" | "sentences";
+  readonly keyboardType?: "email-address" | "default";
+  readonly autoComplete?: "email" | "password" | "new-password";
+  readonly editable?: boolean;
+  readonly opacity: Animated.Value;
+  readonly translateY: Animated.Value;
+}) {
+  const { colors } = useTheme();
+  const [focused, setFocused] = useState(false);
+  const borderAnim = useRef(new Animated.Value(0)).current;
+
+  const handleFocus = useCallback(() => {
+    setFocused(true);
+    Animated.timing(borderAnim, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [borderAnim]);
+
+  const handleBlur = useCallback(() => {
+    setFocused(false);
+    Animated.timing(borderAnim, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+  }, [borderAnim]);
+
+  const borderColor = borderAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [colors.glassBorder, colors.accent],
+  });
+
+  return (
+    <Animated.View style={[styles.inputWrap, { opacity, transform: [{ translateY }] }]}>
+      <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>
+        {label}
+      </Text>
+      <Animated.View
+        style={[
+          styles.inputContainer,
+          {
+            backgroundColor: focused ? colors.glassHeavy : colors.glass,
+            borderColor,
+          },
+        ]}
+      >
+        <TextInput
+          style={[styles.input, { color: colors.text, writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }]}
+          placeholder={placeholder}
+          placeholderTextColor={colors.textTertiary}
+          defaultValue={value}
+          onChangeText={onChangeText}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          secureTextEntry={secureTextEntry}
+          autoCapitalize={autoCapitalize}
+          keyboardType={keyboardType}
+          textAlign={I18nManager.isRTL ? "right" : "left"}
+          autoComplete={autoComplete}
+          editable={editable}
+        />
+      </Animated.View>
+    </Animated.View>
+  );
+}
+
 export function RegisterScreen({ navigation }: Props) {
+  const { t } = useTranslation("auth");
   const { register } = useAuth();
+  const { colors } = useTheme();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Staggered entrance: title(0), subtitle(100), email(250), password(350), confirm(450), button(550)
+  const anims = useRef(
+    Array.from({ length: 7 }, () => ({
+      opacity: new Animated.Value(0),
+      translateY: new Animated.Value(15),
+    })),
+  ).current;
+
+  useEffect(() => {
+    const delays = [0, 100, 250, 350, 450, 550, 600];
+    const animations = anims.flatMap((anim, i) => [
+      Animated.timing(anim.opacity, {
+        toValue: 1,
+        duration: 300,
+        delay: delays[i],
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+      Animated.timing(anim.translateY, {
+        toValue: 0,
+        duration: 300,
+        delay: delays[i],
+        easing: Easing.out(Easing.cubic),
+        useNativeDriver: true,
+      }),
+    ]);
+    Animated.parallel(animations).start();
+  }, [anims]);
+
   const handleRegister = useCallback(async () => {
     const trimmedEmail = email.trim();
     if (!trimmedEmail || !password || !confirmPassword) {
-      Alert.alert("Error", "Please fill in all fields.");
+      Alert.alert(t("common:error"), t("register.error_empty"));
       return;
     }
     if (password !== confirmPassword) {
-      Alert.alert("Error", "Passwords do not match.");
+      Alert.alert(t("common:error"), t("register.error_mismatch"));
       return;
     }
     if (password.length < 6) {
-      Alert.alert("Error", "Password must be at least 6 characters.");
+      Alert.alert(t("common:error"), t("register.error_short"));
       return;
     }
     setLoading(true);
     try {
       await register(trimmedEmail, password);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Sign up failed.";
-      Alert.alert("Sign up failed", message);
+      const message = err instanceof Error ? err.message : t("register.error_failed");
+      Alert.alert(t("register.error_failed"), message);
     } finally {
       setLoading(false);
     }
   }, [email, password, confirmPassword, register]);
 
   return (
-    <LinearGradient colors={["#FAF5FF", "#FDF2F8"]} style={styles.gradient}>
-      <SafeAreaView style={styles.safe} edges={["top", "bottom"]}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.keyboard}
-        >
-          <View style={styles.content}>
-            <Text style={styles.title}>Create account</Text>
-            <Text style={styles.subtitle}>Sign up to get started</Text>
+    <AuthLayout
+      linkPrefix={t("register.has_account")}
+      linkAction={t("register.login_link")}
+      onLinkPress={() => navigation.navigate("Login")}
+      linkDisabled={loading}
+    >
+      <Animated.View
+        style={{
+          opacity: anims[0].opacity,
+          transform: [{ translateY: anims[0].translateY }],
+        }}
+      >
+        <Text style={[styles.title, { color: colors.text }]}>{t("register.title")}</Text>
+      </Animated.View>
 
-            <TextInput
-              style={styles.input}
-              placeholder="Email"
-              placeholderTextColor={colors.gray400}
-              value={email}
-              onChangeText={setEmail}
-              autoCapitalize="none"
-              keyboardType="email-address"
-              autoComplete="email"
-              editable={!loading}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Password (min 6 characters)"
-              placeholderTextColor={colors.gray400}
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              autoComplete="new-password"
-              editable={!loading}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Confirm password"
-              placeholderTextColor={colors.gray400}
-              value={confirmPassword}
-              onChangeText={setConfirmPassword}
-              secureTextEntry
-              autoComplete="new-password"
-              editable={!loading}
-            />
+      <Animated.View
+        style={{
+          opacity: anims[1].opacity,
+          transform: [{ translateY: anims[1].translateY }],
+          marginBottom: spacing.xxl,
+        }}
+      >
+        <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+          {t("register.subtitle")}
+        </Text>
+      </Animated.View>
 
-            <Pressable
-              onPress={handleRegister}
-              style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
-              disabled={loading}
-            >
-              <LinearGradient
-                colors={[colors.purple500, colors.pink500]}
-                start={{ x: 0, y: 0.5 }}
-                end={{ x: 1, y: 0.5 }}
-                style={styles.buttonGradient}
-              >
-                {loading ? (
-                  <ActivityIndicator color={colors.white} />
-                ) : (
-                  <Text style={styles.buttonText}>Sign up</Text>
-                )}
-              </LinearGradient>
-            </Pressable>
+      <GlassInput
+        label={t("register.email_label")}
+        value={email}
+        onChangeText={setEmail}
+        placeholder={t("register.email_placeholder")}
+        autoCapitalize="none"
+        keyboardType="email-address"
+        autoComplete="email"
+        editable={!loading}
+        opacity={anims[2].opacity}
+        translateY={anims[2].translateY}
+      />
 
-            <Pressable
-              onPress={() => navigation.navigate("Login")}
-              style={({ pressed }) => [styles.link, pressed && styles.linkPressed]}
-              disabled={loading}
-            >
-              <Text style={styles.linkText}>Already have an account? Log in</Text>
-            </Pressable>
-          </View>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </LinearGradient>
+      <GlassInput
+        label={t("register.password_label")}
+        value={password}
+        onChangeText={setPassword}
+        placeholder={t("register.password_placeholder")}
+        secureTextEntry
+        autoComplete="new-password"
+        editable={!loading}
+        opacity={anims[3].opacity}
+        translateY={anims[3].translateY}
+      />
+
+      <GlassInput
+        label={t("register.confirm_label")}
+        value={confirmPassword}
+        onChangeText={setConfirmPassword}
+        placeholder={t("register.confirm_placeholder")}
+        secureTextEntry
+        autoComplete="new-password"
+        editable={!loading}
+        opacity={anims[4].opacity}
+        translateY={anims[4].translateY}
+      />
+
+      <Animated.View
+        style={[
+          styles.buttonWrap,
+          {
+            opacity: anims[5].opacity,
+            transform: [{ translateY: anims[5].translateY }],
+          },
+        ]}
+      >
+        <GradientButton
+          label={t("register.submit")}
+          onPress={handleRegister}
+          loading={loading}
+          large
+          height={56}
+        />
+      </Animated.View>
+    </AuthLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  gradient: { flex: 1 },
-  safe: { flex: 1 },
-  keyboard: { flex: 1 },
-  content: {
-    flex: 1,
-    paddingHorizontal: spacing.xxl,
-    paddingTop: 48,
-  },
   title: {
-    fontSize: 32,
-    fontWeight: "800",
-    color: colors.gray900,
-    marginBottom: 4,
+    ...typography.displayLarge,
+    marginBottom: spacing.xs,
   },
   subtitle: {
-    fontSize: 16,
-    color: colors.gray500,
-    marginBottom: 32,
+    ...typography.body,
+  },
+  inputWrap: {
+    marginBottom: spacing.lg,
+  },
+  inputLabel: {
+    ...typography.label,
+    marginBottom: spacing.sm,
+    textTransform: "uppercase",
+  },
+  inputContainer: {
+    height: 52,
+    borderRadius: radius.md,
+    borderWidth: 1,
+    justifyContent: "center",
+    paddingHorizontal: spacing.lg,
   },
   input: {
-    height: 52,
-    backgroundColor: colors.white,
-    borderRadius: radius.lg,
-    paddingHorizontal: spacing.lg,
-    fontSize: 16,
-    color: colors.gray900,
-    marginBottom: spacing.lg,
-    borderWidth: 1,
-    borderColor: colors.gray200,
-  },
-  button: {
-    marginTop: 8,
-    marginBottom: spacing.xl,
-    borderRadius: radius.pill,
-    overflow: "hidden",
-  },
-  buttonPressed: { opacity: 0.9 },
-  buttonGradient: {
-    height: 52,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  buttonText: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: "700",
-  },
-  link: {
-    alignSelf: "center",
-    padding: spacing.md,
-  },
-  linkPressed: { opacity: 0.7 },
-  linkText: {
-    color: colors.purple500,
     fontSize: 15,
-    fontWeight: "600",
+    fontWeight: "400" as const,
+    flex: 1,
+    padding: 0,
+  },
+  buttonWrap: {
+    marginTop: spacing.lg,
+    marginBottom: spacing.xl,
   },
 });

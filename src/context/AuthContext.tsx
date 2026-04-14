@@ -1,23 +1,48 @@
 import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  type User,
-} from "firebase/auth";
-import {
   createContext,
   ReactNode,
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from "react";
-import { auth } from "../lib/firebase";
+import { supabase } from "../lib/supabase";
+import type { User } from "@supabase/supabase-js";
+import { profile as defaultProfile } from "../data/profile";
+import type { Profile } from "../hooks/useProfile";
+
+import type { OnboardingStackParamList } from "../navigation/OnboardingNavigator";
+
+type OnboardingRoute = keyof OnboardingStackParamList;
+
+export interface OnboardingProfile {
+  readonly name: string | null;
+  readonly location: string | null;
+  readonly experience: string | null;
+  readonly skills: string[] | null;
+  readonly certifications: string[] | null;
+  readonly preferredShiftTypes: string[] | null;
+  readonly preferredJobTypes: string[] | null;
+  readonly hasOwnTransport: boolean | null;
+}
+
+const EMPTY_PROFILE: OnboardingProfile = {
+  name: null, location: null, experience: null, skills: null,
+  certifications: null, preferredShiftTypes: null, preferredJobTypes: null, hasOwnTransport: null,
+};
 
 interface AuthContextValue {
   user: User | null;
   uid: string | null;
   loading: boolean;
+  needsOnboarding: boolean;
+  onboardingResumeRoute: OnboardingRoute;
+  onboardingProfile: OnboardingProfile;
+  profile: Profile;
+  profileLoading: boolean;
+  updateProfile: (updates: Partial<Profile>) => Promise<void>;
+  completeOnboarding: () => void;
   signIn: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -28,36 +53,180 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [needsOnboarding, setNeedsOnboarding] = useState(false);
+  const [onboardingResumeRoute, setOnboardingResumeRoute] = useState<OnboardingRoute>("Welcome");
+  const [onboardingProfile, setOnboardingProfile] = useState<OnboardingProfile>(EMPTY_PROFILE);
+  const [profile, setProfile] = useState<Profile>(defaultProfile);
+  const [profileLoading, setProfileLoading] = useState(true);
+
+  /** Derive onboarding resume step from which profile fields are already filled. */
+  function deriveResumeRoute(profile: {
+    name?: string | null;
+    location?: string | null;
+    experience?: string | null;
+    certifications?: string[] | null;
+    preferredShiftTypes?: string[] | null;
+    skills?: string[] | null;
+  }): OnboardingRoute {
+    if (!profile.name) return "Welcome";
+    if (!profile.location) return "Location";
+    if (!profile.experience) return "Role";
+    if (!profile.certifications || profile.certifications.length === 0) return "Certifications";
+    if (!profile.preferredShiftTypes || profile.preferredShiftTypes.length === 0) return "WorkPreferences";
+    return "Traits";
+  }
+
+  // Check if user has completed onboarding and determine resume step
+  const checkOnboardingStatus = useCallback(async (uid: string) => {
+    try {
+      const { data } = await supabase
+        .from("app_users")
+        .select("onboardingCompleted, name, location, experience, skills, certifications, preferredShiftTypes, preferredJobTypes, hasOwnTransport")
+        .eq("authId", uid)
+        .single();
+
+      if (!data || !data.onboardingCompleted) {
+        setNeedsOnboarding(true);
+        if (data) {
+          const d = data as Record<string, unknown>;
+          setOnboardingResumeRoute(deriveResumeRoute(d as Parameters<typeof deriveResumeRoute>[0]));
+          setOnboardingProfile({
+            name: d.name as string | null ?? null,
+            location: d.location as string | null ?? null,
+            experience: d.experience as string | null ?? null,
+            skills: d.skills as string[] | null ?? null,
+            certifications: d.certifications as string[] | null ?? null,
+            preferredShiftTypes: d.preferredShiftTypes as string[] | null ?? null,
+            preferredJobTypes: d.preferredJobTypes as string[] | null ?? null,
+            hasOwnTransport: d.hasOwnTransport as boolean | null ?? null,
+          });
+        } else {
+          setOnboardingResumeRoute("Welcome");
+          setOnboardingProfile(EMPTY_PROFILE);
+        }
+      } else {
+        setNeedsOnboarding(false);
+      }
+    } catch {
+      // No row found — needs onboarding from the start
+      setNeedsOnboarding(true);
+      setOnboardingResumeRoute("Welcome");
+      setOnboardingProfile(EMPTY_PROFILE);
+    }
+  }, []);
+
+  const fetchProfile = useCallback(async (uid: string) => {
+    setProfileLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from("app_users")
+        .select("*")
+        .eq("authId", uid)
+        .single();
+
+      if (error) {
+        if (error.code === "PGRST116") {
+          // No row — will be created during onboarding
+          setProfile(defaultProfile);
+        }
+      } else if (data) {
+        const d = data as Record<string, unknown>;
+        setProfile({
+          initials: String(d.initials ?? defaultProfile.initials),
+          name: String(d.name ?? defaultProfile.name),
+          tagline: String(d.tagline ?? defaultProfile.tagline),
+          email: String(d.email ?? defaultProfile.email),
+          location: String(d.location ?? defaultProfile.location),
+          experience: String(d.experience ?? defaultProfile.experience),
+          skills: Array.isArray(d.skills) ? (d.skills as string[]) : defaultProfile.skills,
+        });
+      }
+    } catch {
+      setProfile(defaultProfile);
+    } finally {
+      setProfileLoading(false);
+    }
+  }, []);
+
+  const updateProfile = useCallback(
+    async (updates: Partial<Profile>) => {
+      const currentUid = user?.id;
+      if (!currentUid) return;
+      const { error } = await supabase
+        .from("app_users")
+        .update(updates)
+        .eq("authId", currentUid);
+      if (error) throw error;
+      setProfile((prev) => ({ ...prev, ...updates }));
+    },
+    [user],
+  );
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      const sessionUser = session?.user ?? null;
+      setUser(sessionUser);
+      if (sessionUser) {
+        await Promise.all([
+          checkOnboardingStatus(sessionUser.id),
+          fetchProfile(sessionUser.id),
+        ]);
+      }
       setLoading(false);
     });
 
-    return () => unsubscribe();
-  }, []);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      async (_event, session) => {
+        const sessionUser = session?.user ?? null;
+        setUser(sessionUser);
+        if (sessionUser) {
+          await Promise.all([
+            checkOnboardingStatus(sessionUser.id),
+            fetchProfile(sessionUser.id),
+          ]);
+        } else {
+          setNeedsOnboarding(false);
+          setProfile(defaultProfile);
+          setProfileLoading(false);
+        }
+        setLoading(false);
+      },
+    );
+
+    return () => subscription.unsubscribe();
+  }, [checkOnboardingStatus]);
 
   const signIn = useCallback(async (email: string, password: string) => {
-    await signInWithEmailAndPassword(auth, email, password);
+    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    if (error) throw error;
   }, []);
 
   const register = useCallback(async (email: string, password: string) => {
-    await createUserWithEmailAndPassword(auth, email, password);
+    // Set onboarding flag BEFORE signUp so the auth state change listener
+    // never renders the main app while the onboarding check is pending.
+    setNeedsOnboarding(true);
+    const { error } = await supabase.auth.signUp({ email, password });
+    if (error) {
+      setNeedsOnboarding(false);
+      throw error;
+    }
   }, []);
 
   const signOut = useCallback(async () => {
-    await auth.signOut();
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
   }, []);
 
-  const value: AuthContextValue = {
-    user,
-    uid: user?.uid ?? null,
-    loading,
-    signIn,
-    register,
-    signOut,
-  };
+  const completeOnboarding = useCallback(() => {
+    setNeedsOnboarding(false);
+  }, []);
+
+  const uid = user?.id ?? null;
+
+  const value = useMemo<AuthContextValue>(
+    () => ({ user, uid, loading, needsOnboarding, onboardingResumeRoute, onboardingProfile, profile, profileLoading, updateProfile, completeOnboarding, signIn, register, signOut }),
+    [user, uid, loading, needsOnboarding, onboardingResumeRoute, onboardingProfile, profile, profileLoading, updateProfile, completeOnboarding, signIn, register, signOut],
+  );
 
   return (
     <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

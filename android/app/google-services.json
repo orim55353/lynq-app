@@ -1,26 +1,43 @@
 {
   "project_info": {
-    "project_number": "76197560511",
-    "project_id": "intuere-1031e",
-    "storage_bucket": "intuere-1031e.firebasestorage.app"
+    "project_number": "366069991252",
+    "project_id": "lynq-83ada",
+    "storage_bucket": "lynq-83ada.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:76197560511:android:5f2505a1b16709876f860a",
+        "mobilesdk_app_id": "1:366069991252:android:ccc17f93e7122f28982ac1",
         "android_client_info": {
-          "package_name": "com.jovloo.app"
+          "package_name": "com.lynq.app"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "366069991252-6avq3rbsv2vrvh4l45dqk335kfv4cgv3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBUIAOBn3o3TTvdxLCgOej6RMcZ1rSNp40"
+          "current_key": "AIzaSyCNEIm4imWRp92mwwQ7K3UxTFH4NHhsjsY"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "366069991252-6avq3rbsv2vrvh4l45dqk335kfv4cgv3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "366069991252-os0n45c6e72msv34a7e6vhd3v8hjlg9r.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lynq.app"
+              }
+            }
+          ]
         }
       }
     }

@@ -1,197 +1,488 @@
 import { Ionicons } from "@expo/vector-icons";
+import { useFocusEffect } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useCallback } from "react";
-import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { colors, radius } from "../constants/theme";
+import { useCallback, useEffect, useRef } from "react";
+import {
+  Alert,
+  Animated,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  useWindowDimensions,
+} from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
+import { GlassCard } from "../components/GlassCard";
+import { GlassPill } from "../components/GlassPill";
+import {
+  accentGradient,
+  screenGradient,
+  screenGradientLight,
+  spotlightGradient,
+  warmGradient,
+} from "../constants/gradients";
+import {
+  getFontScale,
+  radius,
+  shadows,
+  spacing,
+  typography,
+} from "../constants/theme";
 import { useAuth } from "../context/AuthContext";
-import { useProfile } from "../hooks/useProfile";
+import { useEntranceAnimations } from "../hooks/useEntranceAnimations";
+import { useSpringPress } from "../hooks/useSpringPress";
+import { useTheme } from "../hooks/useTheme";
 
 export function ProfileScreen() {
-  const { uid, signOut } = useAuth();
-  const { profile, loading } = useProfile(uid);
+  const { t } = useTranslation("profile");
+  const { signOut, profile, profileLoading: loading } = useAuth();
+  const { colors, mode } = useTheme();
+  const insets = useSafeAreaInsets();
+  const { width } = useWindowDimensions();
+  const fontScale = getFontScale(width);
+
+  // 4 sections: profile header, skills, experience, sign-out
+  const { opacities, translateYs, trigger } = useEntranceAnimations(4, {
+    staggerMs: 100,
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      trigger();
+    }, [trigger]),
+  );
+
+  // Avatar scale-in spring
+  const avatarScale = useRef(new Animated.Value(0.8)).current;
+  useEffect(() => {
+    if (!loading) {
+      Animated.spring(avatarScale, {
+        toValue: 1,
+        tension: 200,
+        friction: 15,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [loading, avatarScale]);
+
+  const editPress = useSpringPress({ pressedScale: 0.9 });
+  const signOutPress = useSpringPress({ pressedScale: 0.95 });
 
   const handleSignOut = useCallback(() => {
-    Alert.alert("Sign out", "Are you sure?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Sign out", style: "destructive", onPress: () => signOut() },
+    Alert.alert(t("sign_out"), t("sign_out_confirm"), [
+      { text: t("common:cancel"), style: "cancel" },
+      { text: t("sign_out"), style: "destructive", onPress: () => signOut() },
     ]);
   }, [signOut]);
 
+  const nameSize = Math.round(28 * fontScale);
+  const nameLineHeight = Math.round(32 * fontScale);
+
   if (loading) {
     return (
-      <LinearGradient colors={["#FAF5FF", "#FDF2F8"]} style={styles.background}>
-        <SafeAreaView style={styles.safe} edges={["top"]}>
-          <View style={[styles.card, styles.loadingCard]}>
-            <Text style={styles.loadingText}>Loading profile...</Text>
-          </View>
-        </SafeAreaView>
-      </LinearGradient>
+      <View style={styles.root}>
+        <LinearGradient colors={mode === "dark" ? screenGradient : screenGradientLight} style={StyleSheet.absoluteFill} />
+        <View style={styles.loadingCenter}>
+          <GlassCard>
+            <View style={styles.loadingContent}>
+              <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
+                {t("loading")}
+              </Text>
+            </View>
+          </GlassCard>
+        </View>
+      </View>
     );
   }
 
   return (
-    <LinearGradient colors={["#FAF5FF", "#FDF2F8"]} style={styles.background}>
-      <SafeAreaView style={styles.safe} edges={["top"]}>
-        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-          <View style={styles.card}>
+    <View style={styles.root}>
+      <LinearGradient colors={mode === "dark" ? screenGradient : screenGradientLight} style={StyleSheet.absoluteFill} />
+      <LinearGradient
+        colors={spotlightGradient}
+        style={styles.spotlight}
+        start={{ x: 0.5, y: 0 }}
+        end={{ x: 0.5, y: 1 }}
+      />
+
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          { paddingTop: insets.top + spacing.xxl, paddingBottom: 130 },
+        ]}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Profile Header */}
+        <Animated.View
+          style={{
+            opacity: opacities[0],
+            transform: [{ translateY: translateYs[0] }],
+          }}
+        >
+          <GlassCard>
             <View style={styles.headerRow}>
-              <LinearGradient colors={[colors.purple500, colors.pink500]} style={styles.avatar}>
-                <Text style={styles.avatarText}>{profile.initials}</Text>
-              </LinearGradient>
+              {/* Avatar with gradient ring */}
+              <Animated.View style={{ transform: [{ scale: avatarScale }] }}>
+                <LinearGradient
+                  colors={accentGradient}
+                  style={[styles.avatarRing, shadows.glow]}
+                >
+                  <View style={[styles.avatarSpacer, { backgroundColor: colors.bg }]}>
+                    <LinearGradient colors={accentGradient} style={styles.avatar}>
+                      <Text style={styles.avatarText}>{profile.initials}</Text>
+                    </LinearGradient>
+                  </View>
+                </LinearGradient>
+              </Animated.View>
+
               <View style={styles.flexOne}>
                 <View style={styles.nameRow}>
-                  <Text style={styles.name}>{profile.name}</Text>
-                  <View style={styles.editButton}>
-                    <Ionicons name="create-outline" size={18} color={colors.gray500} />
-                  </View>
+                  <Text
+                    style={[
+                      styles.name,
+                      {
+                        color: colors.text,
+                        fontSize: nameSize,
+                        lineHeight: nameLineHeight,
+                      },
+                    ]}
+                    numberOfLines={1}
+                  >
+                    {profile.name}
+                  </Text>
+                  <Animated.View style={{ transform: [{ scale: editPress.scale }] }}>
+                    <Pressable
+                      onPressIn={editPress.onPressIn}
+                      onPressOut={editPress.onPressOut}
+                      style={[
+                        styles.editButton,
+                        { backgroundColor: colors.glass, borderColor: colors.glassBorder },
+                      ]}
+                    >
+                      <Ionicons name="create-outline" size={16} color={colors.textSecondary} />
+                    </Pressable>
+                  </Animated.View>
                 </View>
-                <Text style={styles.tagline}>{profile.tagline}</Text>
+                <Text style={[styles.tagline, { color: colors.textSecondary }]}>
+                  {profile.tagline}
+                </Text>
 
                 <View style={styles.infoWrap}>
-                  <View style={[styles.infoPill, { backgroundColor: "#F3E8FF" }]}>
-                    <Ionicons name="mail-outline" size={14} color="#7E22CE" />
-                    <Text style={[styles.infoText, { color: "#7E22CE" }]}>{profile.email}</Text>
-                  </View>
-                  <View style={[styles.infoPill, { backgroundColor: "#FCE7F3" }]}>
-                    <Ionicons name="location-outline" size={14} color="#BE185D" />
-                    <Text style={[styles.infoText, { color: "#BE185D" }]}>{profile.location}</Text>
-                  </View>
-                  <View style={[styles.infoPill, { backgroundColor: "#DBEAFE" }]}>
-                    <Ionicons name="briefcase-outline" size={14} color="#1D4ED8" />
-                    <Text style={[styles.infoText, { color: "#1D4ED8" }]}>{profile.experience}</Text>
-                  </View>
+                  <GlassPill icon="mail-outline" label={profile.email} tint={colors.accent} bg={colors.accentSoft} />
+                  <GlassPill icon="location-outline" label={profile.location} tint={colors.warm} bg={colors.warmSoft} />
+                  <GlassPill icon="briefcase-outline" label={profile.experience} tint={colors.info} bg={colors.infoSoft} />
                 </View>
               </View>
             </View>
-          </View>
+          </GlassCard>
+        </Animated.View>
 
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Skills</Text>
+        {/* Skills */}
+        <Animated.View
+          style={{
+            opacity: opacities[1],
+            transform: [{ translateY: translateYs[1] }],
+          }}
+        >
+          <GlassCard>
+            <View style={styles.sectionTitleRow}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                {t("skills_title")}
+              </Text>
+              <LinearGradient
+                colors={accentGradient}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+                style={styles.sectionAccent}
+              />
+            </View>
             <View style={styles.skillsWrap}>
               {profile.skills.map((skill) => (
-                <LinearGradient
+                <GlassPill
                   key={skill}
-                  colors={[colors.purple500, colors.pink500]}
-                  start={{ x: 0, y: 0.5 }}
-                  end={{ x: 1, y: 0.5 }}
-                  style={styles.skillPill}
-                >
-                  <Text style={styles.skillText}>{skill}</Text>
-                </LinearGradient>
+                  label={skill}
+                  tint={colors.accent}
+                  bg={colors.accentSoft}
+                />
               ))}
             </View>
-          </View>
+          </GlassCard>
+        </Animated.View>
 
-          <View style={styles.card}>
-            <Text style={styles.sectionTitle}>Experience</Text>
+        {/* Experience */}
+        <Animated.View
+          style={{
+            opacity: opacities[2],
+            transform: [{ translateY: translateYs[2] }],
+          }}
+        >
+          <GlassCard>
+            <View style={styles.sectionTitleRow}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>
+                {t("experience_title")}
+              </Text>
+              <LinearGradient
+                colors={warmGradient}
+                start={{ x: 0, y: 0.5 }}
+                end={{ x: 1, y: 0.5 }}
+                style={styles.sectionAccent}
+              />
+            </View>
+
+            {/* Timeline entry 1 */}
             <View style={styles.timelineItem}>
-              <View style={[styles.timelineLine, { backgroundColor: colors.purple500 }]} />
+              <View style={styles.timelineTrack}>
+                <LinearGradient
+                  colors={accentGradient}
+                  style={styles.timelineDot}
+                />
+                <LinearGradient
+                  colors={[colors.accent, colors.warm]}
+                  style={styles.timelineLine}
+                />
+              </View>
               <View style={styles.timelineBody}>
-                <Text style={styles.role}>Senior Software Engineer</Text>
-                <Text style={[styles.companyName, { color: colors.purple500 }]}>Tech Company Inc.</Text>
-                <Text style={styles.dates}>2021 - Present</Text>
-                <Text style={styles.summary}>Led development of key features and mentored junior developers.</Text>
+                <Text style={[styles.role, { color: colors.text }]}>
+                  Senior Software Engineer
+                </Text>
+                <Text style={[styles.companyName, { color: colors.accent }]}>
+                  Tech Company Inc.
+                </Text>
+                <Text style={[styles.dates, { color: colors.textTertiary }]}>
+                  2021 - Present
+                </Text>
+                <Text style={[styles.summary, { color: colors.textSecondary }]}>
+                  Led development of key features and mentored junior developers.
+                </Text>
               </View>
             </View>
 
+            {/* Timeline entry 2 */}
             <View style={styles.timelineItem}>
-              <View style={[styles.timelineLine, { backgroundColor: colors.pink500 }]} />
+              <View style={styles.timelineTrack}>
+                <LinearGradient
+                  colors={warmGradient}
+                  style={styles.timelineDot}
+                />
+              </View>
               <View style={styles.timelineBody}>
-                <Text style={styles.role}>Software Engineer</Text>
-                <Text style={[styles.companyName, { color: colors.pink500 }]}>Startup XYZ</Text>
-                <Text style={styles.dates}>2019 - 2021</Text>
-                <Text style={styles.summary}>Built and scaled web applications from the ground up.</Text>
+                <Text style={[styles.role, { color: colors.text }]}>
+                  Software Engineer
+                </Text>
+                <Text style={[styles.companyName, { color: colors.warm }]}>
+                  Startup XYZ
+                </Text>
+                <Text style={[styles.dates, { color: colors.textTertiary }]}>
+                  2019 - 2021
+                </Text>
+                <Text style={[styles.summary, { color: colors.textSecondary }]}>
+                  Built and scaled web applications from the ground up.
+                </Text>
               </View>
             </View>
-          </View>
+          </GlassCard>
+        </Animated.View>
 
-          <Pressable onPress={handleSignOut} style={({ pressed }) => [styles.signOutButton, pressed && styles.signOutPressed]}>
-            <Ionicons name="log-out-outline" size={20} color={colors.red500} />
-            <Text style={styles.signOutText}>Sign out</Text>
-          </Pressable>
-        </ScrollView>
-      </SafeAreaView>
-    </LinearGradient>
+        {/* Sign Out */}
+        <Animated.View
+          style={{
+            opacity: opacities[3],
+            transform: [{ translateY: translateYs[3] }],
+          }}
+        >
+          <Animated.View style={{ transform: [{ scale: signOutPress.scale }] }}>
+            <Pressable
+              onPress={handleSignOut}
+              onPressIn={signOutPress.onPressIn}
+              onPressOut={signOutPress.onPressOut}
+              style={[
+                styles.signOutButton,
+                {
+                  backgroundColor: colors.dangerSoft,
+                  borderColor: colors.glassBorder,
+                },
+              ]}
+            >
+              <Ionicons name="log-out-outline" size={18} color={colors.danger} />
+              <Text style={[styles.signOutText, { color: colors.danger }]}>
+                {t("sign_out")}
+              </Text>
+            </Pressable>
+          </Animated.View>
+        </Animated.View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  background: { flex: 1 },
-  safe: { flex: 1 },
+  root: {
+    flex: 1,
+  },
+  spotlight: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 400,
+  },
   content: {
-    paddingHorizontal: 20,
-    paddingVertical: 14,
-    gap: 14,
-    paddingBottom: 130,
+    paddingHorizontal: spacing.xl,
+    gap: spacing.lg,
   },
-  card: {
-    backgroundColor: colors.white,
-    borderRadius: radius.xl,
-    padding: 20,
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 6,
+  loadingCenter: {
+    flex: 1,
+    justifyContent: "center",
+    paddingHorizontal: spacing.xl,
   },
-  headerRow: { flexDirection: "row", gap: 14 },
-  avatar: {
-    width: 90,
-    height: 90,
+  loadingContent: {
+    alignItems: "center",
+    justifyContent: "center",
+    minHeight: 120,
+  },
+  loadingText: {
+    ...typography.body,
+  },
+
+  // Profile header
+  headerRow: {
+    flexDirection: "row",
+    gap: spacing.lg,
+  },
+  avatarRing: {
+    width: 88,
+    height: 88,
     borderRadius: radius.pill,
     justifyContent: "center",
     alignItems: "center",
   },
-  avatarText: { color: colors.white, fontSize: 30, fontWeight: "800" },
-  flexOne: { flex: 1 },
+  avatarSpacer: {
+    width: 82,
+    height: 82,
+    borderRadius: radius.pill,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  avatar: {
+    width: 76,
+    height: 76,
+    borderRadius: radius.pill,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  avatarText: {
+    color: "#FFFFFF",
+    fontSize: 28,
+    fontWeight: "800",
+  },
+  flexOne: {
+    flex: 1,
+  },
   nameRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 2,
+    marginBottom: spacing.xxs,
   },
-  name: { fontSize: 30, lineHeight: 34, color: colors.gray900, fontWeight: "800" },
+  name: {
+    fontWeight: typography.displayMedium.fontWeight,
+    letterSpacing: typography.displayMedium.letterSpacing,
+    flex: 1,
+  },
   editButton: {
     width: 34,
     height: 34,
     borderRadius: radius.pill,
-    backgroundColor: colors.gray100,
+    borderWidth: 1,
     alignItems: "center",
     justifyContent: "center",
   },
-  tagline: { color: colors.gray500, fontSize: 15, marginBottom: 10 },
-  infoWrap: { flexDirection: "row", flexWrap: "wrap", gap: 7 },
-  infoPill: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 5,
-    borderRadius: radius.pill,
-    paddingHorizontal: 9,
-    paddingVertical: 6,
+  tagline: {
+    ...typography.body,
+    marginBottom: spacing.md,
   },
-  infoText: { fontSize: 12, fontWeight: "600" },
-  sectionTitle: { fontSize: 29, lineHeight: 34, fontWeight: "800", color: colors.gray900, marginBottom: 12 },
-  skillsWrap: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
-  skillPill: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: radius.pill },
-  skillText: { color: colors.white, fontSize: 13, fontWeight: "700" },
-  timelineItem: { flexDirection: "row", gap: 10, marginBottom: 14 },
-  timelineLine: { width: 4, borderRadius: radius.pill },
-  timelineBody: { flex: 1 },
-  role: { fontSize: 22, lineHeight: 28, color: colors.gray900, fontWeight: "800" },
-  companyName: { fontSize: 16, fontWeight: "700", marginTop: 1 },
-  dates: { fontSize: 12, color: colors.gray500, marginTop: 3, marginBottom: 4 },
-  summary: { fontSize: 14, lineHeight: 20, color: colors.gray700 },
-  loadingCard: { alignItems: "center", justifyContent: "center", minHeight: 120 },
-  loadingText: { fontSize: 16, color: colors.gray500 },
+  infoWrap: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
+  },
+
+  // Section titles
+  sectionTitleRow: {
+    marginBottom: spacing.md,
+  },
+  sectionTitle: {
+    ...typography.heading,
+    marginBottom: spacing.sm,
+  },
+  sectionAccent: {
+    height: 3,
+    width: 40,
+    borderRadius: radius.pill,
+  },
+
+  // Skills
+  skillsWrap: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.sm,
+  },
+
+  // Timeline
+  timelineItem: {
+    flexDirection: "row",
+    gap: spacing.md,
+    marginBottom: spacing.lg,
+  },
+  timelineTrack: {
+    alignItems: "center",
+    width: 12,
+  },
+  timelineDot: {
+    width: 12,
+    height: 12,
+    borderRadius: radius.pill,
+  },
+  timelineLine: {
+    width: 3,
+    flex: 1,
+    borderRadius: radius.pill,
+    marginTop: spacing.xs,
+  },
+  timelineBody: {
+    flex: 1,
+  },
+  role: {
+    ...typography.subheading,
+  },
+  companyName: {
+    ...typography.bodySmall,
+    fontWeight: "700",
+    marginTop: spacing.xxs,
+  },
+  dates: {
+    ...typography.caption,
+    marginTop: spacing.xs,
+    marginBottom: spacing.xs,
+  },
+  summary: {
+    ...typography.bodySmall,
+  },
+
+  // Sign out
   signOutButton: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 8,
-    paddingVertical: 14,
-    marginTop: 8,
+    gap: spacing.sm,
+    paddingVertical: spacing.lg,
+    borderRadius: radius.md,
+    borderWidth: 1,
   },
-  signOutPressed: { opacity: 0.7 },
-  signOutText: { fontSize: 16, color: colors.red500, fontWeight: "600" },
+  signOutText: {
+    ...typography.body,
+    fontWeight: "600",
+  },
 });

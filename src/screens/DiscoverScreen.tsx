@@ -1,108 +1,25 @@
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   FlatList,
   StyleSheet,
   useWindowDimensions,
   View,
+  type ViewToken,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { ExpandedJobCard } from "../components/ExpandedJobCard";
 import { JobCard } from "../components/JobCard";
-import { StoryCircle, StoryHeader } from "../components/StoryHeader";
-import { StoryViewModal } from "../components/StoryViewModal";
-import { colors, spacing } from "../constants/theme";
+import { StoryCirclesRow } from "../components/stories/StoryCirclesRow";
+import { StoryViewer } from "../components/stories/StoryViewer";
+import { spacing } from "../constants/theme";
 import { useSavedJobs } from "../context/SavedJobsContext";
 import { useJobs } from "../hooks/useJobs";
+import { useStories } from "../hooks/useStories";
+import { useTheme } from "../hooks/useTheme";
 import type { Job } from "../types/models";
+import type { CompanyStory } from "../types/story";
 import { clamp } from "../utils/math";
-
-const storyCircles: StoryCircle[] = [
-  {
-    id: "tech",
-    label: "Tech",
-    image:
-      "https://images.unsplash.com/photo-1544847558-3ccacb31ee7f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWNobm9sb2d5JTIwbGFwdG9wJTIwY29kaW5nfGVufDF8fHx8MTc3MTI1MTY5MHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    gradient: ["#A855F7", "#EC4899"],
-  },
-  {
-    id: "finance",
-    label: "Finance",
-    image:
-      "https://images.unsplash.com/photo-1675580167286-47ea50993b8f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmaW5hbmNlJTIwbW9uZXklMjBidXNpbmVzc3xlbnwxfHx8fDE3NzEyODY5NTN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    gradient: ["#22C55E", "#14B8A6"],
-  },
-  {
-    id: "design",
-    label: "Design",
-    image:
-      "https://images.unsplash.com/photo-1624901344246-8759f305fef3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZXNpZ24lMjBjcmVhdGl2ZSUyMGFydHxlbnwxfHx8fDE3NzEyMDY1MzN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    gradient: ["#F97316", "#EF4444"],
-  },
-  {
-    id: "marketing",
-    label: "Marketing",
-    image:
-      "https://images.unsplash.com/photo-1566514883564-c4cdfa535113?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYXJrZXRpbmclMjBhbmFseXRpY3MlMjBidXNpbmVzc3xlbnwxfHx8fDE3NzEyODY5NTR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    gradient: ["#3B82F6", "#06B6D4"],
-  },
-  {
-    id: "sales",
-    label: "Sales",
-    image:
-      "https://images.unsplash.com/photo-1748361920780-2a77fdc2cd32?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWxlcyUyMGhhbmRzaGFrZSUyMGJ1c2luZXNzfGVufDF8fHx8MTc3MTIxNzYwMnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    gradient: ["#EAB308", "#F97316"],
-  },
-  {
-    id: "healthcare",
-    label: "Health",
-    image:
-      "https://images.unsplash.com/photo-1769147555720-71fc71bfc216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoZWFsdGhjYXJlJTIwbWVkaWNhbCUyMGhvc3BpdGFsfGVufDF8fHx8MTc3MTE4NjU4NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    gradient: ["#EC4899", "#F43F5E"],
-  },
-  {
-    id: "tech2",
-    label: "Tech",
-    image:
-      "https://images.unsplash.com/photo-1544847558-3ccacb31ee7f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWNobm9sb2d5JTIwbGFwdG9wJTIwY29kaW5nfGVufDF8fHx8MTc3MTI1MTY5MHww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    gradient: ["#A855F7", "#EC4899"],
-  },
-  {
-    id: "finance2",
-    label: "Finance",
-    image:
-      "https://images.unsplash.com/photo-1675580167286-47ea50993b8f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxmaW5hbmNlJTIwbW9uZXklMjBidXNpbmVzc3xlbnwxfHx8fDE3NzEyODY5NTN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    gradient: ["#22C55E", "#14B8A6"],
-  },
-  {
-    id: "design2",
-    label: "Design",
-    image:
-      "https://images.unsplash.com/photo-1624901344246-8759f305fef3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkZXNpZ24lMjBjcmVhdGl2ZSUyMGFydHxlbnwxfHx8fDE3NzEyMDY1MzN8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    gradient: ["#F97316", "#EF4444"],
-  },
-  {
-    id: "marketing2",
-    label: "Marketing",
-    image:
-      "https://images.unsplash.com/photo-1566514883564-c4cdfa535113?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtYXJrZXRpbmclMjBhbmFseXRpY3MlMjBidXNpbmVzc3xlbnwxfHx8fDE3NzEyODY5NTR8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    gradient: ["#3B82F6", "#06B6D4"],
-  },
-  {
-    id: "sales2",
-    label: "Sales",
-    image:
-      "https://images.unsplash.com/photo-1748361920780-2a77fdc2cd32?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzYWxlcyUyMGhhbmRzaGFrZSUyMGJ1c2luZXNzfGVufDF8fHx8MTc3MTIxNzYwMnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    gradient: ["#EAB308", "#F97316"],
-  },
-  {
-    id: "healthcare2",
-    label: "Health",
-    image:
-      "https://images.unsplash.com/photo-1769147555720-71fc71bfc216?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoZWFsdGhjYXJlJTIwbWVkaWNhbCUyMGhvc3BpdGFsfGVufDF8fHx8MTc3MTE4NjU4NXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral",
-    gradient: ["#EC4899", "#F43F5E"],
-  },
-
-];
 
 export function DiscoverScreen() {
   const { height: windowHeight } = useWindowDimensions();
@@ -110,23 +27,55 @@ export function DiscoverScreen() {
   const tabBarHeight = useBottomTabBarHeight();
   const { jobs } = useJobs();
   const { isSaved, toggleSaved } = useSavedJobs();
-  const [selectedStory, setSelectedStory] = useState<string | null>(null);
-  const [openStoryId, setOpenStoryId] = useState<string | null>(null);
-  const [storyHeaderHeight, setStoryHeaderHeight] = useState(112);
+  const { mode, colors } = useTheme();
 
-  const handleSelectStory = useCallback((id: string) => {
-    setSelectedStory(id);
-    setOpenStoryId(id);
+  // ─── Stories ────────────────────────────────────────────────────────────
+  const { stories, isFullySeen, markSlideSeen } = useStories();
+  const [openStoryIndex, setOpenStoryIndex] = useState<number | null>(null);
+
+  // ─── Job state ──────────────────────────────────────────────────────────
+  const [expandedJob, setExpandedJob] = useState<Job | null>(null);
+  const [storyHeaderHeight, setStoryHeaderHeight] = useState(100);
+  const visibleIdsRef = useRef<Set<string>>(new Set(["1"]));
+  const [visibleIdsTick, setVisibleIdsTick] = useState(0);
+
+  const onViewableItemsChanged = useRef(
+    ({ viewableItems }: { viewableItems: ViewToken[] }) => {
+      visibleIdsRef.current = new Set(viewableItems.map((v) => v.key));
+      setVisibleIdsTick((t) => t + 1);
+    },
+  ).current;
+
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 60,
+  }).current;
+
+  // ─── Story handlers ─────────────────────────────────────────────────────
+  const handleSelectStory = useCallback(
+    (story: CompanyStory) => {
+      const index = stories.findIndex((s) => s.id === story.id);
+      setOpenStoryIndex(index >= 0 ? index : 0);
+    },
+    [stories],
+  );
+
+  const handleCloseStory = useCallback(() => {
+    setOpenStoryIndex(null);
+  }, []);
+
+  // ─── Job handlers ──────────────────────────────────────────────────────
+  const handleExpand = useCallback((job: Job) => {
+    setExpandedJob(job);
   }, []);
 
   const layout = useMemo(() => {
     const cardHeight = windowHeight;
     const cardTopGap = clamp(cardHeight * 0.016, spacing.sm, spacing.lg);
-    const cardBottomGap = clamp(cardHeight * 0.028, spacing.md, spacing.lg);
+    const cardBottomGap = clamp(cardHeight * 0.035, spacing.xl, spacing.xxxl);
     const topOffset = storyHeaderHeight + cardTopGap;
     const bottomOffset = Math.max(
       tabBarHeight + cardBottomGap,
-      insets.bottom + clamp(cardHeight * 0.04, spacing.lg, spacing.xxl),
+      insets.bottom + clamp(cardHeight * 0.06, spacing.xxl, spacing.huge),
     );
 
     return { cardHeight, topOffset, bottomOffset };
@@ -141,13 +90,25 @@ export function DiscoverScreen() {
         bottomOffset={layout.bottomOffset}
         isSaved={isSaved(item.id)}
         onToggleSaved={toggleSaved}
+        onExpand={handleExpand}
+        mode={mode}
+        isVisible={visibleIdsRef.current.has(item.id)}
       />
     ),
-    [isSaved, layout.bottomOffset, layout.cardHeight, layout.topOffset, toggleSaved],
+    [
+      isSaved,
+      layout.bottomOffset,
+      layout.cardHeight,
+      layout.topOffset,
+      toggleSaved,
+      handleExpand,
+      mode,
+      visibleIdsTick,
+    ],
   );
 
   return (
-    <View style={styles.screen}>
+    <View style={[styles.screen, { backgroundColor: colors.bg }]}>
       <FlatList
         data={jobs}
         keyExtractor={(item) => item.id}
@@ -161,6 +122,8 @@ export function DiscoverScreen() {
         decelerationRate="fast"
         snapToInterval={layout.cardHeight}
         disableIntervalMomentum
+        onViewableItemsChanged={onViewableItemsChanged}
+        viewabilityConfig={viewabilityConfig}
         getItemLayout={(_, index) => ({
           length: layout.cardHeight,
           offset: layout.cardHeight * index,
@@ -168,28 +131,43 @@ export function DiscoverScreen() {
         })}
       />
 
-      <StoryHeader
-        stories={storyCircles}
-        selectedStory={selectedStory}
+      {/* ─── Company story circles ─── */}
+      <StoryCirclesRow
+        stories={stories}
+        isFullySeen={isFullySeen}
         topInset={insets.top}
         onSelectStory={handleSelectStory}
         onHeightChange={setStoryHeaderHeight}
       />
 
-      <StoryViewModal
-        visible={openStoryId != null}
-        onClose={() => setOpenStoryId(null)}
-        jobs={jobs}
-        isSaved={isSaved}
-        onToggleSaved={toggleSaved}
+      {/* ─── Story viewer modal ─── */}
+      <StoryViewer
+        visible={openStoryIndex !== null}
+        stories={stories}
+        initialStoryIndex={openStoryIndex ?? 0}
+        onClose={handleCloseStory}
+        onSlideSeen={markSlideSeen}
       />
+
+      {/* ─── Expanded job detail ─── */}
+      {expandedJob && (
+        <ExpandedJobCard
+          job={expandedJob}
+          visible
+          isSaved={isSaved(expandedJob.id)}
+          cardTopY={layout.topOffset}
+          onToggleSaved={toggleSaved}
+          onClose={() => setExpandedJob(null)}
+        />
+      )}
     </View>
   );
 }
 
+// ─── Styles ──────────────────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    backgroundColor: colors.black,
   },
 });
