@@ -75,7 +75,9 @@ function getDeviceLanguage(): SupportedLanguage {
   if (SUPPORTED_LANGUAGES.includes(deviceLang as SupportedLanguage)) {
     return deviceLang as SupportedLanguage;
   }
-  return "en";
+  // Fall back to the brand's default language
+  const { brand } = require("../brand");
+  return brand.defaultLanguage;
 }
 
 async function getStoredLanguage(): Promise<SupportedLanguage> {

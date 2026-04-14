@@ -5,6 +5,7 @@ import {
   Alert,
   Animated,
   Easing,
+  I18nManager,
   StyleSheet,
   Text,
   TextInput,
@@ -88,7 +89,7 @@ function GlassInput({
         ]}
       >
         <TextInput
-          style={[styles.input, { color: colors.text }]}
+          style={[styles.input, { color: colors.text, writingDirection: I18nManager.isRTL ? "rtl" : "ltr" }]}
           placeholder={placeholder}
           placeholderTextColor={colors.textTertiary}
           defaultValue={value}
@@ -100,6 +101,7 @@ function GlassInput({
           keyboardType={keyboardType}
           autoComplete={autoComplete}
           editable={editable}
+          textAlign={I18nManager.isRTL ? "right" : "left"}
         />
       </Animated.View>
     </Animated.View>

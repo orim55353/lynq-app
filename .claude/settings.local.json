@@ -40,7 +40,14 @@
       "Bash(xcodebuild -workspace ios/Lynq.xcworkspace -scheme Lynq -configuration Debug -sdk iphonesimulator build)",
       "Bash(npx expo-doctor *)",
       "Bash(lsof -ti:8081)",
-      "Bash(xargs kill *)"
+      "Bash(xargs kill *)",
+      "Bash(ls *)",
+      "Bash(sips *)",
+      "Bash(cp /Users/orimizrachi/Desktop/Ori/Lynq/LynqCodebase/brand/lynq_icon.png /Users/orimizrachi/Desktop/Ori/Lynq/LynqCodebase/lynq-app/assets/brands/)",
+      "Bash(cp /Users/orimizrachi/Desktop/Ori/Lynq/LynqCodebase/brand/jobli_icon.png /Users/orimizrachi/Desktop/Ori/Lynq/LynqCodebase/lynq-app/assets/brands/)",
+      "Bash(cp /Users/orimizrachi/Desktop/Ori/Lynq/LynqCodebase/brand/lynq_icon.png /Users/orimizrachi/Desktop/Ori/Lynq/LynqCodebase/lynq-app/assets/brands/lynq_icon.png)",
+      "Bash(cp /Users/orimizrachi/Desktop/Ori/Lynq/LynqCodebase/brand/jobli_icon.png /Users/orimizrachi/Desktop/Ori/Lynq/LynqCodebase/lynq-app/assets/brands/jobli_icon.png)",
+      "Bash(cp /Users/orimizrachi/Desktop/Ori/Lynq/LynqCodebase/brand/lynq_icon.png /Users/orimizrachi/Desktop/Ori/Lynq/LynqCodebase/lynq-app/ios/Lynq/Images.xcassets/AppIcon.appiconset/App-Icon-1024x1024@1x.png)"
     ]
   }
 }

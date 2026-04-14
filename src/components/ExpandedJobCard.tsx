@@ -17,6 +17,7 @@ import {
 } from "react-native";
 import { Image } from "expo-image";
 import { useTranslation } from "react-i18next";
+import { brand } from "../brand";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { radius, shadows, spacing } from "../constants/theme";
 import { useTheme } from "../hooks/useTheme";
@@ -462,7 +463,7 @@ export function ExpandedJobCard({
                   {job.matchExplanation}
                 </Text>
                 <Text style={[styles.aiFooter, { color: p.poweredBy }]}>
-                  {t("powered_by_lynq")}
+                  {t("powered_by", { brand: brand.name })}
                 </Text>
               </View>
             )}

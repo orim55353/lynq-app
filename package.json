@@ -9,7 +9,13 @@
     "android": "expo run:android",
     "ios": "expo run:ios",
     "web": "expo start --web",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lynq": "EXPO_PUBLIC_BRAND=lynq expo run:ios --device 'iPhone 15 Pro Max'",
+    "lynq:start": "EXPO_PUBLIC_BRAND=lynq expo start -c",
+    "lynq:android": "EXPO_PUBLIC_BRAND=lynq expo run:android",
+    "jobli": "EXPO_PUBLIC_BRAND=jobli expo run:ios --device 'iPhone 15 Pro Max'",
+    "jobli:start": "EXPO_PUBLIC_BRAND=jobli expo start -c",
+    "jobli:android": "EXPO_PUBLIC_BRAND=jobli expo run:android"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.1.0",

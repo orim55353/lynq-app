@@ -20,7 +20,7 @@
   "about_company": "About {{company}}",
   "match_title": "You're a {{label}} Match!",
   "why_this_score": "Why this score?",
-  "powered_by_lynq": "Powered by Lynq HI",
+  "powered_by": "Powered by {{brand}} HI",
   "something_went_wrong": "Something went wrong",
   "please_try_again": "Please try again.",
   "selected_count": "{{count}} selected",

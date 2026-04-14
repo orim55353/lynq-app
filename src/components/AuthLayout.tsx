@@ -13,7 +13,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { authGradient, authGradientLight, spotlightGradient } from "../constants/gradients";
 import { spacing, typography } from "../constants/theme";
 import { useTheme } from "../hooks/useTheme";
-import { LynqLogo } from "./LynqLogo";
+import { BrandLogo } from "./BrandLogo";
+import { brand } from "../brand";
 
 interface AuthLayoutProps {
   /** Form content rendered between brand header and bottom link */
@@ -61,8 +62,8 @@ export function AuthLayout({
           <View style={styles.content}>
             {/* Brand header */}
             <View style={styles.brandRow}>
-              <LynqLogo size={48} white={mode === "dark"} />
-              <Text style={[styles.brandName, { color: colors.text }]}>{t("brand_name")}</Text>
+              <BrandLogo size={48} white={mode === "dark"} />
+              <Text style={[styles.brandName, { color: colors.text }]}>{brand.name}</Text>
             </View>
 
             {/* Form content */}

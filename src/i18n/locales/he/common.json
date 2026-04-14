@@ -20,7 +20,7 @@
   "about_company": "על {{company}}",
   "match_title": "התאמה {{label}}!",
   "why_this_score": "איך חישבנו?",
-  "powered_by_lynq": "מופעל ע״י Lynq HI",
+  "powered_by": "מופעל ע״י {{brand}} HI",
   "something_went_wrong": "משהו השתבש",
   "please_try_again": "נסה שוב.",
   "selected_count": "{{count}} נבחרו",

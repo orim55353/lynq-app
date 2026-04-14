@@ -2,7 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useCallback } from "react";
 import type { LayoutChangeEvent } from "react-native";
 import { ScrollView, StyleSheet, View, useWindowDimensions } from "react-native";
-import { LynqLogo } from "../../components/LynqLogo";
+import { BrandLogo } from "../../components/BrandLogo";
 import { spacing } from "../../constants/theme";
 import { useTheme } from "../../hooks/useTheme";
 import type { CompanyStory } from "../../types/story";
@@ -65,7 +65,7 @@ export function StoryCirclesRow({
       <View style={styles.row}>
         {/* Fixed Lynq logo on the left */}
         <View style={[styles.logoWrap, { paddingLeft: horizontalPadding }]} pointerEvents="none">
-          <LynqLogo size={30} white={mode === "dark"} />
+          <BrandLogo size={30} white={mode === "dark"} />
         </View>
 
         {/* Scrollable story circles */}

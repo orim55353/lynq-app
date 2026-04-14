@@ -2,13 +2,15 @@ import Svg, { Defs, LinearGradient, Path, Stop } from "react-native-svg";
 
 interface LynqLogoProps {
   readonly size?: number;
-  /** Use white fill instead of brand cyan (for dark backgrounds) */
+  /** Use white fill for the main letterforms (for dark backgrounds). Orange arrow always stays orange. */
   readonly white?: boolean;
 }
 
 /**
  * Lynq brand logo rendered as an SVG.
- * Uses the official logo paths from brand/logo_color.svg.
+ * Path 1: "L" letterform
+ * Path 2: "q" letterform (body)
+ * Path 3: Arrow in the "q" — always orange gradient
  */
 export function LynqLogo({ size = 48, white = false }: LynqLogoProps) {
   const mainFill = white ? "#FFFFFF" : "#06B6D4";

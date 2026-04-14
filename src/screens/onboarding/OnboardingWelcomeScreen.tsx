@@ -3,7 +3,7 @@ import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Animated, StyleSheet, Text, View } from "react-native";
 import { GradientButton } from "../../components/GradientButton";
-import { LynqLogo } from "../../components/LynqLogo";
+import { BrandLogo } from "../../components/BrandLogo";
 import { OnboardingLayout } from "../../components/OnboardingLayout";
 import { spacing, typography } from "../../constants/theme";
 import { useTheme } from "../../hooks/useTheme";
@@ -38,7 +38,7 @@ export function OnboardingWelcomeScreen({ navigation }: Props) {
       <View style={styles.content}>
         {/* Brand */}
         <View style={styles.brandRow}>
-          <LynqLogo size={56} />
+          <BrandLogo size={56} />
         </View>
 
         {/* Hero */}
